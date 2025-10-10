@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { VehicleSelector } from "@/components/VehicleSelector";
+import { VoiceInput } from "@/components/VoiceInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -90,15 +91,31 @@ export default function Home() {
 
                 <div className="space-y-2">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground z-10" />
                     <Input
                       type="text"
                       placeholder="What needs repair? (e.g., brake pads, oil change)"
-                      className="pl-10 h-12 bg-background"
+                      className="pl-10 pr-12 h-12 bg-background"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
+                    <VoiceInput onTranscript={(text) => setSearchQuery(text)} />
                   </div>
+                  {searchQuery === "" && (
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {["Oil change", "Brake pads", "Battery replacement", "Air filter", "Spark plugs", "Transmission fluid"].map((query) => (
+                        <Button
+                          key={query}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setSearchQuery(query)}
+                          className="text-xs"
+                        >
+                          {query}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <Button size="lg" className="w-full" variant="hero" asChild>

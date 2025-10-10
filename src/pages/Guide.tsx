@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { 
   AlertTriangle, CheckCircle2, Clock, DollarSign, MapPin, Phone, 
   Printer, Share2, ThumbsUp, ThumbsDown, ChevronRight, Wrench, 
@@ -342,9 +343,20 @@ export default function Guide() {
                           </div>
                           <p className="text-muted-foreground">{step.content}</p>
                           
+                          {/* Step Images */}
+                          {(step.number === 2 || step.number === 5) && (
+                            <div className="my-4">
+                              <img 
+                                src={step.number === 2 ? toolsImage : engineImage} 
+                                alt={`Step ${step.number} illustration`}
+                                className="rounded-lg w-full object-cover h-48"
+                              />
+                            </div>
+                          )}
+                          
                           {step.caution && (
                             <div className="flex items-start gap-2 p-3 bg-warning/10 border border-warning/20 rounded-lg">
-                              <AlertTriangle className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
+                              <AlertCircle className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
                               <p className="text-sm text-warning-foreground"><strong>Caution:</strong> {step.caution}</p>
                             </div>
                           )}
@@ -379,6 +391,48 @@ export default function Guide() {
                       )}
                     </div>
                   ))}
+                </CardContent>
+              </Card>
+
+              {/* FAQs */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Frequently Asked Questions</CardTitle>
+                  <CardDescription>Common questions about brake pad replacement</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="faq-1">
+                      <AccordionTrigger>How often should I replace brake pads?</AccordionTrigger>
+                      <AccordionContent>
+                        Typically, brake pads should be replaced every 30,000 to 70,000 miles, depending on driving conditions and pad material. Listen for squealing sounds or check pad thickness regularly.
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="faq-2">
+                      <AccordionTrigger>Can I replace just one set of brake pads?</AccordionTrigger>
+                      <AccordionContent>
+                        While possible, it's recommended to replace brake pads in pairs (both front or both rear) to maintain balanced braking performance and prevent uneven wear.
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="faq-3">
+                      <AccordionTrigger>What if my rotors are damaged?</AccordionTrigger>
+                      <AccordionContent>
+                        If rotors are warped, grooved, or below minimum thickness, they should be replaced or resurfaced. Installing new pads on damaged rotors will reduce braking effectiveness and cause premature wear.
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="faq-4">
+                      <AccordionTrigger>Do I need to bleed the brakes after pad replacement?</AccordionTrigger>
+                      <AccordionContent>
+                        No, brake bleeding is not required for a simple pad replacement. However, if you opened any brake lines or the brake fluid is old, bleeding may be necessary.
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="faq-5">
+                      <AccordionTrigger>Why do new brakes make noise?</AccordionTrigger>
+                      <AccordionContent>
+                        New brake pads often need a break-in period of 200-300 miles. Light squealing is normal during this time. Persistent loud noise may indicate improper installation or missing shims.
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                 </CardContent>
               </Card>
 
