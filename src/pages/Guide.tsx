@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { FeedbackForm } from "@/components/FeedbackForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,8 +12,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { 
   AlertTriangle, CheckCircle2, Clock, DollarSign, MapPin, Phone, 
   Printer, Share2, ThumbsUp, ThumbsDown, ChevronRight, Wrench, 
-  AlertCircle, Star, Navigation
+  AlertCircle, Star, Navigation, Bookmark
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import engineImage from "@/assets/engine-image.jpg";
 import toolsImage from "@/assets/tools-image.jpg";
 
@@ -146,6 +148,9 @@ export default function Guide() {
   const { id } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [feedbackType, setFeedbackType] = useState<"helpful" | "not-helpful" | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
+  const { toast } = useToast();
   const progress = (completedSteps.length / GUIDE_DATA.steps.length) * 100;
 
   const toggleStepComplete = (stepNumber: number) => {
@@ -154,6 +159,18 @@ export default function Guide() {
         ? prev.filter(s => s !== stepNumber)
         : [...prev, stepNumber]
     );
+  };
+
+  const handleSaveGuide = () => {
+    setIsSaved(!isSaved);
+    toast({
+      title: isSaved ? "Removed from favorites" : "Saved to favorites",
+      description: isSaved ? "Guide removed from your profile" : "You can find this in your profile",
+    });
+  };
+
+  const handleFeedback = (type: "helpful" | "not-helpful") => {
+    setFeedbackType(type);
   };
 
   return (
@@ -192,6 +209,14 @@ export default function Guide() {
                 </div>
               </div>
               <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                  onClick={handleSaveGuide}
+                >
+                  <Bookmark className={`h-4 w-4 ${isSaved ? "fill-primary" : ""}`} />
+                </Button>
                 <Button variant="outline" size="sm" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
                   <Printer className="h-4 w-4" />
                 </Button>
@@ -468,15 +493,29 @@ export default function Guide() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex gap-4">
-                    <Button variant="outline" className="flex-1">
+                    <Button 
+                      variant={feedbackType === "helpful" ? "default" : "outline"} 
+                      className="flex-1"
+                      onClick={() => handleFeedback("helpful")}
+                    >
                       <ThumbsUp className="h-4 w-4 mr-2" />
                       Helpful
                     </Button>
-                    <Button variant="outline" className="flex-1">
+                    <Button 
+                      variant={feedbackType === "not-helpful" ? "default" : "outline"} 
+                      className="flex-1"
+                      onClick={() => handleFeedback("not-helpful")}
+                    >
                       <ThumbsDown className="h-4 w-4 mr-2" />
                       Not Helpful
                     </Button>
                   </div>
+                  {feedbackType && (
+                    <FeedbackForm 
+                      type={feedbackType} 
+                      onClose={() => setFeedbackType(null)} 
+                    />
+                  )}
                 </CardContent>
               </Card>
             </div>

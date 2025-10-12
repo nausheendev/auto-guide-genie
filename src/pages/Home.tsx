@@ -99,7 +99,7 @@ export default function Home() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    <VoiceInput onTranscript={(text) => setSearchQuery(text)} />
+                    <VoiceInput onTranscript={(text) => setSearchQuery(text)} value={searchQuery} />
                   </div>
                   {searchQuery === "" && (
                     <div className="flex flex-wrap gap-2 pt-2">

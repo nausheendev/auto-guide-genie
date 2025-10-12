@@ -1,11 +1,14 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { AuthModal } from "@/components/AuthModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { User, Mail, MapPin, Clock, BookOpen, Settings, LogOut } from "lucide-react";
+import { User, Mail, MapPin, Clock, BookOpen, Settings, LogOut, Bookmark } from "lucide-react";
 
 const USER_DATA = {
   name: "John Doe",
@@ -18,13 +21,20 @@ const USER_DATA = {
     { id: 2, title: "Oil Change", date: "1 week ago" },
     { id: 3, title: "Battery Replacement", date: "2 weeks ago" },
     { id: 4, title: "Air Filter Replacement", date: "1 month ago" }
+  ],
+  savedGuides: [
+    { id: 3, title: "Brake Pad Replacement", category: "Brakes", date: "Saved yesterday" },
+    { id: 5, title: "Engine Oil Change", category: "Maintenance", date: "Saved 3 days ago" }
   ]
 };
 
 export default function Profile() {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
 
       <main className="flex-1 py-8">
         <div className="container max-w-5xl">
@@ -54,11 +64,13 @@ export default function Profile() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
+                <Button variant="outline" asChild>
+                  <Link to="/settings">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
+                  </Link>
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => setShowAuthModal(true)}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
                 </Button>
@@ -107,6 +119,42 @@ export default function Profile() {
               </Card>
             </div>
 
+            {/* Saved Guides */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Bookmark className="h-5 w-5" />
+                      Saved Guides
+                    </CardTitle>
+                    <CardDescription>Your favorite repair guides</CardDescription>
+                  </div>
+                  <Button variant="outline" size="sm">View All</Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {USER_DATA.savedGuides.map((item) => (
+                    <Link 
+                      key={item.id}
+                      to={`/guide/${item.id}`}
+                      className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted transition-colors"
+                    >
+                      <div>
+                        <h4 className="font-medium">{item.title}</h4>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge variant="secondary" className="text-xs">{item.category}</Badge>
+                          <p className="text-xs text-muted-foreground">{item.date}</p>
+                        </div>
+                      </div>
+                      <Bookmark className="h-4 w-4 fill-primary text-primary" />
+                    </Link>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
             {/* View History */}
             <Card>
               <CardHeader>
@@ -124,7 +172,11 @@ export default function Profile() {
               <CardContent>
                 <div className="space-y-4">
                   {USER_DATA.viewHistory.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted transition-colors">
+                    <Link 
+                      key={item.id}
+                      to={`/guide/${item.id}`}
+                      className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted transition-colors"
+                    >
                       <div>
                         <h4 className="font-medium">{item.title}</h4>
                         <p className="text-sm text-muted-foreground">{item.date}</p>
@@ -132,7 +184,7 @@ export default function Profile() {
                       <Button size="sm" variant="ghost">
                         View Again
                       </Button>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </CardContent>

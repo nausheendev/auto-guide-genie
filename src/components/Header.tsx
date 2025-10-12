@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Wrench, User, MapPin } from "lucide-react";
+import { LocationSelector } from "@/components/LocationSelector";
+import { Wrench, User } from "lucide-react";
 
 export const Header = () => {
+  const [location, setLocation] = useState("New York, NY");
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="container flex h-16 items-center justify-between">
@@ -26,10 +30,7 @@ export const Header = () => {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="gap-2">
-            <MapPin className="h-4 w-4" />
-            <span className="hidden sm:inline">New York, NY</span>
-          </Button>
+          <LocationSelector currentLocation={location} onLocationChange={setLocation} />
           <Button variant="outline" size="sm" asChild>
             <Link to="/profile">
               <User className="h-4 w-4" />
