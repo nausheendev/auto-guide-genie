@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { VehicleSelector } from "@/components/VehicleSelector";
 import { VoiceInput } from "@/components/VoiceInput";
+import { AuthModal } from "@/components/AuthModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,9 +55,11 @@ const POPULAR_REPAIRS = [
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       <Header />
 
       {/* Hero Section */}
@@ -118,10 +121,8 @@ export default function Home() {
                   )}
                 </div>
 
-                <Button size="lg" className="w-full" variant="hero" asChild>
-                  <Link to="/search">
-                    Get Repair Guide
-                  </Link>
+                <Button size="lg" className="w-full" variant="hero" onClick={() => setShowAuthModal(true)}>
+                  Get Repair Guide
                 </Button>
 
                 <p className="text-sm text-muted-foreground text-center">
@@ -248,8 +249,8 @@ export default function Home() {
               <Button size="lg" variant="accent" asChild>
                 <Link to="/search">Browse Repair Guides</Link>
               </Button>
-              <Button size="lg" variant="outline" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90" asChild>
-                <Link to="/profile">Create Account</Link>
+              <Button size="lg" variant="outline" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90" onClick={() => setShowAuthModal(true)}>
+                Create Account
               </Button>
             </div>
           </div>

@@ -2,12 +2,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LocationSelector } from "@/components/LocationSelector";
-import { Wrench, User } from "lucide-react";
+import { AuthModal } from "@/components/AuthModal";
+import { Wrench, User, LogIn } from "lucide-react";
 
 export const Header = () => {
   const [location, setLocation] = useState("New York, NY");
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   return (
+    <>
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
@@ -31,6 +35,10 @@ export const Header = () => {
 
         <div className="flex items-center gap-3">
           <LocationSelector currentLocation={location} onLocationChange={setLocation} />
+          <Button variant="outline" size="sm" onClick={() => setShowAuthModal(true)}>
+            <LogIn className="h-4 w-4" />
+            <span className="hidden sm:inline ml-2">Login</span>
+          </Button>
           <Button variant="outline" size="sm" asChild>
             <Link to="/profile">
               <User className="h-4 w-4" />
@@ -40,5 +48,6 @@ export const Header = () => {
         </div>
       </div>
     </header>
+    </>
   );
 };
