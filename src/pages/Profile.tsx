@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AuthModal } from "@/components/AuthModal";
@@ -8,7 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { User, Mail, MapPin, Clock, BookOpen, Settings, LogOut, Bookmark } from "lucide-react";
+import { User, Mail, MapPin, Clock, BookOpen, Settings, LogOut, Bookmark, Wrench } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const USER_DATA = {
   name: "John Doe",
@@ -30,6 +31,18 @@ const USER_DATA = {
 
 export default function Profile() {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isMechanicAccount, setIsMechanicAccount] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleCreateMechanicAccount = () => {
+    setIsMechanicAccount(true);
+    toast({
+      title: "Mechanic Account Activated",
+      description: "You now have access to workshop management features",
+    });
+    navigate("/mechanic-dashboard");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -63,7 +76,21 @@ export default function Profile() {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
+                {!isMechanicAccount && (
+                  <Button variant="default" onClick={handleCreateMechanicAccount}>
+                    <Wrench className="h-4 w-4 mr-2" />
+                    Create Mechanic Account
+                  </Button>
+                )}
+                {isMechanicAccount && (
+                  <Button variant="default" asChild>
+                    <Link to="/mechanic-dashboard">
+                      <Wrench className="h-4 w-4 mr-2" />
+                      Mechanic Dashboard
+                    </Link>
+                  </Button>
+                )}
                 <Button variant="outline" asChild>
                   <Link to="/settings">
                     <Settings className="h-4 w-4 mr-2" />

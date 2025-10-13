@@ -7,13 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { User, Mail, Bell, Lock, Globe, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { User, Mail, Bell, Lock, Globe, Trash2, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { DeleteAccountModal } from "@/components/DeleteAccountModal";
+import { TwoFactorSetupModal } from "@/components/TwoFactorSetupModal";
 
 export default function Settings() {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(false);
   const [autoLocation, setAutoLocation] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showTwoFactorModal, setShowTwoFactorModal] = useState(false);
+  const [isEmailVerified] = useState(true); // Mock verified status
   const { toast } = useToast();
 
   const handleSaveProfile = () => {
@@ -33,6 +39,8 @@ export default function Settings() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <DeleteAccountModal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} />
+      <TwoFactorSetupModal isOpen={showTwoFactorModal} onClose={() => setShowTwoFactorModal(false)} />
 
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
@@ -69,8 +77,27 @@ export default function Settings() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" defaultValue="john.doe@example.com" />
+                  <Label htmlFor="email" className="flex items-center gap-2">
+                    Email
+                    {isEmailVerified && (
+                      <Badge variant="secondary" className="text-xs">
+                        <Mail className="h-3 w-3 mr-1" />
+                        Verified
+                      </Badge>
+                    )}
+                  </Label>
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    defaultValue="john.doe@example.com"
+                    disabled={isEmailVerified}
+                    className={isEmailVerified ? "cursor-not-allowed opacity-70" : ""}
+                  />
+                  {isEmailVerified && (
+                    <p className="text-xs text-muted-foreground">
+                      Email cannot be changed once verified for security reasons
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="location">Default Location</Label>
@@ -175,12 +202,17 @@ export default function Settings() {
                 </div>
                 <div className="flex items-center justify-between p-4 rounded-lg border">
                   <div>
-                    <h4 className="font-medium">Two-Factor Authentication</h4>
+                    <h4 className="font-medium flex items-center gap-2">
+                      Two-Factor Authentication
+                      <Shield className="h-4 w-4 text-primary" />
+                    </h4>
                     <p className="text-sm text-muted-foreground">
-                      Add an extra layer of security
+                      Add an extra layer of security to your account
                     </p>
                   </div>
-                  <Button variant="outline">Enable</Button>
+                  <Button variant="outline" onClick={() => setShowTwoFactorModal(true)}>
+                    Enable 2FA
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -204,7 +236,9 @@ export default function Settings() {
                       Permanently delete your account and all data
                     </p>
                   </div>
-                  <Button variant="destructive">Delete Account</Button>
+                  <Button variant="destructive" onClick={() => setShowDeleteModal(true)}>
+                    Delete Account
+                  </Button>
                 </div>
               </CardContent>
             </Card>

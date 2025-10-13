@@ -9,6 +9,7 @@ import Search from "./pages/Search";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Admin from "./pages/Admin";
+import MechanicDashboard from "./pages/MechanicDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
