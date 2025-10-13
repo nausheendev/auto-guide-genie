@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Chrome, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { ForgotPasswordModal } from "@/components/ForgotPasswordModal";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtpInput, setShowOtpInput] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { toast } = useToast();
 
   const handleGoogleLogin = () => {
@@ -73,14 +75,19 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Welcome to AutoGos</DialogTitle>
-          <DialogDescription>
-            Sign in to access repair guides and save your favorites
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <ForgotPasswordModal 
+        isOpen={showForgotPassword} 
+        onClose={() => setShowForgotPassword(false)} 
+      />
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-md border-2 shadow-xl">
+          <DialogHeader className="space-y-3">
+            <DialogTitle className="text-2xl font-bold">Welcome to AutoGos</DialogTitle>
+            <DialogDescription className="text-base">
+              Sign in to access repair guides and save your favorites
+            </DialogDescription>
+          </DialogHeader>
 
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
@@ -88,13 +95,13 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="login" className="space-y-4">
+          <TabsContent value="login" className="space-y-4 mt-6">
             <Button 
               onClick={handleGoogleLogin} 
               variant="outline" 
-              className="w-full"
+              className="w-full bg-white hover:bg-gray-50 text-gray-700 border-gray-300 shadow-sm"
             >
-              <Chrome className="mr-2 h-4 w-4" />
+              <Chrome className="mr-2 h-4 w-4 text-[#4285F4]" />
               Continue with Google
             </Button>
 
@@ -120,7 +127,19 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="login-password">Password</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="login-password">Password</Label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      setShowForgotPassword(true);
+                    }}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
                 <Input
                   id="login-password"
                   type="password"
@@ -136,13 +155,13 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             </form>
           </TabsContent>
 
-          <TabsContent value="signup" className="space-y-4">
+          <TabsContent value="signup" className="space-y-4 mt-6">
             <Button 
               onClick={handleGoogleLogin} 
               variant="outline" 
-              className="w-full"
+              className="w-full bg-white hover:bg-gray-50 text-gray-700 border-gray-300 shadow-sm"
             >
-              <Chrome className="mr-2 h-4 w-4" />
+              <Chrome className="mr-2 h-4 w-4 text-[#4285F4]" />
               Sign up with Google
             </Button>
 
@@ -217,5 +236,6 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         </Tabs>
       </DialogContent>
     </Dialog>
+    </>
   );
 };

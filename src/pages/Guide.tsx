@@ -192,6 +192,10 @@ export default function Guide() {
                 </div>
                 <h1 className="text-3xl md:text-4xl font-bold">{GUIDE_DATA.title}</h1>
                 <div className="flex flex-wrap items-center gap-3">
+                  <Badge variant="secondary" className="bg-success/20 text-success-foreground border border-success/30">
+                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                    Verified by Professional Mechanics
+                  </Badge>
                   <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
                     {GUIDE_DATA.category}
                   </Badge>
