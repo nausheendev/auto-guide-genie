@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ProfileCard } from "@/components/ProfileCard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -44,12 +45,7 @@ export default function ProfileDashboard() {
       <main className="flex-1 py-8">
         <div className="container max-w-5xl">
           <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold">Dashboard</h1>
-              <p className="text-muted-foreground mt-2">
-                Overview of your activity and statistics
-              </p>
-            </div>
+            <ProfileCard />
 
             <Separator />
 

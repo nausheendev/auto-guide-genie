@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ProfileCard } from "@/components/ProfileCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -62,12 +63,7 @@ export default function Settings() {
       <main className="flex-1 py-8">
         <div className="container max-w-4xl">
           <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold">Settings</h1>
-              <p className="text-muted-foreground mt-2">
-                Manage your account settings and preferences
-              </p>
-            </div>
+            <ProfileCard />
 
             <Separator />
 

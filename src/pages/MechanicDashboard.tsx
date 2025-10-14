@@ -1,8 +1,8 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ProfileCard } from "@/components/ProfileCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Wrench } from "lucide-react";
 import MechanicGMB from "./MechanicGMB";
 import MechanicWorkshops from "./MechanicWorkshops";
 import MechanicLeads from "./MechanicLeads";
@@ -15,15 +15,7 @@ export default function MechanicDashboard() {
       <main className="flex-1 py-8">
         <div className="container max-w-6xl">
           <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold flex items-center gap-2">
-                <Wrench className="h-8 w-8" />
-                Mechanic Dashboard
-              </h1>
-              <p className="text-muted-foreground mt-2">
-                Manage your workshop, Google My Business, and customer leads
-              </p>
-            </div>
+            <ProfileCard showMechanicButton={false} />
 
             <Separator />
 
