@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { BookOpen, Bookmark } from "lucide-react";
+import { BookOpen, Bookmark, Mail } from "lucide-react";
 
 const USER_DATA = {
   name: "John Doe",
@@ -39,7 +39,7 @@ export default function Profile() {
             <Separator />
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Card>
                 <CardContent className="pt-6">
                   <div className="space-y-2">
@@ -73,6 +73,21 @@ export default function Profile() {
                     <Badge className="bg-success text-success-foreground">
                       ✓ Verified
                     </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-5 w-5 text-primary" />
+                      <p className="text-2xl font-bold">12</p>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Enquiries/Leads</p>
+                    <p className="text-xs text-muted-foreground">
+                      3 pending responses
+                    </p>
                   </div>
                 </CardContent>
               </Card>

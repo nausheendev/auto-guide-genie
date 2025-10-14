@@ -4,7 +4,7 @@ import { ProfileCard } from "@/components/ProfileCard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Activity, TrendingUp, Users, DollarSign } from "lucide-react";
+import { Activity, TrendingUp, Users, DollarSign, Mail } from "lucide-react";
 
 export default function ProfileDashboard() {
   const stats = [
@@ -35,6 +35,13 @@ export default function ProfileDashboard() {
       change: "Keep it up!",
       icon: TrendingUp,
       trend: "up"
+    },
+    {
+      title: "Enquiries/Leads",
+      value: "12",
+      change: "3 pending",
+      icon: Mail,
+      trend: "neutral"
     }
   ];
 
@@ -49,7 +56,7 @@ export default function ProfileDashboard() {
 
             <Separator />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
               {stats.map((stat) => {
                 const Icon = stat.icon;
                 return (

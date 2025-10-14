@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LocationSelector } from "@/components/LocationSelector";
 import { AuthModal } from "@/components/AuthModal";
-import { Wrench, User, LogIn, Home } from "lucide-react";
+import { Wrench, User, LogIn, Home, Bell } from "lucide-react";
 
 export const Header = () => {
   const [location, setLocation] = useState("New York, NY");
@@ -39,6 +39,10 @@ export const Header = () => {
             <Link to="/">
               <Home className="h-4 w-4" />
             </Link>
+          </Button>
+          <Button variant="ghost" size="sm" className="relative">
+            <Bell className="h-4 w-4" />
+            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground flex items-center justify-center">3</span>
           </Button>
           <Button variant="outline" size="sm" onClick={() => setShowAuthModal(true)}>
             <LogIn className="h-4 w-4" />
