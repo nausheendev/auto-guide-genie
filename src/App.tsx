@@ -14,6 +14,10 @@ import Admin from "./pages/Admin";
 import MechanicDashboard from "./pages/MechanicDashboard";
 import MechanicOnboarding from "./pages/MechanicOnboarding";
 import MechanicOffers from "./pages/MechanicOffers";
+import WorkshopDetails from "./pages/WorkshopDetails";
+import WorkshopEdit from "./pages/WorkshopEdit";
+import WorkshopOffers from "./pages/WorkshopOffers";
+import WorkshopLeads from "./pages/WorkshopLeads";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 
@@ -37,6 +41,10 @@ const App = () => (
           <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
           <Route path="/mechanic-onboarding" element={<MechanicOnboarding />} />
           <Route path="/mechanic-offers" element={<MechanicOffers />} />
+          <Route path="/workshop/:id" element={<WorkshopDetails />} />
+          <Route path="/workshop/:id/edit" element={<WorkshopEdit />} />
+          <Route path="/workshop/:id/offers" element={<WorkshopOffers />} />
+          <Route path="/workshop/:id/leads" element={<WorkshopLeads />} />
           <Route path="/notifications" element={<Notifications />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

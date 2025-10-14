@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Plus, MapPin, Edit, Trash2, Star } from "lucide-react";
+import { Plus, MapPin, Edit, Trash2, Star, Eye, Tag, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function MechanicWorkshops() {
@@ -33,7 +34,7 @@ export default function MechanicWorkshops() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Workshop Listings</h2>
           <p className="text-muted-foreground mt-1">
@@ -42,7 +43,8 @@ export default function MechanicWorkshops() {
         </div>
         <Button onClick={() => setShowAddForm(!showAddForm)}>
           <Plus className="h-4 w-4 mr-2" />
-          Add Workshop
+          <span className="hidden sm:inline">Add Workshop</span>
+          <span className="sm:hidden">Add</span>
         </Button>
       </div>
 
@@ -115,9 +117,9 @@ export default function MechanicWorkshops() {
         {workshops.map((workshop) => (
           <Card key={workshop.id}>
             <CardHeader>
-              <div className="flex items-start justify-between">
+              <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="flex-1">
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 flex-wrap">
                     {workshop.name}
                     <Badge variant={workshop.status === "active" ? "default" : "secondary"}>
                       {workshop.status}
@@ -129,9 +131,11 @@ export default function MechanicWorkshops() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to={`/workshop/${workshop.id}/edit`}>
+                      <Edit className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Edit</span>
+                    </Link>
                   </Button>
                   <Button variant="outline" size="sm">
                     <Trash2 className="h-4 w-4" />
@@ -151,15 +155,27 @@ export default function MechanicWorkshops() {
                 </div>
               </div>
               <Separator />
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="flex-1">
-                  View Details
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <Button variant="outline" size="sm" asChild>
+                  <Link to={`/workshop/${workshop.id}`}>
+                    <Eye className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">View Details</span>
+                    <span className="sm:inline md:hidden">Details</span>
+                  </Link>
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
-                  Manage Offers
+                <Button variant="outline" size="sm" asChild>
+                  <Link to={`/workshop/${workshop.id}/offers`}>
+                    <Tag className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Offers</span>
+                    <span className="sm:inline md:hidden">Offers</span>
+                  </Link>
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
-                  View Leads
+                <Button variant="outline" size="sm" asChild>
+                  <Link to={`/workshop/${workshop.id}/leads`}>
+                    <Users className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Leads</span>
+                    <span className="sm:inline md:hidden">Leads</span>
+                  </Link>
                 </Button>
               </div>
             </CardContent>

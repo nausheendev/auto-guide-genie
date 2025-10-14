@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Edit2, Trash2, Search } from "lucide-react";
+import { Plus, Edit2, Trash2, Search as SearchIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function MechanicOffers() {
@@ -122,7 +122,7 @@ export default function MechanicOffers() {
       <main className="flex-1 py-8">
         <div className="container max-w-5xl">
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-bold">Manage Offers</h2>
                 <p className="text-muted-foreground mt-1">
@@ -135,7 +135,8 @@ export default function MechanicOffers() {
                 setFormData({ title: "", description: "", discount: "", validUntil: "", enabled: true });
               }}>
                 <Plus className="h-4 w-4 mr-2" />
-                Add Offer
+                <span className="hidden sm:inline">Add Offer</span>
+                <span className="sm:inline">Add</span>
               </Button>
             </div>
 
@@ -232,7 +233,7 @@ export default function MechanicOffers() {
               <CardContent className="space-y-4">
                 <div className="flex gap-2">
                   <div className="relative flex-1">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <SearchIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="Search offers..."
                       value={searchQuery}

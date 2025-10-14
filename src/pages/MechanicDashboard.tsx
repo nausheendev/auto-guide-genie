@@ -20,11 +20,11 @@ export default function MechanicDashboard() {
             <Separator />
 
             <Tabs defaultValue="workshops" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="workshops">Workshops</TabsTrigger>
-                <TabsTrigger value="offers">Offers</TabsTrigger>
-                <TabsTrigger value="leads">Leads</TabsTrigger>
-                <TabsTrigger value="gmb">GMB Connection</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+                <TabsTrigger value="workshops" className="text-xs sm:text-sm">Workshops</TabsTrigger>
+                <TabsTrigger value="offers" className="text-xs sm:text-sm">Offers</TabsTrigger>
+                <TabsTrigger value="leads" className="text-xs sm:text-sm">Leads</TabsTrigger>
+                <TabsTrigger value="gmb" className="text-xs sm:text-sm">GMB</TabsTrigger>
               </TabsList>
 
               <TabsContent value="workshops" className="mt-6">

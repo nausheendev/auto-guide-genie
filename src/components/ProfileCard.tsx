@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, Mail, MapPin, Clock, Settings, LogOut, Wrench, LayoutDashboard, CreditCard, ChevronDown } from "lucide-react";
+import { User, Mail, MapPin, Clock, Settings, LogOut, Wrench, LayoutDashboard, CreditCard, ChevronDown, Menu, Tag } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { AuthModal } from "@/components/AuthModal";
 
@@ -31,12 +31,7 @@ export function ProfileCard({ showMechanicButton = true }: ProfileCardProps) {
   const { toast } = useToast();
 
   const handleCreateMechanicAccount = () => {
-    setIsMechanicAccount(true);
-    toast({
-      title: "Mechanic Account Activated",
-      description: "You now have access to workshop management features",
-    });
-    navigate("/mechanic-dashboard");
+    navigate("/mechanic-onboarding");
   };
 
   const handleLogout = () => {
@@ -92,12 +87,12 @@ export function ProfileCard({ showMechanicButton = true }: ProfileCardProps) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline">
-                    <Settings className="h-4 w-4 mr-2" />
-                    <span className="hidden sm:inline">Menu</span>
-                    <ChevronDown className="h-4 w-4 ml-2" />
+                    <Menu className="h-4 w-4 md:mr-2" />
+                    <span className="hidden md:inline">Menu</span>
+                    <ChevronDown className="h-4 w-4 ml-2 hidden md:block" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 bg-background z-50">
                   <DropdownMenuItem asChild>
                     <Link to="/profile-dashboard" className="cursor-pointer">
                       <LayoutDashboard className="h-4 w-4 mr-2" />
@@ -116,6 +111,14 @@ export function ProfileCard({ showMechanicButton = true }: ProfileCardProps) {
                       Subscription & Billing
                     </Link>
                   </DropdownMenuItem>
+                  {isMechanicAccount && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/mechanic-offers" className="cursor-pointer">
+                        <Tag className="h-4 w-4 mr-2" />
+                        Manage Offers
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                     <LogOut className="h-4 w-4 mr-2" />
                     Logout
