@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { LocationSelector } from "@/components/LocationSelector";
 import { AuthModal } from "@/components/AuthModal";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { Wrench, User, LogIn, Home, Bell, Mail, Calendar, AlertCircle } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Wrench, User, LogIn, Home, Bell, Mail, Calendar, AlertCircle, Menu, Search, BookOpen } from "lucide-react";
 
 export const Header = () => {
   const [location, setLocation] = useState("New York, NY");
@@ -42,11 +43,40 @@ export const Header = () => {
 
         <div className="flex items-center gap-3">
           <LocationSelector currentLocation={location} onLocationChange={setLocation} />
-          <Button variant="outline" size="sm" asChild className="md:hidden">
-            <Link to="/">
-              <Home className="h-4 w-4" />
-            </Link>
-          </Button>
+          
+          {/* Mobile Menu */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="sm" className="md:hidden">
+                <Menu className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[240px] sm:w-[280px]">
+              <nav className="flex flex-col gap-4 mt-8">
+                <Link 
+                  to="/" 
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                >
+                  <Home className="h-5 w-5" />
+                  <span className="font-medium">Home</span>
+                </Link>
+                <Link 
+                  to="/search" 
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                >
+                  <Search className="h-5 w-5" />
+                  <span className="font-medium">Search Guides</span>
+                </Link>
+                <Link 
+                  to="/blogs" 
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
+                >
+                  <BookOpen className="h-5 w-5" />
+                  <span className="font-medium">Blogs</span>
+                </Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="relative">

@@ -12,6 +12,8 @@ import Settings from "./pages/Settings";
 import Subscription from "./pages/Subscription";
 import Admin from "./pages/Admin";
 import MechanicDashboard from "./pages/MechanicDashboard";
+import MechanicOnboarding from "./pages/MechanicOnboarding";
+import MechanicOffers from "./pages/MechanicOffers";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
+          <Route path="/mechanic-onboarding" element={<MechanicOnboarding />} />
+          <Route path="/mechanic-offers" element={<MechanicOffers />} />
           <Route path="/notifications" element={<Notifications />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
