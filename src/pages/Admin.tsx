@@ -8,8 +8,14 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   LayoutDashboard, FileText, Users, Wrench, Settings, 
-  TrendingUp, Eye, CheckCircle, AlertCircle, Code, Pencil
+  TrendingUp, Eye, CheckCircle, AlertCircle, Code, Pencil,
+  UserPlus, Car, Globe, Plus, Edit, Trash2, Upload, Download
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const STATS = {
   totalGuides: 1247,
@@ -30,6 +36,25 @@ const RECENT_USERS = [
   { id: 2, name: "Jane Smith", email: "jane@example.com", status: "Active", credits: 2 },
   { id: 3, name: "Bob Johnson", email: "bob@example.com", status: "Blocked", credits: 0 },
   { id: 4, name: "Alice Williams", email: "alice@example.com", status: "Active", credits: 3 }
+];
+
+const STAFF_MEMBERS = [
+  { id: 1, name: "Sarah Admin", email: "sarah@admin.com", role: "Admin", permissions: ["All"] },
+  { id: 2, name: "Mike Manager", email: "mike@admin.com", role: "Manager", permissions: ["Users", "Content", "Mechanics"] },
+  { id: 3, name: "Emma Editor", email: "emma@admin.com", role: "Editor", permissions: ["Content"] }
+];
+
+const BRANDS = [
+  { id: 1, name: "Toyota", models: ["Camry", "Corolla", "RAV4", "Highlander"] },
+  { id: 2, name: "Honda", models: ["Civic", "Accord", "CR-V", "Pilot"] },
+  { id: 3, name: "Ford", models: ["F-150", "Mustang", "Explorer", "Escape"] }
+];
+
+const COUNTRIES = [
+  { id: 1, name: "United States", currency: "USD", language: "English", isActive: true },
+  { id: 2, name: "United Kingdom", currency: "GBP", language: "English", isActive: true },
+  { id: 3, name: "Germany", currency: "EUR", language: "German", isActive: true },
+  { id: 4, name: "Japan", currency: "JPY", language: "Japanese", isActive: false }
 ];
 
 export default function Admin() {
@@ -127,6 +152,18 @@ export default function Admin() {
                 <TabsTrigger value="mechanics">
                   <Wrench className="h-4 w-4 mr-2" />
                   Mechanics
+                </TabsTrigger>
+                <TabsTrigger value="staff">
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Staff
+                </TabsTrigger>
+                <TabsTrigger value="brands">
+                  <Car className="h-4 w-4 mr-2" />
+                  Brands & Models
+                </TabsTrigger>
+                <TabsTrigger value="localization">
+                  <Globe className="h-4 w-4 mr-2" />
+                  Localization
                 </TabsTrigger>
                 <TabsTrigger value="settings">
                   <Settings className="h-4 w-4 mr-2" />
@@ -338,6 +375,376 @@ export default function Admin() {
                       <Button className="mt-4" variant="outline">
                         Add New Mechanic
                       </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Staff Management Tab */}
+              <TabsContent value="staff" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Staff Management</CardTitle>
+                        <CardDescription>Manage staff, managers, and editors with permissions</CardDescription>
+                      </div>
+                      <Button>
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        Add Staff Member
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Role</TableHead>
+                          <TableHead>Permissions</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {STAFF_MEMBERS.map((staff) => (
+                          <TableRow key={staff.id}>
+                            <TableCell className="font-medium">{staff.name}</TableCell>
+                            <TableCell>{staff.email}</TableCell>
+                            <TableCell>
+                              <Badge variant="secondary">{staff.role}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-wrap gap-1">
+                                {staff.permissions.map((perm, idx) => (
+                                  <Badge key={idx} variant="outline" className="text-xs">
+                                    {perm}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                <Button size="sm" variant="outline">
+                                  <Edit className="h-3 w-3" />
+                                </Button>
+                                <Button size="sm" variant="outline">
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Create New Staff Member</CardTitle>
+                    <CardDescription>Add a new staff member with specific role and permissions</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="staff-name">Full Name</Label>
+                        <Input id="staff-name" placeholder="Enter full name" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="staff-email">Email</Label>
+                        <Input id="staff-email" type="email" placeholder="email@example.com" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="staff-role">Role</Label>
+                        <Select>
+                          <SelectTrigger id="staff-role">
+                            <SelectValue placeholder="Select role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="admin">Admin</SelectItem>
+                            <SelectItem value="manager">Manager</SelectItem>
+                            <SelectItem value="editor">Editor</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="staff-password">Temporary Password</Label>
+                        <Input id="staff-password" type="password" placeholder="Generate password" />
+                      </div>
+                      <div className="space-y-2 md:col-span-2">
+                        <Label>Permissions</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border rounded-lg">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="perm-users" />
+                            <label htmlFor="perm-users" className="text-sm cursor-pointer">Users</label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="perm-content" />
+                            <label htmlFor="perm-content" className="text-sm cursor-pointer">Content</label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="perm-mechanics" />
+                            <label htmlFor="perm-mechanics" className="text-sm cursor-pointer">Mechanics</label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="perm-settings" />
+                            <label htmlFor="perm-settings" className="text-sm cursor-pointer">Settings</label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="perm-brands" />
+                            <label htmlFor="perm-brands" className="text-sm cursor-pointer">Brands</label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="perm-reports" />
+                            <label htmlFor="perm-reports" className="text-sm cursor-pointer">Reports</label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="perm-analytics" />
+                            <label htmlFor="perm-analytics" className="text-sm cursor-pointer">Analytics</label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="perm-all" />
+                            <label htmlFor="perm-all" className="text-sm cursor-pointer font-medium">All Permissions</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="md:col-span-2">
+                        <Button className="w-full">Create Staff Member</Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Brands & Models Tab */}
+              <TabsContent value="brands" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Brands & Models Management</CardTitle>
+                        <CardDescription>Manage vehicle brands and their models</CardDescription>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline">
+                          <Upload className="h-4 w-4 mr-2" />
+                          Bulk Import
+                        </Button>
+                        <Button>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Brand
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {BRANDS.map((brand) => (
+                        <div key={brand.id} className="border rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <Car className="h-5 w-5 text-primary" />
+                              <h4 className="font-semibold text-lg">{brand.name}</h4>
+                              <Badge variant="outline">{brand.models.length} models</Badge>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline">
+                                <Plus className="h-3 w-3 mr-1" />
+                                Add Model
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <Edit className="h-3 w-3" />
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {brand.models.map((model, idx) => (
+                              <div key={idx} className="flex items-center gap-1 px-3 py-1 bg-muted rounded-md text-sm">
+                                <span>{model}</span>
+                                <button className="ml-1 hover:text-destructive">
+                                  <Trash2 className="h-3 w-3" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Add New Brand</CardTitle>
+                      <CardDescription>Add a single vehicle brand</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="brand-name">Brand Name</Label>
+                          <Input id="brand-name" placeholder="e.g., Toyota" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="brand-models">Models (comma-separated)</Label>
+                          <Input id="brand-models" placeholder="e.g., Camry, Corolla, RAV4" />
+                        </div>
+                        <Button className="w-full">Add Brand</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Bulk Import Brands</CardTitle>
+                      <CardDescription>Upload CSV file with brands and models</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="border-2 border-dashed rounded-lg p-8 text-center">
+                          <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                          <p className="text-sm text-muted-foreground mb-2">
+                            Drag and drop CSV file or click to browse
+                          </p>
+                          <Input type="file" accept=".csv" className="max-w-xs mx-auto" />
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium">CSV Format:</p>
+                          <code className="block text-xs bg-muted p-2 rounded">
+                            Brand,Model1,Model2,Model3<br/>
+                            Toyota,Camry,Corolla,RAV4<br/>
+                            Honda,Civic,Accord,CR-V
+                          </code>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button variant="outline" className="flex-1">
+                            <Download className="h-4 w-4 mr-2" />
+                            Download Template
+                          </Button>
+                          <Button className="flex-1">Import CSV</Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              {/* Localization Tab */}
+              <TabsContent value="localization" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Country & Localization Settings</CardTitle>
+                        <CardDescription>Manage countries, currencies, and languages</CardDescription>
+                      </div>
+                      <Button>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Country
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Country</TableHead>
+                          <TableHead>Currency</TableHead>
+                          <TableHead>Language</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {COUNTRIES.map((country) => (
+                          <TableRow key={country.id}>
+                            <TableCell className="font-medium">{country.name}</TableCell>
+                            <TableCell>{country.currency}</TableCell>
+                            <TableCell>{country.language}</TableCell>
+                            <TableCell>
+                              <Badge variant={country.isActive ? "secondary" : "outline"}>
+                                {country.isActive ? "Active" : "Inactive"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                <Button size="sm" variant="outline">
+                                  <Edit className="h-3 w-3" />
+                                </Button>
+                                <Button size="sm" variant="outline">
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Add New Country Configuration</CardTitle>
+                    <CardDescription>Configure localization settings for a new country</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="country-name">Country Name</Label>
+                        <Input id="country-name" placeholder="Enter country name" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="country-currency">Currency</Label>
+                        <Select>
+                          <SelectTrigger id="country-currency">
+                            <SelectValue placeholder="Select currency" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="USD">USD - US Dollar</SelectItem>
+                            <SelectItem value="EUR">EUR - Euro</SelectItem>
+                            <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                            <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                            <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
+                            <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="country-language">Language</Label>
+                        <Select>
+                          <SelectTrigger id="country-language">
+                            <SelectValue placeholder="Select language" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="English">English</SelectItem>
+                            <SelectItem value="Spanish">Spanish</SelectItem>
+                            <SelectItem value="French">French</SelectItem>
+                            <SelectItem value="German">German</SelectItem>
+                            <SelectItem value="Japanese">Japanese</SelectItem>
+                            <SelectItem value="Chinese">Chinese</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="country-status">Status</Label>
+                        <Select>
+                          <SelectTrigger id="country-status">
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">Active</SelectItem>
+                            <SelectItem value="inactive">Inactive</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="md:col-span-2">
+                        <Button className="w-full">Add Country Configuration</Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
