@@ -7,7 +7,9 @@ import Home from "./pages/Home";
 import Guide from "./pages/Guide";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
+import ProfileDashboard from "./pages/ProfileDashboard";
 import Settings from "./pages/Settings";
+import Subscription from "./pages/Subscription";
 import Admin from "./pages/Admin";
 import MechanicDashboard from "./pages/MechanicDashboard";
 import NotFound from "./pages/NotFound";
@@ -25,7 +27,9 @@ const App = () => (
           <Route path="/guide/:id" element={<Guide />} />
           <Route path="/search" element={<Search />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile-dashboard" element={<ProfileDashboard />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/subscription" element={<Subscription />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

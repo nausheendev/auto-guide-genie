@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LocationSelector } from "@/components/LocationSelector";
 import { AuthModal } from "@/components/AuthModal";
-import { Wrench, User, LogIn } from "lucide-react";
+import { Wrench, User, LogIn, Home } from "lucide-react";
 
 export const Header = () => {
   const [location, setLocation] = useState("New York, NY");
@@ -35,6 +35,11 @@ export const Header = () => {
 
         <div className="flex items-center gap-3">
           <LocationSelector currentLocation={location} onLocationChange={setLocation} />
+          <Button variant="outline" size="sm" asChild className="md:hidden">
+            <Link to="/">
+              <Home className="h-4 w-4" />
+            </Link>
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setShowAuthModal(true)}>
             <LogIn className="h-4 w-4" />
             <span className="hidden sm:inline ml-2">Login</span>

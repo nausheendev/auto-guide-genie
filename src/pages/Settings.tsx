@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { User, Mail, Bell, Lock, Globe, Trash2, Shield } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User, Mail, Bell, Lock, Globe, Trash2, Shield, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DeleteAccountModal } from "@/components/DeleteAccountModal";
 import { TwoFactorSetupModal } from "@/components/TwoFactorSetupModal";
@@ -20,7 +21,23 @@ export default function Settings() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showTwoFactorModal, setShowTwoFactorModal] = useState(false);
   const [isEmailVerified] = useState(true); // Mock verified status
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const { toast } = useToast();
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+        toast({
+          title: "Profile picture updated",
+          description: "Your profile picture has been changed successfully",
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSaveProfile = () => {
     toast({
@@ -66,6 +83,36 @@ export default function Settings() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="flex items-center gap-6">
+                  <Avatar className="h-24 w-24">
+                    {profileImage ? (
+                      <AvatarImage src={profileImage} alt="Profile" />
+                    ) : (
+                      <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
+                        JD
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  <div className="space-y-2">
+                    <Label htmlFor="profile-image" className="cursor-pointer">
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors">
+                        <Upload className="h-4 w-4" />
+                        Change Profile Picture
+                      </div>
+                    </Label>
+                    <Input
+                      id="profile-image"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageUpload}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      JPG, PNG or GIF (max. 2MB)
+                    </p>
+                  </div>
+                </div>
+                <Separator />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
