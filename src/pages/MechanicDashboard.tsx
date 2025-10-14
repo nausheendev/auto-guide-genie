@@ -13,7 +13,7 @@ export default function MechanicDashboard() {
       <Header />
 
       <main className="flex-1 py-8">
-        <div className="container max-w-6xl">
+        <div className="container max-w-5xl">
           <div className="space-y-6">
             <ProfileCard showMechanicButton={false} />
 
