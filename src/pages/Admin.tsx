@@ -9,13 +9,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   LayoutDashboard, FileText, Users, Wrench, Settings, 
   TrendingUp, Eye, CheckCircle, AlertCircle, Code, Pencil,
-  UserPlus, Car, Globe, Plus, Edit, Trash2, Upload, Download, Mail, Bell
+  UserPlus, Car, Globe, Plus, Edit, Trash2, Upload, Download, Mail, Bell, EyeIcon
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const STATS = {
   totalGuides: 1247,
@@ -79,9 +82,156 @@ export default function Admin() {
   const [editorMode, setEditorMode] = useState<"visual" | "code">("visual");
   const [selectedEmailTemplate, setSelectedEmailTemplate] = useState<number | null>(null);
   const [emailTemplateContent, setEmailTemplateContent] = useState("");
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailEditorTab, setEmailEditorTab] = useState<"visual" | "html">("visual");
+  const [showPreview, setShowPreview] = useState(false);
   const [notificationEnabled, setNotificationEnabled] = useState<Record<number, boolean>>({
     1: true, 2: true, 3: true, 4: true, 5: false
   });
+
+  const handleEmailTemplateSelect = (templateId: number) => {
+    const template = EMAIL_TEMPLATES.find(t => t.id === templateId);
+    if (template) {
+      setSelectedEmailTemplate(templateId);
+      setEmailSubject(template.subject);
+      // Load default template content based on type
+      const defaultContent = getDefaultTemplateContent(template.type);
+      setEmailTemplateContent(defaultContent);
+    }
+  };
+
+  const getDefaultTemplateContent = (type: string) => {
+    const templates: Record<string, string> = {
+      verification: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #007bff; color: white; padding: 20px; text-align: center; }
+    .content { padding: 30px; background: #f9f9f9; }
+    .code { font-size: 32px; font-weight: bold; color: #007bff; text-align: center; padding: 20px; background: white; border-radius: 8px; }
+    .footer { text-align: center; padding: 20px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Verify Your Email</h1>
+    </div>
+    <div class="content">
+      <p>Hello {user_name},</p>
+      <p>Thank you for signing up! Please use the verification code below to verify your email address:</p>
+      <div class="code">{verification_code}</div>
+      <p>This code will expire in 10 minutes.</p>
+    </div>
+    <div class="footer">
+      <p>© 2025 AutoRepair Guide. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>`,
+      welcome: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #007bff, #00d4ff); color: white; padding: 30px; text-align: center; }
+    .content { padding: 30px; }
+    .button { display: inline-block; padding: 12px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; padding: 20px; color: #666; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Welcome to AutoRepair Guide!</h1>
+    </div>
+    <div class="content">
+      <p>Hello {user_name},</p>
+      <p>Your account has been successfully created. We're excited to help you with all your vehicle repair needs!</p>
+      <p>Get started by:</p>
+      <ul>
+        <li>Adding your vehicle information</li>
+        <li>Browsing repair guides</li>
+        <li>Finding local mechanics</li>
+      </ul>
+      <a href="#" class="button">Get Started</a>
+    </div>
+    <div class="footer">
+      <p>© 2025 AutoRepair Guide. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>`,
+      password_reset: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #dc3545; color: white; padding: 20px; text-align: center; }
+    .content { padding: 30px; background: #fff3cd; }
+    .button { display: inline-block; padding: 12px 30px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; padding: 20px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Password Reset Request</h1>
+    </div>
+    <div class="content">
+      <p>Hello {user_name},</p>
+      <p>We received a request to reset your password. Click the button below to create a new password:</p>
+      <a href="{reset_link}" class="button">Reset Password</a>
+      <p>If you didn't request this, please ignore this email.</p>
+      <p><small>This link expires in 1 hour.</small></p>
+    </div>
+    <div class="footer">
+      <p>© 2025 AutoRepair Guide. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>`,
+      default: `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #007bff; color: white; padding: 20px; text-align: center; }
+    .content { padding: 30px; }
+    .footer { text-align: center; padding: 20px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>AutoRepair Guide</h1>
+    </div>
+    <div class="content">
+      <p>Hello {user_name},</p>
+      <p>Your email content goes here...</p>
+    </div>
+    <div class="footer">
+      <p>© 2025 AutoRepair Guide. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>`
+    };
+    return templates[type] || templates.default;
+  };
+
+  const handleSaveTemplate = () => {
+    toast.success("Email template saved successfully!");
+  };
+
+  const handleSendTestEmail = () => {
+    toast.success("Test email sent to your email address!");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -859,7 +1009,8 @@ export default function Admin() {
                         <Label htmlFor="email-subject">Email Subject</Label>
                         <Input 
                           id="email-subject" 
-                          defaultValue={EMAIL_TEMPLATES.find(t => t.id === selectedEmailTemplate)?.subject}
+                          value={emailSubject}
+                          onChange={(e) => setEmailSubject(e.target.value)}
                           placeholder="Enter email subject"
                         />
                       </div>
@@ -867,48 +1018,49 @@ export default function Admin() {
                       <div className="space-y-2">
                         <Label htmlFor="email-content">Email Content</Label>
                         <div className="border rounded-lg">
-                          <Tabs defaultValue="visual">
-                            <div className="border-b px-3">
+                          <Tabs value={emailEditorTab} onValueChange={(v) => setEmailEditorTab(v as "visual" | "html")}>
+                            <div className="border-b px-3 flex items-center justify-between">
                               <TabsList className="h-10">
                                 <TabsTrigger value="visual">Visual Editor</TabsTrigger>
                                 <TabsTrigger value="html">HTML Code</TabsTrigger>
                               </TabsList>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                onClick={() => setShowPreview(true)}
+                                className="my-2"
+                              >
+                                <EyeIcon className="h-4 w-4 mr-2" />
+                                Preview
+                              </Button>
                             </div>
-                            <TabsContent value="visual" className="p-4 min-h-[300px]">
-                              <div className="prose prose-sm max-w-none">
-                                <p className="text-muted-foreground">
-                                  Visual email editor would appear here with drag-and-drop components, 
-                                  text formatting, and live preview.
-                                </p>
-                                <div className="mt-4 p-4 border rounded-lg bg-muted/30">
-                                  <p className="text-sm">Example template content...</p>
-                                  <p className="text-sm mt-2">
-                                    Variables available: {"{user_name}"}, {"{verification_code}"}, 
-                                    {"{reset_link}"}, {"{vehicle}"}, {"{guide_title}"}, {"{offer_title}"}
-                                  </p>
+                            <TabsContent value="visual" className="p-4 min-h-[400px]">
+                              <div className="space-y-4">
+                                <div className="p-4 border rounded-lg bg-background">
+                                  <Textarea
+                                    value={emailTemplateContent}
+                                    onChange={(e) => setEmailTemplateContent(e.target.value)}
+                                    className="min-h-[350px] font-sans"
+                                    placeholder="Edit your email content here. You can use HTML tags for formatting.
+
+Example:
+<h1>Hello {user_name}!</h1>
+<p>Your content goes here...</p>
+<a href='{reset_link}'>Click here</a>"
+                                  />
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  <p className="font-medium mb-1">Available Variables:</p>
+                                  <p>{"{user_name}"}, {"{verification_code}"}, {"{reset_link}"}, {"{vehicle}"}, {"{guide_title}"}, {"{offer_title}"}, {"{discount}"}, {"{location}"}</p>
                                 </div>
                               </div>
                             </TabsContent>
                             <TabsContent value="html" className="p-0">
-                              <textarea
-                                className="w-full min-h-[300px] p-4 font-mono text-sm bg-muted/30 border-0 focus:outline-none resize-none"
+                              <Textarea
+                                value={emailTemplateContent}
+                                onChange={(e) => setEmailTemplateContent(e.target.value)}
+                                className="w-full min-h-[400px] p-4 font-mono text-sm bg-muted/30 border-0 rounded-none resize-none"
                                 placeholder="Enter HTML code..."
-                                defaultValue={`<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; }
-    .container { max-width: 600px; margin: 0 auto; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Welcome to AutoRepair Guide</h1>
-    <p>Hello {user_name},</p>
-    <p>Your email content here...</p>
-  </div>
-</body>
-</html>`}
                               />
                             </TabsContent>
                           </Tabs>
@@ -916,8 +1068,8 @@ export default function Admin() {
                       </div>
 
                       <div className="flex gap-2">
-                        <Button>Save Template</Button>
-                        <Button variant="outline">Send Test Email</Button>
+                        <Button onClick={handleSaveTemplate}>Save Template</Button>
+                        <Button variant="outline" onClick={handleSendTestEmail}>Send Test Email</Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -1153,6 +1305,45 @@ export default function Admin() {
       </main>
 
       <Footer />
+
+      {/* Email Preview Dialog */}
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Email Preview</DialogTitle>
+            <DialogDescription>
+              Preview how your email will look to recipients
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="p-3 bg-muted rounded-lg">
+              <p className="text-sm font-medium">Subject:</p>
+              <p className="text-sm text-muted-foreground">{emailSubject}</p>
+            </div>
+            <div className="border rounded-lg p-6 bg-white">
+              <div 
+                dangerouslySetInnerHTML={{ 
+                  __html: emailTemplateContent
+                    .replace(/\{user_name\}/g, "John Doe")
+                    .replace(/\{user_email\}/g, "john@example.com")
+                    .replace(/\{verification_code\}/g, "123456")
+                    .replace(/\{reset_link\}/g, "https://example.com/reset-password")
+                    .replace(/\{vehicle\}/g, "Toyota Camry 2020")
+                    .replace(/\{guide_title\}/g, "Brake Pad Replacement")
+                    .replace(/\{offer_title\}/g, "Spring Maintenance Special")
+                    .replace(/\{discount\}/g, "20")
+                    .replace(/\{location\}/g, "New York, NY")
+                    .replace(/\{date\}/g, new Date().toLocaleDateString())
+                }}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowPreview(false)}>Close</Button>
+              <Button onClick={handleSendTestEmail}>Send Test Email</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
