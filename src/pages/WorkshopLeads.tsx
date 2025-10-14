@@ -105,12 +105,14 @@ export default function WorkshopLeads() {
             </div>
           )}
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Button variant="default" size="sm" className="flex-1">
-              Contact Customer
+              <span className="hidden sm:inline">Contact Customer</span>
+              <span className="sm:hidden">Contact</span>
             </Button>
             <Button variant="outline" size="sm" className="flex-1">
-              Mark as Converted
+              <span className="hidden sm:inline">Mark as Converted</span>
+              <span className="sm:hidden">Converted</span>
             </Button>
           </div>
         </div>

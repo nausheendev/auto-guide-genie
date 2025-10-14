@@ -57,9 +57,10 @@ export default function GMBConnectionStep({ onNext, onBack }: GMBConnectionStepP
                   Authorize AutoGos to verify your business through Google My Business
                 </p>
               </div>
-              <Button size="lg" onClick={handleConnectGMB}>
+              <Button onClick={handleConnectGMB}>
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Connect with Google
+                <span className="hidden sm:inline">Connect with Google</span>
+                <span className="sm:hidden">Connect</span>
               </Button>
             </div>
 
@@ -114,8 +115,8 @@ export default function GMBConnectionStep({ onNext, onBack }: GMBConnectionStepP
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>
-        <Button onClick={handleFinish} size="lg">
-          {isConnected ? "Complete Setup" : "Skip & Complete"}
+        <Button onClick={handleFinish}>
+          {isConnected ? "Complete Setup" : "Finish"}
         </Button>
       </div>
     </div>

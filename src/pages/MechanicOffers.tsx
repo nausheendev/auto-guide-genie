@@ -263,17 +263,19 @@ export default function MechanicOffers() {
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
                           <Switch
                             checked={offer.enabled}
                             onCheckedChange={() => toggleOfferStatus(offer.id)}
                           />
-                          <Button variant="ghost" size="sm" onClick={() => handleEdit(offer)}>
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm" onClick={() => handleDelete(offer.id)}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button variant="ghost" size="sm" onClick={() => handleEdit(offer)}>
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" onClick={() => handleDelete(offer.id)}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </Card>

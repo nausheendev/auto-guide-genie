@@ -194,8 +194,9 @@ export default function OffersStep({ onNext, onBack, initialData }: OffersStepPr
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>
-        <Button onClick={handleContinue} size="lg">
-          Continue to Contact Details
+        <Button onClick={handleContinue}>
+          <span className="hidden sm:inline">Continue to Contact Details</span>
+          <span className="sm:hidden">Next Step</span>
         </Button>
       </div>
     </div>

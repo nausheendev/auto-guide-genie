@@ -115,8 +115,9 @@ export default function ContactPersonStep({ onNext, onBack, initialData }: Conta
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>
-        <Button onClick={handleContinue} size="lg" disabled={!isFormValid}>
-          Continue to GMB Connection
+        <Button onClick={handleContinue} disabled={!isFormValid}>
+          <span className="hidden sm:inline">Continue to GMB Connection</span>
+          <span className="sm:hidden">Next Step</span>
         </Button>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import MechanicGMB from "./MechanicGMB";
 import MechanicWorkshops from "./MechanicWorkshops";
 import MechanicLeads from "./MechanicLeads";
+import MechanicOffers from "./MechanicOffers";
 
 export default function MechanicDashboard() {
   return (
@@ -32,9 +33,7 @@ export default function MechanicDashboard() {
               </TabsContent>
 
               <TabsContent value="offers" className="mt-6">
-                <p className="text-muted-foreground text-center py-8">
-                  Manage your offers from the <a href="/mechanic-offers" className="text-primary hover:underline">Offers page</a>
-                </p>
+                <MechanicOffers />
               </TabsContent>
 
               <TabsContent value="leads" className="mt-6">
