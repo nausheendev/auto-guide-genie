@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   LayoutDashboard, FileText, Users, Wrench, Settings, 
   TrendingUp, Eye, CheckCircle, AlertCircle, Code, Pencil,
-  UserPlus, Car, Globe, Plus, Edit, Trash2, Upload, Download
+  UserPlus, Car, Globe, Plus, Edit, Trash2, Upload, Download, Mail, Bell
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -57,8 +57,31 @@ const COUNTRIES = [
   { id: 4, name: "Japan", currency: "JPY", language: "Japanese", isActive: false }
 ];
 
+const EMAIL_TEMPLATES = [
+  { id: 1, name: "Email Verification Code", type: "verification", subject: "Verify your email address", lastEdited: "2 hours ago" },
+  { id: 2, name: "Account Creation Confirmation", type: "welcome", subject: "Welcome to AutoRepair Guide", lastEdited: "1 day ago" },
+  { id: 3, name: "Forgot Password Link", type: "password_reset", subject: "Reset your password", lastEdited: "3 days ago" },
+  { id: 4, name: "Password Change Confirmation", type: "password_change", subject: "Your password has been changed", lastEdited: "5 days ago" },
+  { id: 5, name: "Guide Match Notification", type: "guide_match", subject: "New repair guide matches your vehicle", lastEdited: "1 week ago" },
+  { id: 6, name: "Guide Update Notification", type: "guide_update", subject: "A guide you viewed has been updated", lastEdited: "2 weeks ago" },
+  { id: 7, name: "Offer Notification", type: "offer", subject: "New offer available in your area", lastEdited: "3 weeks ago" }
+];
+
+const NOTIFICATION_TEMPLATES = [
+  { id: 1, name: "New Guide Match", type: "guide_match", message: "New repair guide available for your {vehicle}", enabled: true },
+  { id: 2, name: "Guide Updated", type: "guide_update", message: "Guide '{guide_title}' has been updated", enabled: true },
+  { id: 3, name: "Favorite Guide Updated", type: "favorite_update", message: "Your favorite guide has new information", enabled: true },
+  { id: 4, name: "Offer Available", type: "offer", message: "New offer: {offer_title} - {discount}% off", enabled: true },
+  { id: 5, name: "Offer in Your Area", type: "offer_location", message: "Special offer available near {location}", enabled: false }
+];
+
 export default function Admin() {
   const [editorMode, setEditorMode] = useState<"visual" | "code">("visual");
+  const [selectedEmailTemplate, setSelectedEmailTemplate] = useState<number | null>(null);
+  const [emailTemplateContent, setEmailTemplateContent] = useState("");
+  const [notificationEnabled, setNotificationEnabled] = useState<Record<number, boolean>>({
+    1: true, 2: true, 3: true, 4: true, 5: false
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -164,6 +187,14 @@ export default function Admin() {
                 <TabsTrigger value="localization">
                   <Globe className="h-4 w-4 mr-2" />
                   Localization
+                </TabsTrigger>
+                <TabsTrigger value="email-templates">
+                  <Mail className="h-4 w-4 mr-2" />
+                  Email Templates
+                </TabsTrigger>
+                <TabsTrigger value="notifications">
+                  <Bell className="h-4 w-4 mr-2" />
+                  Notifications
                 </TabsTrigger>
                 <TabsTrigger value="settings">
                   <Settings className="h-4 w-4 mr-2" />
@@ -745,6 +776,338 @@ export default function Admin() {
                       <div className="md:col-span-2">
                         <Button className="w-full">Add Country Configuration</Button>
                       </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Email Templates Tab */}
+              <TabsContent value="email-templates" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Email Templates</CardTitle>
+                        <CardDescription>Manage and customize email templates sent to users</CardDescription>
+                      </div>
+                      <Button>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Template
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Template Name</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Subject</TableHead>
+                          <TableHead>Last Edited</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {EMAIL_TEMPLATES.map((template) => (
+                          <TableRow key={template.id}>
+                            <TableCell className="font-medium">{template.name}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{template.type}</Badge>
+                            </TableCell>
+                            <TableCell className="text-sm text-muted-foreground">{template.subject}</TableCell>
+                            <TableCell className="text-sm text-muted-foreground">{template.lastEdited}</TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => setSelectedEmailTemplate(template.id)}
+                                >
+                                  <Edit className="h-3 w-3 mr-1" />
+                                  Edit
+                                </Button>
+                                <Button size="sm" variant="outline">
+                                  <Eye className="h-3 w-3 mr-1" />
+                                  Preview
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+
+                {selectedEmailTemplate && (
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle>
+                            Edit Template: {EMAIL_TEMPLATES.find(t => t.id === selectedEmailTemplate)?.name}
+                          </CardTitle>
+                          <CardDescription>Customize email content and styling</CardDescription>
+                        </div>
+                        <Button variant="outline" onClick={() => setSelectedEmailTemplate(null)}>
+                          Close Editor
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="email-subject">Email Subject</Label>
+                        <Input 
+                          id="email-subject" 
+                          defaultValue={EMAIL_TEMPLATES.find(t => t.id === selectedEmailTemplate)?.subject}
+                          placeholder="Enter email subject"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="email-content">Email Content</Label>
+                        <div className="border rounded-lg">
+                          <Tabs defaultValue="visual">
+                            <div className="border-b px-3">
+                              <TabsList className="h-10">
+                                <TabsTrigger value="visual">Visual Editor</TabsTrigger>
+                                <TabsTrigger value="html">HTML Code</TabsTrigger>
+                              </TabsList>
+                            </div>
+                            <TabsContent value="visual" className="p-4 min-h-[300px]">
+                              <div className="prose prose-sm max-w-none">
+                                <p className="text-muted-foreground">
+                                  Visual email editor would appear here with drag-and-drop components, 
+                                  text formatting, and live preview.
+                                </p>
+                                <div className="mt-4 p-4 border rounded-lg bg-muted/30">
+                                  <p className="text-sm">Example template content...</p>
+                                  <p className="text-sm mt-2">
+                                    Variables available: {"{user_name}"}, {"{verification_code}"}, 
+                                    {"{reset_link}"}, {"{vehicle}"}, {"{guide_title}"}, {"{offer_title}"}
+                                  </p>
+                                </div>
+                              </div>
+                            </TabsContent>
+                            <TabsContent value="html" className="p-0">
+                              <textarea
+                                className="w-full min-h-[300px] p-4 font-mono text-sm bg-muted/30 border-0 focus:outline-none resize-none"
+                                placeholder="Enter HTML code..."
+                                defaultValue={`<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 600px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to AutoRepair Guide</h1>
+    <p>Hello {user_name},</p>
+    <p>Your email content here...</p>
+  </div>
+</body>
+</html>`}
+                              />
+                            </TabsContent>
+                          </Tabs>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button>Save Template</Button>
+                        <Button variant="outline">Send Test Email</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Available Variables</CardTitle>
+                    <CardDescription>Use these variables in your email templates</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        { var: "{user_name}", desc: "User's full name" },
+                        { var: "{user_email}", desc: "User's email address" },
+                        { var: "{verification_code}", desc: "6-digit verification code" },
+                        { var: "{reset_link}", desc: "Password reset URL" },
+                        { var: "{vehicle}", desc: "User's vehicle make/model" },
+                        { var: "{guide_title}", desc: "Repair guide title" },
+                        { var: "{offer_title}", desc: "Offer or promotion title" },
+                        { var: "{discount}", desc: "Discount percentage" },
+                        { var: "{location}", desc: "User's location/area" },
+                        { var: "{date}", desc: "Current date" }
+                      ].map((item, idx) => (
+                        <div key={idx} className="p-3 border rounded-lg">
+                          <code className="text-sm font-mono text-primary">{item.var}</code>
+                          <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Notifications Tab */}
+              <TabsContent value="notifications" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Notification Templates</CardTitle>
+                        <CardDescription>Manage in-app notification templates and triggers</CardDescription>
+                      </div>
+                      <Button>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Template
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {NOTIFICATION_TEMPLATES.map((template) => (
+                        <div key={template.id} className="flex items-center justify-between p-4 rounded-lg border">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h4 className="font-medium">{template.name}</h4>
+                              <Badge variant="outline">{template.type}</Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{template.message}</p>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor={`notify-${template.id}`} className="text-sm">
+                                {template.enabled ? "Enabled" : "Disabled"}
+                              </Label>
+                              <Checkbox 
+                                id={`notify-${template.id}`} 
+                                checked={template.enabled}
+                              />
+                            </div>
+                            <Button size="sm" variant="outline">
+                              <Edit className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Edit Notification Template</CardTitle>
+                    <CardDescription>Customize notification message and trigger conditions</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="notify-name">Template Name</Label>
+                      <Input id="notify-name" placeholder="e.g., New Guide Match" />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="notify-type">Notification Type</Label>
+                      <Select>
+                        <SelectTrigger id="notify-type">
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="guide_match">Guide Match</SelectItem>
+                          <SelectItem value="guide_update">Guide Update</SelectItem>
+                          <SelectItem value="favorite_update">Favorite Update</SelectItem>
+                          <SelectItem value="offer">Offer</SelectItem>
+                          <SelectItem value="offer_location">Offer Location</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="notify-message">Notification Message</Label>
+                      <textarea
+                        id="notify-message"
+                        className="w-full min-h-[100px] p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                        placeholder="Enter notification message with variables..."
+                        defaultValue="New repair guide available for your {vehicle}"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Use variables: {"{vehicle}"}, {"{guide_title}"}, {"{offer_title}"}, {"{discount}"}, {"{location}"}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Trigger Conditions</Label>
+                      <div className="space-y-2 p-4 border rounded-lg">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox id="trigger-new-guide" />
+                          <label htmlFor="trigger-new-guide" className="text-sm cursor-pointer">
+                            When new guide matches user's vehicle
+                          </label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox id="trigger-guide-update" />
+                          <label htmlFor="trigger-guide-update" className="text-sm cursor-pointer">
+                            When viewed guide is updated
+                          </label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox id="trigger-favorite" />
+                          <label htmlFor="trigger-favorite" className="text-sm cursor-pointer">
+                            When favorite guide changes
+                          </label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox id="trigger-offer" />
+                          <label htmlFor="trigger-offer" className="text-sm cursor-pointer">
+                            When offer is available in user's area
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2 p-3 bg-muted/50 rounded-lg">
+                      <Checkbox id="notify-enabled" defaultChecked />
+                      <label htmlFor="notify-enabled" className="text-sm font-medium cursor-pointer">
+                        Enable this notification template
+                      </label>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button>Save Template</Button>
+                      <Button variant="outline">Send Test Notification</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Notification Settings</CardTitle>
+                    <CardDescription>Configure global notification preferences</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <h4 className="text-sm font-medium">Enable All Notifications</h4>
+                        <p className="text-xs text-muted-foreground">Master switch for all notifications</p>
+                      </div>
+                      <Checkbox defaultChecked />
+                    </div>
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <h4 className="text-sm font-medium">Notification Sound</h4>
+                        <p className="text-xs text-muted-foreground">Play sound when notification arrives</p>
+                      </div>
+                      <Checkbox defaultChecked />
+                    </div>
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <h4 className="text-sm font-medium">Desktop Notifications</h4>
+                        <p className="text-xs text-muted-foreground">Show browser notifications</p>
+                      </div>
+                      <Checkbox />
                     </div>
                   </CardContent>
                 </Card>
