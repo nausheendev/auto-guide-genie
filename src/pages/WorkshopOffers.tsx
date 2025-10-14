@@ -103,7 +103,7 @@ export default function WorkshopOffers() {
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex w-full sm:w-auto flex-wrap items-center justify-between gap-2">
                         <Switch
                           checked={offer.enabled}
                           onCheckedChange={() => toggleOfferStatus(offer.id)}
