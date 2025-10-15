@@ -723,7 +723,7 @@ export default function LocalGuide() {
                             variant={completedSteps.includes(index) ? "default" : "outline"}
                             size="sm"
                             onClick={() => toggleStepComplete(index)}
-                            className={completedSteps.includes(index) ? "bg-green-600 hover:bg-green-700 text-white border-green-600" : "hover:bg-accent"}
+                            className={completedSteps.includes(index) ? "bg-emerald-600 hover:bg-emerald-700 text-emerald-50 border-emerald-600" : "hover:bg-accent"}
                           >
                             <CheckCircle2 className="h-4 w-4 mr-1" />
                             Mark Complete
