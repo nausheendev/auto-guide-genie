@@ -365,26 +365,32 @@ export default function LocalGuide() {
                       : `Complete DIY guide and local mechanic directory for ${city} drivers. Save money or find trusted professionals near you.`
                     }
                   </p>
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    <Badge variant="secondary" className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 shadow-lg">
-                      <CheckCircle2 className="h-3 w-3 mr-1" />
-                      Verified by Professional Mechanics
-                    </Badge>
-                    <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
-                      Brake
-                    </Badge>
-                    {isVehicleSpecific && (
-                      <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
-                        Medium
+                  <div className="flex flex-col gap-3 pt-2">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Badge variant="secondary" className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 shadow-lg">
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        Verified by Professional Mechanics
                       </Badge>
-                    )}
-                    <div className="flex items-center gap-1">
-                      <DollarSign className="h-4 w-4" />
-                      <span className="text-sm">${localData.avgCost.min}-${localData.avgCost.max}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span className="text-sm">2 hours</span>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
+                        Brake
+                      </Badge>
+                      {isVehicleSpecific && (
+                        <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
+                          Medium
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="h-4 w-4" />
+                        <span className="text-sm">${localData.avgCost.min}-${localData.avgCost.max}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        <span className="text-sm">2 hours</span>
+                      </div>
                     </div>
                   </div>
                 </div>
