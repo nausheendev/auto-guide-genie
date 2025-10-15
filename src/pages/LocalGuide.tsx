@@ -14,7 +14,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { 
   MapPin, Clock, DollarSign, CheckCircle2, AlertTriangle, 
   Wrench, Phone, Star, Navigation, TrendingUp, Calendar,
-  ThermometerSun, CloudRain, Mountain, Users, Printer, Share2
+  ThermometerSun, CloudRain, Mountain, Users, Printer, Share2, Heart
 } from "lucide-react";
 import { Helmet } from "react-helmet";
 
@@ -262,8 +262,8 @@ export default function LocalGuide() {
             ? `Complete step-by-step ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanic recommendations.`
             : `Complete step-by-step guide for ${service.toLowerCase()} tailored for ${city} drivers, including local considerations and mechanic recommendations.`,
           estimatedCost: localData.avgCost,
-          totalTime: "PT1H20M",
-          tools: isVehicleSpecific 
+          totalTime: "PT2H",
+          tools: isVehicleSpecific
             ? [`Jack and jack stands`, `Lug wrench (19mm for ${vehicleMake})`, `C-clamp or brake piston tool`, `Socket set (12mm hex)`]
             : ["Jack and jack stands", "Lug wrench", "C-clamp or brake piston tool", "Socket set"],
           supplies: isVehicleSpecific
@@ -366,16 +366,16 @@ export default function LocalGuide() {
                     }
                   </p>
                   <div className="flex flex-wrap items-center gap-3 pt-2">
-                    <Badge variant="secondary" className="bg-success/20 text-success-foreground border border-success/30">
+                    <Badge variant="secondary" className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 shadow-lg">
                       <CheckCircle2 className="h-3 w-3 mr-1" />
-                      Verified Local Mechanics
+                      Verified by Professional Mechanics
                     </Badge>
                     <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
-                      Professional Service
+                      Brake
                     </Badge>
                     {isVehicleSpecific && (
                       <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
-                        {vehicleMake} Specialist
+                        Medium
                       </Badge>
                     )}
                     <div className="flex items-center gap-1">
@@ -384,11 +384,14 @@ export default function LocalGuide() {
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="h-4 w-4" />
-                      <span className="text-sm">{localData.avgWaitDays} days wait</span>
+                      <span className="text-sm">2 hours</span>
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
+                  <Button variant="outline" size="sm" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+                    <Heart className="h-4 w-4" />
+                  </Button>
                   <Button variant="outline" size="sm" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
                     <Printer className="h-4 w-4" />
                   </Button>
