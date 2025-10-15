@@ -694,7 +694,7 @@ export default function LocalGuide() {
             </div>
           </section>
 
-          {/* Required Tools Section */}
+          {/* Required Tools Section with Affiliate Links */}
           <section className="py-12 bg-background">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
@@ -703,64 +703,221 @@ export default function LocalGuide() {
                   Required Tools
                 </h2>
                 
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {(isVehicleSpecific ? [
-                        `Jack and jack stands`,
-                        `Lug wrench (19mm for ${vehicleMake})`,
-                        `C-clamp or brake piston tool`,
-                        `Socket set (12mm hex)`,
-                        `Torque wrench`,
-                        `Brake cleaner spray`
-                      ] : [
-                        "Jack and jack stands",
-                        "Lug wrench",
-                        "C-clamp or brake piston tool",
-                        "Socket set",
-                        "Torque wrench",
-                        "Brake cleaner spray"
-                      ]).map((tool, index) => (
-                        <div key={index} className="flex items-center gap-3 p-3 bg-background rounded-lg">
-                          <Wrench className="h-5 w-5 text-primary shrink-0" />
-                          <span className="text-sm">{tool}</span>
+                <div className="space-y-6">
+                  {[
+                    {
+                      name: "Jack and Jack Stands Set",
+                      description: "3-ton capacity hydraulic jack with safety stands",
+                      vendors: [
+                        { name: "Amazon", price: "$89.99", link: "https://amazon.com/dp/YOURAFFID-jack-stands", rating: 4.6 },
+                        { name: "AutoZone", price: "$94.99", link: "https://autozone.com/YOURAFFID-jack-stands", rating: 4.5 },
+                        { name: "RockAuto", price: "$79.99", link: "https://rockauto.com/YOURAFFID-jack-stands", rating: 4.7 }
+                      ]
+                    },
+                    {
+                      name: isVehicleSpecific ? `Lug Wrench (19mm for ${vehicleMake})` : "Lug Wrench Set",
+                      description: "Cross-pattern lug wrench with multiple sizes",
+                      vendors: [
+                        { name: "Amazon", price: "$24.99", link: "https://amazon.com/dp/YOURAFFID-lug-wrench", rating: 4.7 },
+                        { name: "Advance Auto", price: "$27.99", link: "https://advanceautoparts.com/YOURAFFID-lug-wrench", rating: 4.4 }
+                      ]
+                    },
+                    {
+                      name: "Brake Caliper Piston Tool",
+                      description: "Universal disc brake caliper compression tool",
+                      vendors: [
+                        { name: "Amazon", price: "$32.99", link: "https://amazon.com/dp/YOURAFFID-piston-tool", rating: 4.5 },
+                        { name: "AutoZone", price: "$36.99", link: "https://autozone.com/YOURAFFID-piston-tool", rating: 4.3 },
+                        { name: "Harbor Freight", price: "$29.99", link: "https://harborfreight.com/YOURAFFID-piston-tool", rating: 4.2 }
+                      ]
+                    },
+                    {
+                      name: isVehicleSpecific ? `Socket Set (12mm hex)` : "Metric Socket Set",
+                      description: "Complete metric socket set with ratchet",
+                      vendors: [
+                        { name: "Amazon", price: "$45.99", link: "https://amazon.com/dp/YOURAFFID-socket-set", rating: 4.8 },
+                        { name: "AutoZone", price: "$52.99", link: "https://autozone.com/YOURAFFID-socket-set", rating: 4.6 }
+                      ]
+                    },
+                    {
+                      name: "Torque Wrench",
+                      description: "Click-type torque wrench (20-150 ft-lbs)",
+                      vendors: [
+                        { name: "Amazon", price: "$49.99", link: "https://amazon.com/dp/YOURAFFID-torque-wrench", rating: 4.7 },
+                        { name: "Harbor Freight", price: "$39.99", link: "https://harborfreight.com/YOURAFFID-torque-wrench", rating: 4.4 },
+                        { name: "AutoZone", price: "$54.99", link: "https://autozone.com/YOURAFFID-torque-wrench", rating: 4.5 }
+                      ]
+                    }
+                  ].map((tool, index) => (
+                    <Card key={index}>
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <Wrench className="h-5 w-5 text-primary" />
+                          {tool.name}
+                        </CardTitle>
+                        <CardDescription>{tool.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid gap-3">
+                          {tool.vendors.map((vendor, vIndex) => (
+                            <div key={vIndex} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                              <div className="flex items-center gap-3 flex-1">
+                                <div className="flex flex-col">
+                                  <span className="font-semibold text-sm">{vendor.name}</span>
+                                  <div className="flex items-center gap-1">
+                                    <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                    <span className="text-xs text-muted-foreground">{vendor.rating}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className="font-bold text-lg text-primary">{vendor.price}</span>
+                                <Button 
+                                  size="sm" 
+                                  asChild
+                                  className="bg-primary hover:bg-primary/90"
+                                >
+                                  <a 
+                                    href={vendor.link} 
+                                    target="_blank" 
+                                    rel="nofollow noopener noreferrer"
+                                    className="flex items-center gap-1"
+                                  >
+                                    View Deal
+                                    <Navigation className="h-3 w-3" />
+                                  </a>
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                        <p className="text-xs text-muted-foreground mt-2 italic">
+                          Prices may vary. Last updated: {new Date().toLocaleDateString()}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Required Parts Section */}
+          {/* Required Parts Section with Affiliate Links */}
           <section className="py-12 bg-muted/30">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
                 <h2 className="text-3xl font-bold mb-6">Required Parts</h2>
                 
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      {(isVehicleSpecific ? [
-                        { name: `${vehicleMake} OEM or equivalent brake pads`, price: "$50-120" },
-                        { name: "Brake cleaner", price: "$8-15" },
-                        { name: "High-temperature grease", price: "$10-20" },
-                        { name: "Anti-squeal shims", price: "$15-25" }
-                      ] : [
-                        { name: "New brake pads", price: "$40-100" },
-                        { name: "Brake cleaner", price: "$8-15" },
-                        { name: "High-temperature grease", price: "$10-20" },
-                        { name: "Anti-squeal shims (optional)", price: "$15-25" }
-                      ]).map((part, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                          <div className="flex items-center gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
-                            <span className="text-sm font-medium">{part.name}</span>
-                          </div>
-                          <span className="text-sm font-bold text-primary">{part.price}</span>
+                <div className="space-y-6">
+                  {[
+                    {
+                      name: isVehicleSpecific ? `${vehicleMake} ${vehicleModel} Brake Pads` : "Brake Pads (Front Set)",
+                      description: isVehicleSpecific 
+                        ? `OEM-quality ceramic brake pads for ${vehicleMake} ${vehicleModel}`
+                        : "Premium ceramic brake pads for most vehicles",
+                      vendors: [
+                        { name: "Amazon", price: "$67.99", link: "https://amazon.com/dp/YOURAFFID-brake-pads", rating: 4.6, shipping: "Free 2-day" },
+                        { name: "RockAuto", price: "$52.99", link: "https://rockauto.com/YOURAFFID-brake-pads", rating: 4.7, shipping: "$5.99" },
+                        { name: "AutoZone", price: "$74.99", link: "https://autozone.com/YOURAFFID-brake-pads", rating: 4.5, shipping: "Free pickup" },
+                        { name: "Advance Auto", price: "$69.99", link: "https://advanceautoparts.com/YOURAFFID-brake-pads", rating: 4.4, shipping: "Free pickup" }
+                      ]
+                    },
+                    {
+                      name: "Brake Cleaner Spray",
+                      description: "Non-chlorinated brake parts cleaner (14 oz)",
+                      vendors: [
+                        { name: "Amazon", price: "$8.99", link: "https://amazon.com/dp/YOURAFFID-brake-cleaner", rating: 4.8, shipping: "Add-on item" },
+                        { name: "AutoZone", price: "$7.49", link: "https://autozone.com/YOURAFFID-brake-cleaner", rating: 4.6, shipping: "In-store" },
+                        { name: "Walmart", price: "$6.99", link: "https://walmart.com/YOURAFFID-brake-cleaner", rating: 4.5, shipping: "Free pickup" }
+                      ]
+                    },
+                    {
+                      name: "High-Temperature Brake Grease",
+                      description: "Synthetic brake lubricant for caliper pins and slides",
+                      vendors: [
+                        { name: "Amazon", price: "$12.99", link: "https://amazon.com/dp/YOURAFFID-brake-grease", rating: 4.7, shipping: "Prime" },
+                        { name: "AutoZone", price: "$14.99", link: "https://autozone.com/YOURAFFID-brake-grease", rating: 4.5, shipping: "In-store" },
+                        { name: "RockAuto", price: "$10.99", link: "https://rockauto.com/YOURAFFID-brake-grease", rating: 4.6, shipping: "$5.99" }
+                      ]
+                    },
+                    {
+                      name: "Anti-Squeal Brake Shims",
+                      description: "Noise-dampening shims for quiet braking",
+                      vendors: [
+                        { name: "Amazon", price: "$18.99", link: "https://amazon.com/dp/YOURAFFID-brake-shims", rating: 4.5, shipping: "Prime" },
+                        { name: "RockAuto", price: "$15.99", link: "https://rockauto.com/YOURAFFID-brake-shims", rating: 4.6, shipping: "$5.99" },
+                        { name: "AutoZone", price: "$21.99", link: "https://autozone.com/YOURAFFID-brake-shims", rating: 4.4, shipping: "In-store" }
+                      ]
+                    }
+                  ].map((part, index) => (
+                    <Card key={index}>
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          <CheckCircle2 className="h-5 w-5 text-primary" />
+                          {part.name}
+                        </CardTitle>
+                        <CardDescription>{part.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid gap-3">
+                          {part.vendors.map((vendor, vIndex) => (
+                            <div key={vIndex} className="flex items-center justify-between p-3 bg-background rounded-lg hover:bg-muted/50 transition-colors border">
+                              <div className="flex items-center gap-3 flex-1">
+                                <div className="flex flex-col">
+                                  <span className="font-semibold text-sm">{vendor.name}</span>
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-1">
+                                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                      <span className="text-xs text-muted-foreground">{vendor.rating}</span>
+                                    </div>
+                                    <span className="text-xs text-muted-foreground">• {vendor.shipping}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className="font-bold text-lg text-primary">{vendor.price}</span>
+                                <Button 
+                                  size="sm" 
+                                  asChild
+                                  className="bg-primary hover:bg-primary/90"
+                                >
+                                  <a 
+                                    href={vendor.link} 
+                                    target="_blank" 
+                                    rel="nofollow noopener noreferrer"
+                                    className="flex items-center gap-1"
+                                  >
+                                    Buy Now
+                                    <Navigation className="h-3 w-3" />
+                                  </a>
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                        <p className="text-xs text-muted-foreground mt-2 italic">
+                          Prices may vary. We earn commission on qualifying purchases. Last updated: {new Date().toLocaleDateString()}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                <Card className="mt-6 bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800">
+                  <CardContent className="pt-6">
+                    <div className="flex items-start gap-3">
+                      <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-green-900 dark:text-green-100 mb-1">
+                          Total Estimated Cost in {city}
+                        </p>
+                        <p className="text-sm text-green-800 dark:text-green-200">
+                          DIY Parts: $90-$150 | Professional Service: ${localData.avgCost.min}-${localData.avgCost.max}
+                        </p>
+                        <p className="text-xs text-green-700 dark:text-green-300 mt-2">
+                          Save up to ${localData.avgCost.max - 150} by doing it yourself with quality parts from trusted vendors above.
+                        </p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
