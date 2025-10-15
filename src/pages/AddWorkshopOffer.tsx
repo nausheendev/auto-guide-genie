@@ -10,31 +10,28 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Tag, Users } from "lucide-react";
+import { ArrowLeft, Tag, Users, Wrench } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-export default function WorkshopEdit() {
+export default function AddWorkshopOffer() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Mock data - replace with actual data fetching
   const [formData, setFormData] = useState({
-    name: "AutoFix Pro Workshop",
-    address: "123 Main Street, New York, NY 10001",
-    phone: "+1 (555) 123-4567",
-    email: "contact@autofixpro.com",
-    description: "Professional automotive repair and maintenance services with over 20 years of experience.",
-    services: "Oil Change, Brake Repair, Engine Diagnostics, Transmission Service, AC Repair, Battery Replacement"
+    title: "",
+    description: "",
+    discount: "",
+    validUntil: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
-      title: "Workshop Updated",
-      description: "Your workshop details have been updated successfully.",
+      title: "Offer Created",
+      description: "Your offer has been created successfully.",
     });
-    navigate(`/workshop/${id}`);
+    navigate(`/workshop/${id}/offers`);
   };
 
   return (
@@ -48,7 +45,7 @@ export default function WorkshopEdit() {
 
             <Separator />
 
-            <Tabs defaultValue="workshops" className="w-full">
+            <Tabs defaultValue="offers" className="w-full">
               <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
                 <TabsTrigger value="workshops" className="text-xs sm:text-sm">Workshop</TabsTrigger>
                 <TabsTrigger value="offers" className="text-xs sm:text-sm">Offers</TabsTrigger>
@@ -57,56 +54,36 @@ export default function WorkshopEdit() {
               </TabsList>
 
               <TabsContent value="workshops" className="mt-6">
+                <Card className="p-6">
+                  <p className="text-muted-foreground text-center">View workshop details</p>
+                  <div className="flex justify-center mt-4">
+                    <Button asChild>
+                      <Link to={`/workshop/${id}`}>
+                        <Wrench className="h-4 w-4 mr-2" />
+                        Go to Workshop
+                      </Link>
+                    </Button>
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="offers" className="mt-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-2xl">Edit Workshop Details</CardTitle>
+                    <CardTitle className="text-2xl">Add New Offer</CardTitle>
                   </CardHeader>
 
                   <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Workshop Name</Label>
+                        <Label htmlFor="title">Offer Title</Label>
                         <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          id="title"
+                          value={formData.title}
+                          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                          placeholder="e.g., 20% Off Oil Change"
                           required
                         />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="address">Address</Label>
-                        <Textarea
-                          id="address"
-                          value={formData.address}
-                          onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                          rows={3}
-                          required
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="phone">Phone</Label>
-                          <Input
-                            id="phone"
-                            type="tel"
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            required
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="email">Email</Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            required
-                          />
-                        </div>
                       </div>
 
                       <div className="space-y-2">
@@ -116,30 +93,45 @@ export default function WorkshopEdit() {
                           value={formData.description}
                           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                           rows={4}
+                          placeholder="Describe your offer in detail"
+                          required
                         />
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="services">Services Offered (comma-separated)</Label>
-                        <Textarea
-                          id="services"
-                          value={formData.services}
-                          onChange={(e) => setFormData({ ...formData, services: e.target.value })}
-                          rows={3}
-                          placeholder="e.g., Oil Change, Brake Repair, Engine Diagnostics"
-                        />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="discount">Discount</Label>
+                          <Input
+                            id="discount"
+                            value={formData.discount}
+                            onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+                            placeholder="e.g., 20% or $50"
+                            required
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="validUntil">Valid Until</Label>
+                          <Input
+                            id="validUntil"
+                            type="date"
+                            value={formData.validUntil}
+                            onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })}
+                            required
+                          />
+                        </div>
                       </div>
 
                       <div className="flex gap-3 justify-end">
                         <Button 
                           type="button" 
                           variant="outline"
-                          onClick={() => navigate(-1)}
+                          onClick={() => navigate(`/workshop/${id}/offers`)}
                         >
                           Cancel
                         </Button>
                         <Button type="submit">
-                          Save Changes
+                          Create Offer
                         </Button>
                       </div>
                     </form>
@@ -147,23 +139,9 @@ export default function WorkshopEdit() {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="offers" className="mt-6">
-                <Card className="p-6">
-                  <p className="text-muted-foreground text-center">View and manage offers in the Offers tab</p>
-                  <div className="flex justify-center mt-4">
-                    <Button asChild>
-                      <Link to={`/workshop/${id}/offers`}>
-                        <Tag className="h-4 w-4 mr-2" />
-                        Go to Offers
-                      </Link>
-                    </Button>
-                  </div>
-                </Card>
-              </TabsContent>
-
               <TabsContent value="leads" className="mt-6">
                 <Card className="p-6">
-                  <p className="text-muted-foreground text-center">View and manage leads in the Leads tab</p>
+                  <p className="text-muted-foreground text-center">View and manage leads</p>
                   <div className="flex justify-center mt-4">
                     <Button asChild>
                       <Link to={`/workshop/${id}/leads`}>

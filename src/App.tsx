@@ -17,6 +17,7 @@ import MechanicOffers from "./pages/MechanicOffers";
 import WorkshopDetails from "./pages/WorkshopDetails";
 import WorkshopEdit from "./pages/WorkshopEdit";
 import WorkshopOffers from "./pages/WorkshopOffers";
+import AddWorkshopOffer from "./pages/AddWorkshopOffer";
 import WorkshopLeads from "./pages/WorkshopLeads";
 import Notifications from "./pages/Notifications";
 import LeadDetails from "./pages/LeadDetails";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/workshop/:id" element={<WorkshopDetails />} />
           <Route path="/workshop/:id/edit" element={<WorkshopEdit />} />
           <Route path="/workshop/:id/offers" element={<WorkshopOffers />} />
+          <Route path="/workshop/:id/offers/new" element={<AddWorkshopOffer />} />
           <Route path="/workshop/:id/leads" element={<WorkshopLeads />} />
           <Route path="/leads/:id" element={<LeadDetails />} />
           <Route path="/notifications" element={<Notifications />} />

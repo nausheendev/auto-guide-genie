@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ProfileCard } from "@/components/ProfileCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Phone, Mail, Clock, Car } from "lucide-react";
+import { ArrowLeft, Phone, Mail, Clock, Car, Tag, Wrench } from "lucide-react";
 
 export default function WorkshopLeads() {
   const { id } = useParams();
@@ -125,45 +127,87 @@ export default function WorkshopLeads() {
       <Header />
       
       <main className="flex-1 py-8">
-        <div className="container max-w-4xl">
-          <Button 
-            variant="ghost" 
-            className="mb-4"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
+        <div className="container max-w-5xl">
+          <div className="space-y-6">
+            <ProfileCard showMechanicButton={false} />
 
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold">Workshop Leads</h1>
-            <p className="text-muted-foreground mt-1">{workshopName}</p>
+            <Separator />
+
+            <Tabs defaultValue="leads" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+                <TabsTrigger value="workshops" className="text-xs sm:text-sm">Workshop</TabsTrigger>
+                <TabsTrigger value="offers" className="text-xs sm:text-sm">Offers</TabsTrigger>
+                <TabsTrigger value="leads" className="text-xs sm:text-sm">Leads</TabsTrigger>
+                <TabsTrigger value="gmb" className="text-xs sm:text-sm">GMB</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="workshops" className="mt-6">
+                <Card className="p-6">
+                  <p className="text-muted-foreground text-center">View workshop details</p>
+                  <div className="flex justify-center mt-4">
+                    <Button asChild>
+                      <Link to={`/workshop/${id}`}>
+                        <Wrench className="h-4 w-4 mr-2" />
+                        Go to Workshop
+                      </Link>
+                    </Button>
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="offers" className="mt-6">
+                <Card className="p-6">
+                  <p className="text-muted-foreground text-center">View and manage offers</p>
+                  <div className="flex justify-center mt-4">
+                    <Button asChild>
+                      <Link to={`/workshop/${id}/offers`}>
+                        <Tag className="h-4 w-4 mr-2" />
+                        Go to Offers
+                      </Link>
+                    </Button>
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="leads" className="mt-6">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold">Workshop Leads</h2>
+                  <p className="text-muted-foreground mt-1">{workshopName}</p>
+                </div>
+
+                <Tabs defaultValue="all" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+                    <TabsTrigger value="all" className="text-xs sm:text-sm">All ({leads.length})</TabsTrigger>
+                    <TabsTrigger value="new" className="text-xs sm:text-sm">New ({filterLeads('new').length})</TabsTrigger>
+                    <TabsTrigger value="contacted" className="text-xs sm:text-sm">Contacted ({filterLeads('contacted').length})</TabsTrigger>
+                    <TabsTrigger value="converted" className="text-xs sm:text-sm">Converted ({filterLeads('converted').length})</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="all" className="mt-6 space-y-4">
+                    {leads.map(lead => <LeadCard key={lead.id} lead={lead} />)}
+                  </TabsContent>
+
+                  <TabsContent value="new" className="mt-6 space-y-4">
+                    {filterLeads('new').map(lead => <LeadCard key={lead.id} lead={lead} />)}
+                  </TabsContent>
+
+                  <TabsContent value="contacted" className="mt-6 space-y-4">
+                    {filterLeads('contacted').map(lead => <LeadCard key={lead.id} lead={lead} />)}
+                  </TabsContent>
+
+                  <TabsContent value="converted" className="mt-6 space-y-4">
+                    {filterLeads('converted').map(lead => <LeadCard key={lead.id} lead={lead} />)}
+                  </TabsContent>
+                </Tabs>
+              </TabsContent>
+
+              <TabsContent value="gmb" className="mt-6">
+                <Card className="p-6">
+                  <p className="text-muted-foreground text-center">Google My Business integration coming soon</p>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
-
-          <Tabs defaultValue="all" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
-              <TabsTrigger value="all" className="text-xs sm:text-sm">All ({leads.length})</TabsTrigger>
-              <TabsTrigger value="new" className="text-xs sm:text-sm">New ({filterLeads('new').length})</TabsTrigger>
-              <TabsTrigger value="contacted" className="text-xs sm:text-sm">Contacted ({filterLeads('contacted').length})</TabsTrigger>
-              <TabsTrigger value="converted" className="text-xs sm:text-sm">Converted ({filterLeads('converted').length})</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="all" className="mt-6 space-y-4">
-              {leads.map(lead => <LeadCard key={lead.id} lead={lead} />)}
-            </TabsContent>
-
-            <TabsContent value="new" className="mt-6 space-y-4">
-              {filterLeads('new').map(lead => <LeadCard key={lead.id} lead={lead} />)}
-            </TabsContent>
-
-            <TabsContent value="contacted" className="mt-6 space-y-4">
-              {filterLeads('contacted').map(lead => <LeadCard key={lead.id} lead={lead} />)}
-            </TabsContent>
-
-            <TabsContent value="converted" className="mt-6 space-y-4">
-              {filterLeads('converted').map(lead => <LeadCard key={lead.id} lead={lead} />)}
-            </TabsContent>
-          </Tabs>
         </div>
       </main>
 
