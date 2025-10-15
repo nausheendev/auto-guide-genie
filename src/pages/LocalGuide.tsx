@@ -518,7 +518,11 @@ export default function LocalGuide() {
                       Safety First
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-2">
+                  <CardContent className="space-y-4">
+                    <p className="text-amber-900 dark:text-amber-100 font-medium">
+                      {service} repairs are safety-critical. If you're unsure about any step or lack proper tools, please consult a certified mechanic in {city}. Improper {service.toLowerCase()} work can lead to brake failure and serious accidents. Always test brakes in a safe area before normal driving.
+                    </p>
+                    
                     <ul className="space-y-2 text-sm text-amber-900 dark:text-amber-100">
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
@@ -547,6 +551,16 @@ export default function LocalGuide() {
                       <li className="flex items-start gap-2">
                         <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                         <span><strong>Caution:</strong> Dispose of old brake pads properly - they may contain hazardous materials.</span>
+                      </li>
+                      {isVehicleSpecific && (
+                        <li className="flex items-start gap-2">
+                          <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                          <span><strong>Caution:</strong> Follow {vehicleMake} {vehicleModel} specific torque specifications to prevent brake system damage.</span>
+                        </li>
+                      )}
+                      <li className="flex items-start gap-2">
+                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <span><strong>{city} specific:</strong> California law requires STAR certification for shops performing brake work. Ensure compliance with local emissions standards.</span>
                       </li>
                     </ul>
                   </CardContent>
