@@ -35,6 +35,7 @@ interface SchemaMarkupProps {
     steps?: HowToStep[];
     tools?: string[];
     supplies?: string[];
+    aggregateRating?: { ratingValue: number; reviewCount: number };
     
     // LocalBusiness Schema
     businesses?: LocalBusiness[];
@@ -71,6 +72,11 @@ export const SchemaMarkup = ({ type, data }: SchemaMarkupProps) => {
               "maxValue": data.estimatedCost.max
             } : undefined,
             "totalTime": data.totalTime,
+            "aggregateRating": data.aggregateRating ? {
+              "@type": "AggregateRating",
+              "ratingValue": data.aggregateRating.ratingValue,
+              "reviewCount": data.aggregateRating.reviewCount
+            } : undefined,
             "tool": data.tools?.map(tool => ({
               "@type": "HowToTool",
               "name": tool

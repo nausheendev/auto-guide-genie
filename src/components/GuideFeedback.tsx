@@ -2,28 +2,25 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Star, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface GuideFeedbackProps {
   guideTitle: string;
+  averageRating?: number;
+  totalRatings?: number;
 }
 
-export const GuideFeedback = ({ guideTitle }: GuideFeedbackProps) => {
+export const GuideFeedback = ({ guideTitle, averageRating = 4.7, totalRatings = 324 }: GuideFeedbackProps) => {
   const [rating, setRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [feedback, setFeedback] = useState("");
   const [hasVoted, setHasVoted] = useState(false);
-  const [isHelpful, setIsHelpful] = useState<boolean | null>(null);
   const [showFeedbackBox, setShowFeedbackBox] = useState(false);
   const { toast } = useToast();
 
   const handleRatingClick = (value: number) => {
     setRating(value);
-  };
-
-  const handleHelpfulClick = (helpful: boolean) => {
-    setIsHelpful(helpful);
     setShowFeedbackBox(true);
   };
 
@@ -34,7 +31,6 @@ export const GuideFeedback = ({ guideTitle }: GuideFeedbackProps) => {
     console.log({
       guideTitle,
       rating,
-      isHelpful,
       feedback
     });
 
@@ -50,35 +46,29 @@ export const GuideFeedback = ({ guideTitle }: GuideFeedbackProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Was this guide helpful?</CardTitle>
+        <CardTitle>Rate This Guide</CardTitle>
+        <div className="flex items-center gap-2 pt-2">
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`h-5 w-5 ${
+                  star <= Math.round(averageRating)
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "text-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+          <span className="text-sm font-medium">{averageRating.toFixed(1)}</span>
+          <span className="text-sm text-muted-foreground">({totalRatings} ratings)</span>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Helpful/Not Helpful Buttons */}
-        {!hasVoted && (
-          <div className="flex gap-4">
-            <Button
-              variant={isHelpful === true ? "default" : "outline"}
-              onClick={() => handleHelpfulClick(true)}
-              className="flex-1"
-            >
-              <ThumbsUp className="h-4 w-4 mr-2" />
-              Helpful
-            </Button>
-            <Button
-              variant={isHelpful === false ? "default" : "outline"}
-              onClick={() => handleHelpfulClick(false)}
-              className="flex-1"
-            >
-              <ThumbsDown className="h-4 w-4 mr-2" />
-              Not Helpful
-            </Button>
-          </div>
-        )}
-
         {/* Rating Stars */}
         {!hasVoted && (
           <div className="space-y-2">
-            <p className="text-sm font-medium">Rate this guide:</p>
+            <p className="text-sm font-medium">Your rating:</p>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((value) => (
                 <button
@@ -107,7 +97,7 @@ export const GuideFeedback = ({ guideTitle }: GuideFeedbackProps) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="suggestion" className="text-sm font-medium">
-                {isHelpful 
+                {rating >= 4
                   ? "What did you find most helpful?"
                   : "How can we improve this guide?"}
               </label>

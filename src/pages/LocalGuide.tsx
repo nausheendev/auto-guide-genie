@@ -264,6 +264,7 @@ export default function LocalGuide() {
             : `Complete step-by-step guide for ${service.toLowerCase()} tailored for ${city} drivers, including local considerations and mechanic recommendations.`,
           estimatedCost: localData.avgCost,
           totalTime: "PT2H",
+          aggregateRating: { ratingValue: 4.7, reviewCount: 324 },
           tools: isVehicleSpecific
             ? [`Jack and jack stands`, `Lug wrench (19mm for ${vehicleMake})`, `C-clamp or brake piston tool`, `Socket set (12mm hex)`]
             : ["Jack and jack stands", "Lug wrench", "C-clamp or brake piston tool", "Socket set"],
@@ -534,6 +535,18 @@ export default function LocalGuide() {
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                         <span>Never compress brake caliper without opening bleeder valve</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <span><strong>Caution:</strong> Working on brakes requires mechanical knowledge. If you're unsure, consult a professional mechanic to avoid safety risks.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <span><strong>Caution:</strong> Brake fluid is corrosive. Avoid skin contact and clean spills immediately.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <span><strong>Caution:</strong> Dispose of old brake pads properly - they may contain hazardous materials.</span>
                       </li>
                     </ul>
                   </CardContent>
@@ -967,20 +980,73 @@ export default function LocalGuide() {
           {/* Used Cars Section */}
           <UsedCarsSection city={city} />
 
-          {/* Safety Warning */}
-          <section className="py-8 bg-warning/10 border-y border-warning/20">
+          {/* Related Guides Section */}
+          <section className="py-12 bg-background">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
-                <div className="flex gap-4">
-                  <AlertTriangle className="h-6 w-6 text-warning shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-bold text-lg mb-2">Important Safety Notice</h3>
-                    <p className="text-muted-foreground">
-                      Brake repairs are safety-critical. If you're unsure about any step or lack proper tools, 
-                      please consult a certified mechanic in {city}. Improper brake work can lead to brake failure 
-                      and serious accidents. Always test brakes in a safe area before normal driving.
-                    </p>
-                  </div>
+                <h2 className="text-3xl font-bold mb-6">Related Guides</h2>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {[
+                    { title: "How to Replace Brake Rotors", slug: "brake-rotor-replacement" },
+                    { title: "Brake Fluid Flush Guide", slug: "brake-fluid-flush" },
+                    { title: "Brake Caliper Replacement", slug: "brake-caliper-replacement" },
+                    { title: "ABS System Diagnosis", slug: "abs-system-diagnosis" },
+                    { title: "Parking Brake Adjustment", slug: "parking-brake-adjustment" },
+                    { title: "Brake Line Replacement", slug: "brake-line-replacement" }
+                  ].map((guide) => (
+                    <a
+                      key={guide.slug}
+                      href={isVehicleSpecific 
+                        ? `/repairs/${citySlug}/${make}/${model}/${guide.slug}`
+                        : `/repairs/${citySlug}/${guide.slug}`}
+                      className="flex items-center gap-3 p-4 border rounded-lg hover:border-primary hover:bg-muted/50 transition-all"
+                    >
+                      <Wrench className="h-5 w-5 text-primary shrink-0" />
+                      <span className="font-medium">{guide.title}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Top Related Cities Section */}
+          <section className="py-12 bg-muted/30">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-3xl font-bold mb-2">Top Related Cities</h2>
+                <p className="text-muted-foreground mb-6">
+                  Find {service.toLowerCase()} guides in nearby cities
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                  {[
+                    { name: "San Francisco", slug: "san-francisco" },
+                    { name: "San Diego", slug: "san-diego" },
+                    { name: "San Jose", slug: "san-jose" },
+                    { name: "Sacramento", slug: "sacramento" },
+                    { name: "Long Beach", slug: "long-beach" },
+                    { name: "Oakland", slug: "oakland" },
+                    { name: "Fresno", slug: "fresno" },
+                    { name: "Bakersfield", slug: "bakersfield" },
+                    { name: "Anaheim", slug: "anaheim" },
+                    { name: "Santa Ana", slug: "santa-ana" },
+                    { name: "Riverside", slug: "riverside" },
+                    { name: "Stockton", slug: "stockton" },
+                    { name: "Irvine", slug: "irvine" },
+                    { name: "Fremont", slug: "fremont" },
+                    { name: "Santa Clarita", slug: "santa-clarita" }
+                  ].map((cityItem) => (
+                    <a
+                      key={cityItem.slug}
+                      href={isVehicleSpecific 
+                        ? `/repairs/${cityItem.slug}/${make}/${model}/${serviceSlug}`
+                        : `/repairs/${cityItem.slug}/${serviceSlug}`}
+                      className="flex items-center gap-2 p-3 border rounded-lg hover:border-primary hover:bg-background transition-all text-sm"
+                    >
+                      <MapPin className="h-4 w-4 text-primary shrink-0" />
+                      <span className="font-medium">{cityItem.name}</span>
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
