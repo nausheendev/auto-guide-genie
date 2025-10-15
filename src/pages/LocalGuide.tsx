@@ -942,7 +942,7 @@ export default function LocalGuide() {
                       className={completedSteps.includes(index) ? "border-green-500" : ""}
                     >
                       <CardHeader>
-                        <div className="flex items-start justify-between">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
                               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">
@@ -964,7 +964,7 @@ export default function LocalGuide() {
                             variant={completedSteps.includes(index) ? "default" : "outline"}
                             size="sm"
                             onClick={() => toggleStepComplete(index)}
-                            className={completedSteps.includes(index) ? "bg-emerald-600 hover:bg-emerald-700 text-emerald-50 border-emerald-600" : "hover:bg-accent"}
+                            className={`${completedSteps.includes(index) ? "bg-emerald-600 hover:bg-emerald-700 text-emerald-50 border-emerald-600" : "hover:bg-accent"} w-full sm:w-auto shrink-0`}
                           >
                             <CheckCircle2 className="h-4 w-4 mr-1" />
                             Mark Complete
