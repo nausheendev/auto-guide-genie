@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SchemaMarkup } from "@/components/SchemaMarkup";
 import { UsedCarsSection } from "@/components/UsedCarsSection";
+import { PopularSearches } from "@/components/PopularSearches";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,13 +19,32 @@ import {
 import { Helmet } from "react-helmet";
 
 export default function LocalGuide() {
-  const { citySlug, serviceSlug } = useParams<{ citySlug: string; serviceSlug: string }>();
+  const { citySlug, serviceSlug, make, model } = useParams<{ 
+    citySlug: string; 
+    serviceSlug: string;
+    make?: string;
+    model?: string;
+  }>();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   
   // In production, fetch this data from database/API
   const city = citySlug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Los Angeles';
   const service = serviceSlug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Brake Repair';
   const state = 'California'; // Would come from DB
+  
+  // Vehicle-specific data
+  const vehicleMake = make?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const vehicleModel = model?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const isVehicleSpecific = !!vehicleMake && !!vehicleModel;
+  
+  // Build page title and description
+  const pageTitle = isVehicleSpecific 
+    ? `${vehicleMake} ${vehicleModel} ${service} in ${city}`
+    : `${service} in ${city}`;
+  
+  const pageDescription = isVehicleSpecific
+    ? `Complete ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city}. Model-specific instructions, torque specs, common issues. Local cost $${29}0-$${45}0.`
+    : `Complete ${service.toLowerCase()} guide for ${city} drivers. Local cost $${25}0-$${45}0. Find ${47} certified mechanics, step-by-step instructions.`;
   
   // Mock local data - in production, generate with AI
   const localData = {
@@ -44,7 +64,49 @@ export default function LocalGuide() {
     commonIssue: "Dust and smog accelerate brake pad deterioration in LA County"
   };
 
-  const guideSteps = [
+  // Vehicle-specific instructions (in production, generate with AI based on make/model)
+  const guideSteps = isVehicleSpecific ? [
+    {
+      title: "Prepare Your Vehicle",
+      description: `Park your ${vehicleMake} ${vehicleModel} on level ground and engage parking brake. For this model, ensure transmission is in Park. Gather all necessary tools including ${vehicleMake}-specific socket sizes.`,
+      image: "/placeholder.svg",
+      duration: "10 min",
+      difficulty: "Easy",
+      vehicleNote: `${vehicleMake} ${vehicleModel} specific: Check owner's manual for jacking points location.`
+    },
+    {
+      title: "Remove the Wheel",
+      description: `Loosen lug nuts (typically 19mm for ${vehicleMake} ${vehicleModel}), jack up the vehicle at designated points, and remove the wheel to access brake components.`,
+      image: "/placeholder.svg",
+      duration: "15 min",
+      difficulty: "Medium",
+      vehicleNote: `Torque spec for ${vehicleMake} ${vehicleModel} lug nuts: 80 ft-lbs`
+    },
+    {
+      title: "Remove Old Brake Pads",
+      description: `Remove caliper bolts (12mm hex on most ${vehicleMake} models) and slide out the old brake pads. Common on ${vehicleModel}: check for uneven inner pad wear.`,
+      image: "/placeholder.svg",
+      duration: "20 min",
+      difficulty: "Medium",
+      vehicleNote: `${vehicleMake} ${vehicleModel} caliper bolt torque: 26 ft-lbs`
+    },
+    {
+      title: "Install New Brake Pads",
+      description: `Compress the caliper piston using a C-clamp. ${vehicleMake} ${vehicleModel} may require opening bleeder valve if piston is stubborn. Insert new pads with anti-squeal shims.`,
+      image: "/placeholder.svg",
+      duration: "20 min",
+      difficulty: "Medium",
+      vehicleNote: `Use ${vehicleMake} OEM or equivalent ceramic pads for best performance`
+    },
+    {
+      title: "Test and Verify",
+      description: `Reinstall wheel, torque to spec, lower vehicle. Pump brake pedal 3-4 times before starting. Test in safe area - ${vehicleMake} ${vehicleModel} ABS will activate if done correctly.`,
+      image: "/placeholder.svg",
+      duration: "15 min",
+      difficulty: "Easy",
+      vehicleNote: `${vehicleMake} ${vehicleModel}: Check brake fluid reservoir level before first drive`
+    }
+  ] : [
     {
       title: "Prepare Your Vehicle",
       description: "Park on level ground and engage parking brake. Gather all necessary tools.",
@@ -158,21 +220,30 @@ export default function LocalGuide() {
   return (
     <>
       <Helmet>
-        <title>{service} in {city} - Expert DIY Guide & Local Mechanics | AutoGos</title>
+        <title>{pageTitle} - Expert DIY Guide & Local Mechanics | AutoGos</title>
         <meta 
           name="description" 
-          content={`Complete ${service.toLowerCase()} guide for ${city} drivers. Local cost $${localData.avgCost.min}-$${localData.avgCost.max}. Find ${localData.mechanicCount} certified mechanics, step-by-step instructions.`}
+          content={pageDescription}
         />
-        <meta property="og:title" content={`${service} in ${city} - Local Guide`} />
-        <meta property="og:description" content={`Expert ${service.toLowerCase()} guide for ${city}. Find local mechanics, costs, and DIY instructions.`} />
-        <link rel="canonical" href={`https://autogos.com/repairs/${citySlug}/${serviceSlug}`} />
+        <meta property="og:title" content={`${pageTitle} - Local Guide`} />
+        <meta property="og:description" content={pageDescription} />
+        <link rel="canonical" href={isVehicleSpecific 
+          ? `https://autogos.com/repairs/${citySlug}/${make}/${model}/${serviceSlug}`
+          : `https://autogos.com/repairs/${citySlug}/${serviceSlug}`} />
       </Helmet>
 
       {/* All Schema Markups */}
       <SchemaMarkup
         type="breadcrumb"
         data={{
-          breadcrumbs: [
+          breadcrumbs: isVehicleSpecific ? [
+            { name: "Home", url: "/" },
+            { name: "Repairs", url: "/repairs" },
+            { name: city, url: `/repairs/${citySlug}` },
+            { name: vehicleMake!, url: `/repairs/${citySlug}/${make}` },
+            { name: vehicleModel!, url: `/repairs/${citySlug}/${make}/${model}` },
+            { name: service, url: `/repairs/${citySlug}/${make}/${model}/${serviceSlug}` }
+          ] : [
             { name: "Home", url: "/" },
             { name: "Repairs", url: "/repairs" },
             { name: city, url: `/repairs/${citySlug}` },
@@ -184,12 +255,20 @@ export default function LocalGuide() {
       <SchemaMarkup
         type="howto"
         data={{
-          name: `How to Perform ${service} in ${city}`,
-          description: `Complete step-by-step guide for ${service.toLowerCase()} tailored for ${city} drivers, including local considerations and mechanic recommendations.`,
+          name: isVehicleSpecific 
+            ? `How to Perform ${service} on ${vehicleMake} ${vehicleModel} in ${city}`
+            : `How to Perform ${service} in ${city}`,
+          description: isVehicleSpecific
+            ? `Complete step-by-step ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanic recommendations.`
+            : `Complete step-by-step guide for ${service.toLowerCase()} tailored for ${city} drivers, including local considerations and mechanic recommendations.`,
           estimatedCost: localData.avgCost,
           totalTime: "PT1H20M",
-          tools: ["Jack and jack stands", "Lug wrench", "C-clamp or brake piston tool", "Socket set"],
-          supplies: ["New brake pads", "Brake cleaner", "High-temperature grease"],
+          tools: isVehicleSpecific 
+            ? [`Jack and jack stands`, `Lug wrench (19mm for ${vehicleMake})`, `C-clamp or brake piston tool`, `Socket set (12mm hex)`]
+            : ["Jack and jack stands", "Lug wrench", "C-clamp or brake piston tool", "Socket set"],
+          supplies: isVehicleSpecific
+            ? [`${vehicleMake} OEM or equivalent brake pads`, "Brake cleaner", "High-temperature grease", "Anti-squeal shims"]
+            : ["New brake pads", "Brake cleaner", "High-temperature grease"],
           steps: guideSteps.map(step => ({
             name: step.title,
             text: step.description,
@@ -240,6 +319,18 @@ export default function LocalGuide() {
                   <BreadcrumbItem>
                     <BreadcrumbLink href={`/repairs/${citySlug}`}>{city}</BreadcrumbLink>
                   </BreadcrumbItem>
+                  {isVehicleSpecific && (
+                    <>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <BreadcrumbLink href={`/repairs/${citySlug}/${make}`}>{vehicleMake}</BreadcrumbLink>
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <BreadcrumbLink href={`/repairs/${citySlug}/${make}/${model}`}>{vehicleModel}</BreadcrumbLink>
+                      </BreadcrumbItem>
+                    </>
+                  )}
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbPage>{service}</BreadcrumbPage>
@@ -259,12 +350,14 @@ export default function LocalGuide() {
                 </div>
                 
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                  {service} in {city}
+                  {isVehicleSpecific ? `${vehicleMake} ${vehicleModel} ${service}` : service} in {city}
                 </h1>
                 
                 <p className="text-xl mb-6 text-primary-foreground/90">
-                  Complete DIY guide and local mechanic directory for {city} drivers. 
-                  Save money or find trusted professionals near you.
+                  {isVehicleSpecific 
+                    ? `Complete ${vehicleMake} ${vehicleModel}-specific ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanics specializing in ${vehicleMake}.`
+                    : `Complete DIY guide and local mechanic directory for ${city} drivers. Save money or find trusted professionals near you.`
+                  }
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -453,10 +546,17 @@ export default function LocalGuide() {
                               loading="lazy"
                             />
                           </div>
-                          <div>
+                          <div className="space-y-3">
                             <p className="text-muted-foreground leading-relaxed">
                               {step.description}
                             </p>
+                            {isVehicleSpecific && 'vehicleNote' in step && (
+                              <div className="p-3 bg-primary/5 border-l-4 border-primary rounded">
+                                <p className="text-sm font-medium text-primary">
+                                  {step.vehicleNote}
+                                </p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </CardContent>
@@ -596,6 +696,9 @@ export default function LocalGuide() {
               </div>
             </div>
           </section>
+
+          {/* Popular Searches Section */}
+          <PopularSearches city={city} citySlug={citySlug!} />
 
           {/* Used Cars Section */}
           <UsedCarsSection city={city} />

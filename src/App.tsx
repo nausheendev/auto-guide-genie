@@ -49,6 +49,9 @@ const App = () => (
           <Route path="/workshop/:id/leads" element={<WorkshopLeads />} />
           <Route path="/leads/:id" element={<LeadDetails />} />
           <Route path="/notifications" element={<Notifications />} />
+          {/* Vehicle-specific local guide routes */}
+          <Route path="/repairs/:citySlug/:make/:model/:serviceSlug" element={<LocalGuide />} />
+          {/* General local guide routes */}
           <Route path="/repairs/:citySlug/:serviceSlug" element={<LocalGuide />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
