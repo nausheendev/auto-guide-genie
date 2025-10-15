@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, Wrench, Clock, DollarSign, TrendingUp } from "lucide-react";
+import { Search, Wrench, Clock, DollarSign, TrendingUp, Calendar } from "lucide-react";
 import heroBanner from "@/assets/hero-banner.jpg";
 import toolsImage from "@/assets/tools-image.jpg";
 import engineImage from "@/assets/engine-image.jpg";
@@ -50,6 +50,49 @@ const POPULAR_REPAIRS = [
     time: "10 mins",
     cost: "$20-40",
     views: "9.3k"
+  }
+];
+
+const LATEST_GUIDES = [
+  {
+    id: 5,
+    title: "Transmission Fluid Change",
+    category: "Maintenance",
+    difficulty: "Medium",
+    time: "1 hour",
+    cost: "$80-150",
+    publishedDate: "2025-10-14",
+    vehicle: "Honda Civic 2020"
+  },
+  {
+    id: 6,
+    title: "Spark Plug Replacement",
+    category: "Engine",
+    difficulty: "Easy",
+    time: "45 mins",
+    cost: "$60-120",
+    publishedDate: "2025-10-13",
+    vehicle: "Toyota Camry 2019"
+  },
+  {
+    id: 7,
+    title: "Headlight Bulb Replacement",
+    category: "Electrical",
+    difficulty: "Easy",
+    time: "20 mins",
+    cost: "$30-80",
+    publishedDate: "2025-10-12",
+    vehicle: "Ford F-150 2021"
+  },
+  {
+    id: 8,
+    title: "Coolant Flush",
+    category: "Maintenance",
+    difficulty: "Medium",
+    time: "1.5 hours",
+    cost: "$100-180",
+    publishedDate: "2025-10-11",
+    vehicle: "Chevrolet Silverado 2018"
   }
 ];
 
@@ -181,6 +224,59 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Guides Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-3xl font-bold mb-2">Latest Repair Guides</h2>
+              <p className="text-muted-foreground">Recently published guides for your vehicle</p>
+            </div>
+            <Button variant="outline" asChild>
+              <Link to="/search">View All</Link>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {LATEST_GUIDES.map((guide) => (
+              <Link key={guide.id} to={`/guide/${guide.id}`}>
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+                  <CardHeader>
+                    <div className="flex items-start justify-between mb-2">
+                      <Badge variant="secondary">{guide.category}</Badge>
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Calendar className="h-3 w-3" />
+                        <span className="text-xs">
+                          {new Date(guide.publishedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </span>
+                      </div>
+                    </div>
+                    <CardTitle className="text-lg">{guide.title}</CardTitle>
+                    <CardDescription className="text-xs mt-1">{guide.vehicle}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Difficulty:</span>
+                      <Badge variant={guide.difficulty === "Easy" ? "secondary" : "outline"}>
+                        {guide.difficulty}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Time:</span>
+                      <span className="font-medium">{guide.time}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Est. Cost:</span>
+                      <span className="font-medium">{guide.cost}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
