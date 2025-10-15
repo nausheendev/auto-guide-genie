@@ -309,7 +309,7 @@ export default function Admin() {
 
             {/* Main Content Tabs */}
             <Tabs defaultValue="overview" className="space-y-6">
-              <TabsList className="grid grid-cols-5 lg:grid-cols-10">
+              <TabsList className="flex-nowrap gap-1">
                 <TabsTrigger value="overview">
                   <LayoutDashboard className="h-4 w-4 mr-2" />
                   Overview
