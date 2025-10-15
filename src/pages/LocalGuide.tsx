@@ -1,23 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { SchemaMarkup } from "@/components/SchemaMarkup";
-import { UsedCarsSection } from "@/components/UsedCarsSection";
-import { PopularSearches } from "@/components/PopularSearches";
-import { GuideFeedback } from "@/components/GuideFeedback";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Skeleton } from "@/components/ui/skeleton";
 import { 
   MapPin, Clock, DollarSign, CheckCircle2, AlertTriangle, 
   Wrench, Phone, Star, Navigation, TrendingUp, Calendar,
   ThermometerSun, CloudRain, Mountain, Users, Printer, Share2, Heart
 } from "lucide-react";
 import { Helmet } from "react-helmet";
+
+// Lazy load heavy components for better initial load performance
+const SchemaMarkup = lazy(() => import("@/components/SchemaMarkup").then(m => ({ default: m.SchemaMarkup })));
+const UsedCarsSection = lazy(() => import("@/components/UsedCarsSection").then(m => ({ default: m.UsedCarsSection })));
+const PopularSearches = lazy(() => import("@/components/PopularSearches").then(m => ({ default: m.PopularSearches })));
+const GuideFeedback = lazy(() => import("@/components/GuideFeedback").then(m => ({ default: m.GuideFeedback })));
 
 export default function LocalGuide() {
   const { citySlug, serviceSlug, make, model } = useParams<{ 
@@ -220,13 +223,24 @@ export default function LocalGuide() {
     }
   ];
 
-  const toggleStepComplete = (index: number) => {
+  // Optimize event handlers with useCallback
+  const toggleStepComplete = useCallback((index: number) => {
     setCompletedSteps(prev =>
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
     );
-  };
+  }, []);
 
-  const progress = (completedSteps.length / guideSteps.length) * 100;
+  // Memoize computed values
+  const progress = useMemo(() => (completedSteps.length / guideSteps.length) * 100, [completedSteps.length, guideSteps.length]);
+  
+  // Track when below-fold content should be loaded
+  const [shouldLoadBelowFold, setShouldLoadBelowFold] = useState(false);
+
+  useEffect(() => {
+    // Defer loading below-fold content for better LCP
+    const timer = setTimeout(() => setShouldLoadBelowFold(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
@@ -243,73 +257,77 @@ export default function LocalGuide() {
           : `https://autogos.com/repairs/${citySlug}/${serviceSlug}`} />
       </Helmet>
 
-      {/* All Schema Markups */}
-      <SchemaMarkup
-        type="breadcrumb"
-        data={{
-          breadcrumbs: isVehicleSpecific ? [
-            { name: "Home", url: "/" },
-            { name: "Repairs", url: "/repairs" },
-            { name: city, url: `/repairs/${citySlug}` },
-            { name: vehicleMake!, url: `/repairs/${citySlug}/${make}` },
-            { name: vehicleModel!, url: `/repairs/${citySlug}/${make}/${model}` },
-            { name: service, url: `/repairs/${citySlug}/${make}/${model}/${serviceSlug}` }
-          ] : [
-            { name: "Home", url: "/" },
-            { name: "Repairs", url: "/repairs" },
-            { name: city, url: `/repairs/${citySlug}` },
-            { name: service, url: `/repairs/${citySlug}/${serviceSlug}` }
-          ]
-        }}
-      />
-      
-      <SchemaMarkup
-        type="howto"
-        data={{
-          name: isVehicleSpecific 
-            ? `How to Perform ${service} on ${vehicleMake} ${vehicleModel} in ${city}`
-            : `How to Perform ${service} in ${city}`,
-          description: isVehicleSpecific
-            ? `Complete step-by-step ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanic recommendations.`
-            : `Complete step-by-step guide for ${service.toLowerCase()} tailored for ${city} drivers, including local considerations and mechanic recommendations.`,
-          estimatedCost: localData.avgCost,
-          totalTime: "PT2H",
-          aggregateRating: { ratingValue: 4.7, reviewCount: 324 },
-          tools: isVehicleSpecific
-            ? [`Jack and jack stands`, `Lug wrench (19mm for ${vehicleMake})`, `C-clamp or brake piston tool`, `Socket set (12mm hex)`]
-            : ["Jack and jack stands", "Lug wrench", "C-clamp or brake piston tool", "Socket set"],
-          supplies: isVehicleSpecific
-            ? [`${vehicleMake} OEM or equivalent brake pads`, "Brake cleaner", "High-temperature grease", "Anti-squeal shims"]
-            : ["New brake pads", "Brake cleaner", "High-temperature grease"],
-          steps: guideSteps.map(step => ({
-            name: step.title,
-            text: step.description,
-            image: step.image,
-            url: `${window.location.href}#step-${guideSteps.indexOf(step) + 1}`
-          }))
-        }}
-      />
+      {/* Schema Markups - Lazy loaded for better initial performance */}
+      {shouldLoadBelowFold && (
+        <Suspense fallback={null}>
+          <SchemaMarkup
+            type="breadcrumb"
+            data={{
+              breadcrumbs: isVehicleSpecific ? [
+                { name: "Home", url: "/" },
+                { name: "Repairs", url: "/repairs" },
+                { name: city, url: `/repairs/${citySlug}` },
+                { name: vehicleMake!, url: `/repairs/${citySlug}/${make}` },
+                { name: vehicleModel!, url: `/repairs/${citySlug}/${make}/${model}` },
+                { name: service, url: `/repairs/${citySlug}/${make}/${model}/${serviceSlug}` }
+              ] : [
+                { name: "Home", url: "/" },
+                { name: "Repairs", url: "/repairs" },
+                { name: city, url: `/repairs/${citySlug}` },
+                { name: service, url: `/repairs/${citySlug}/${serviceSlug}` }
+              ]
+            }}
+          />
+          
+          <SchemaMarkup
+            type="howto"
+            data={{
+              name: isVehicleSpecific 
+                ? `How to Perform ${service} on ${vehicleMake} ${vehicleModel} in ${city}`
+                : `How to Perform ${service} in ${city}`,
+              description: isVehicleSpecific
+                ? `Complete step-by-step ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanic recommendations.`
+                : `Complete step-by-step guide for ${service.toLowerCase()} tailored for ${city} drivers, including local considerations and mechanic recommendations.`,
+              estimatedCost: localData.avgCost,
+              totalTime: "PT2H",
+              aggregateRating: { ratingValue: 4.7, reviewCount: 324 },
+              tools: isVehicleSpecific
+                ? [`Jack and jack stands`, `Lug wrench (19mm for ${vehicleMake})`, `C-clamp or brake piston tool`, `Socket set (12mm hex)`]
+                : ["Jack and jack stands", "Lug wrench", "C-clamp or brake piston tool", "Socket set"],
+              supplies: isVehicleSpecific
+                ? [`${vehicleMake} OEM or equivalent brake pads`, "Brake cleaner", "High-temperature grease", "Anti-squeal shims"]
+                : ["New brake pads", "Brake cleaner", "High-temperature grease"],
+              steps: guideSteps.map(step => ({
+                name: step.title,
+                text: step.description,
+                image: step.image,
+                url: `${window.location.href}#step-${guideSteps.indexOf(step) + 1}`
+              }))
+            }}
+          />
 
-      <SchemaMarkup
-        type="localbusiness"
-        data={{ businesses: localMechanics }}
-      />
+          <SchemaMarkup
+            type="localbusiness"
+            data={{ businesses: localMechanics }}
+          />
 
-      <SchemaMarkup
-        type="faq"
-        data={{ faqs: localFAQs }}
-      />
+          <SchemaMarkup
+            type="faq"
+            data={{ faqs: localFAQs }}
+          />
 
-      <SchemaMarkup
-        type="service"
-        data={{
-          serviceType: service,
-          city,
-          state,
-          areaServed: `${city}, ${state}`,
-          provider: "AutoGos"
-        }}
-      />
+          <SchemaMarkup
+            type="service"
+            data={{
+              name: pageTitle,
+              description: pageDescription,
+              provider: "AutoGos",
+              serviceType: service,
+              areaServed: `${city}, ${state}`
+            }}
+          />
+        </Suspense>
+      )}
 
       <div className="min-h-screen bg-background">
         <Header />
@@ -973,12 +991,15 @@ export default function LocalGuide() {
                       </CardHeader>
                       <CardContent>
                         <div className="grid md:grid-cols-2 gap-6">
-                          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                         <div className="aspect-video bg-muted rounded-lg overflow-hidden">
                             <img
                               src={step.image}
                               alt={step.title}
                               className="w-full h-full object-cover"
                               loading="lazy"
+                              width="800"
+                              height="450"
+                              decoding="async"
                             />
                           </div>
                           <div className="space-y-3">
@@ -1098,14 +1119,18 @@ export default function LocalGuide() {
             </div>
           </section>
 
-          {/* Feedback Section */}
-          <section className="py-12 bg-background">
-            <div className="container mx-auto px-4">
-              <div className="max-w-4xl mx-auto">
-                <GuideFeedback guideTitle={pageTitle} />
-              </div>
-            </div>
-          </section>
+          {/* Feedback Section - Lazy loaded */}
+          {shouldLoadBelowFold && (
+            <Suspense fallback={<div className="py-12"><Skeleton className="h-40 max-w-4xl mx-auto" /></div>}>
+              <section className="py-12 bg-background">
+                <div className="container mx-auto px-4">
+                  <div className="max-w-4xl mx-auto">
+                    <GuideFeedback guideTitle={pageTitle} />
+                  </div>
+                </div>
+              </section>
+            </Suspense>
+          )}
 
           {/* Related Guides Section */}
           <section className="py-12 bg-muted/30">
@@ -1242,11 +1267,19 @@ export default function LocalGuide() {
             </div>
           </section>
 
-          {/* Popular Searches Section */}
-          <PopularSearches city={city} citySlug={citySlug!} />
+          {/* Popular Searches Section - Lazy loaded */}
+          {shouldLoadBelowFold && (
+            <Suspense fallback={<div className="py-12 bg-muted/30"><Skeleton className="h-60 max-w-6xl mx-auto" /></div>}>
+              <PopularSearches city={city} citySlug={citySlug!} />
+            </Suspense>
+          )}
 
-          {/* Used Cars Section */}
-          <UsedCarsSection city={city} />
+          {/* Used Cars Section - Lazy loaded */}
+          {shouldLoadBelowFold && (
+            <Suspense fallback={<div className="py-12"><Skeleton className="h-80 max-w-7xl mx-auto" /></div>}>
+              <UsedCarsSection city={city} />
+            </Suspense>
+          )}
 
           {/* Related Guides Section */}
           <section className="py-12 bg-background">
