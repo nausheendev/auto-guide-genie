@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { SchemaMarkup } from "@/components/SchemaMarkup";
 import { UsedCarsSection } from "@/components/UsedCarsSection";
 import { PopularSearches } from "@/components/PopularSearches";
+import { GuideFeedback } from "@/components/GuideFeedback";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -506,37 +507,33 @@ export default function LocalGuide() {
           </section>
 
           {/* Safety First Section */}
-          <section className="py-12 bg-muted/30">
+          <section className="py-12 bg-background">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
-                <Card className="border-warning/50 bg-warning/5">
+                <Card className="border-amber-500 bg-amber-50 dark:bg-amber-950/30">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-warning">
+                    <CardTitle className="flex items-center gap-2 text-amber-900 dark:text-amber-100">
                       <AlertTriangle className="h-5 w-5" />
                       Safety First
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <p className="text-muted-foreground">
-                      Brake repairs are safety-critical. If you're unsure about any step or lack proper tools, 
-                      please consult a certified mechanic in {city}.
-                    </p>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
+                  <CardContent className="space-y-2">
+                    <ul className="space-y-2 text-sm text-amber-900 dark:text-amber-100">
                       <li className="flex items-start gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-warning shrink-0 mt-0.5" />
-                        <span>Always use jack stands - never rely on the jack alone</span>
+                        <CheckCircle2 className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <span>Always use jack stands - never rely on a jack alone</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-warning shrink-0 mt-0.5" />
-                        <span>Wear safety glasses and gloves throughout the repair</span>
+                        <CheckCircle2 className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <span>Wear safety glasses to protect from brake dust</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-warning shrink-0 mt-0.5" />
-                        <span>Test brakes in a safe area before normal driving</span>
+                        <CheckCircle2 className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <span>Allow brakes to cool completely before starting work</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-warning shrink-0 mt-0.5" />
-                        <span>Dispose of old brake pads and fluid according to {city} regulations</span>
+                        <CheckCircle2 className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <span>Never compress brake caliper without opening bleeder valve</span>
                       </li>
                     </ul>
                   </CardContent>
@@ -546,60 +543,54 @@ export default function LocalGuide() {
           </section>
 
           {/* Quick Overview Section */}
-          <section className="py-12 bg-background">
+          <section className="py-12 bg-muted/30">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
                 <h2 className="text-3xl font-bold mb-6">Quick Overview</h2>
                 
-                <div className="grid md:grid-cols-3 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-lg">
-                        <Clock className="h-5 w-5 text-primary" />
-                        Time Required
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-2xl font-bold">2 hours</p>
-                      <p className="text-sm text-muted-foreground mt-1">Per axle, typical conditions</p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-lg">
-                        <DollarSign className="h-5 w-5 text-primary" />
-                        Estimated Cost
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-2xl font-bold">${localData.avgCost.min}-${localData.avgCost.max}</p>
-                      <p className="text-sm text-muted-foreground mt-1">Professional service in {city}</p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-lg">
-                        <Wrench className="h-5 w-5 text-primary" />
-                        Difficulty Level
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-2xl font-bold">Medium</p>
-                      <p className="text-sm text-muted-foreground mt-1">Intermediate mechanical skills</p>
-                    </CardContent>
-                  </Card>
-                </div>
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="font-semibold text-lg mb-2">Problem</h3>
+                        <p className="text-muted-foreground">
+                          Worn brake pads can reduce braking performance and cause squealing noises.
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h3 className="font-semibold text-lg mb-2">Cause</h3>
+                        <p className="text-muted-foreground">
+                          Brake pads wear down naturally over time due to friction with the brake rotors.
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h3 className="font-semibold text-lg mb-2">Solution</h3>
+                        <p className="text-muted-foreground">
+                          Replace both front or rear brake pads as a set to ensure even braking performance.
+                        </p>
+                      </div>
+                      
+                      <div className="flex items-center justify-between pt-4 border-t">
+                        <span className="font-semibold text-lg">Success Rate:</span>
+                        <span className="text-3xl font-bold text-primary">95%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </section>
 
           {/* Required Tools Section */}
-          <section className="py-12 bg-muted/30">
+          <section className="py-12 bg-background">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
-                <h2 className="text-3xl font-bold mb-6">Required Tools</h2>
+                <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
+                  <Wrench className="h-7 w-7 text-primary" />
+                  Required Tools
+                </h2>
                 
                 <Card>
                   <CardContent className="pt-6">
@@ -632,7 +623,7 @@ export default function LocalGuide() {
           </section>
 
           {/* Required Parts Section */}
-          <section className="py-12 bg-background">
+          <section className="py-12 bg-muted/30">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
                 <h2 className="text-3xl font-bold mb-6">Required Parts</h2>
@@ -705,10 +696,10 @@ export default function LocalGuide() {
                             variant={completedSteps.includes(index) ? "default" : "outline"}
                             size="sm"
                             onClick={() => toggleStepComplete(index)}
-                            className={completedSteps.includes(index) ? "bg-green-600 hover:bg-green-700 text-white" : ""}
+                            className={completedSteps.includes(index) ? "bg-green-600 hover:bg-green-700 text-white border-green-600" : "hover:bg-accent"}
                           >
                             <CheckCircle2 className="h-4 w-4 mr-1" />
-                            {completedSteps.includes(index) ? "Done" : "Mark Complete"}
+                            Mark Complete
                           </Button>
                         </div>
                       </CardHeader>
@@ -826,8 +817,99 @@ export default function LocalGuide() {
             </div>
           </section>
 
-          {/* Local FAQ Section */}
+          {/* Feedback Section */}
           <section className="py-12 bg-background">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <GuideFeedback guideTitle={pageTitle} />
+              </div>
+            </div>
+          </section>
+
+          {/* Related Guides Section */}
+          <section className="py-12 bg-muted/30">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-3xl font-bold mb-2">Related Guides</h2>
+                <p className="text-muted-foreground mb-8">
+                  You might also be interested in these repairs
+                </p>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardHeader>
+                      <CardTitle className="text-lg">Brake Rotor Replacement</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Badge variant="secondary">Brakes</Badge>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardHeader>
+                      <CardTitle className="text-lg">Brake Fluid Flush</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Badge variant="secondary">Maintenance</Badge>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardHeader>
+                      <CardTitle className="text-lg">Caliper Replacement</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Badge variant="secondary">Brakes</Badge>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Related Cities Section */}
+          <section className="py-12 bg-background">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-3xl font-bold mb-2">Top Related Cities</h2>
+                <p className="text-muted-foreground mb-8">
+                  Find {service.toLowerCase()} guides in nearby cities
+                </p>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                  {[
+                    "San Diego",
+                    "San Francisco",
+                    "San Jose",
+                    "Sacramento",
+                    "Fresno",
+                    "Long Beach",
+                    "Oakland",
+                    "Bakersfield",
+                    "Anaheim",
+                    "Santa Ana",
+                    "Riverside",
+                    "Stockton",
+                    "Irvine",
+                    "Chula Vista",
+                    "Fremont"
+                  ].map((relatedCity) => (
+                    <a
+                      key={relatedCity}
+                      href={`/repairs/${relatedCity.toLowerCase().replace(' ', '-')}/${serviceSlug}`}
+                      className="p-4 border rounded-lg hover:shadow-md hover:border-primary transition-all text-center"
+                    >
+                      <MapPin className="h-5 w-5 text-primary mx-auto mb-2" />
+                      <p className="font-medium text-sm">{relatedCity}</p>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Local FAQ Section */}
+          <section className="py-12 bg-muted/30">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
                 <h2 className="text-3xl font-bold mb-2">Frequently Asked Questions</h2>
