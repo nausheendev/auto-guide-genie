@@ -776,42 +776,31 @@ export default function LocalGuide() {
                         <CardDescription>{tool.description}</CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className="grid gap-3">
+                        <div className="flex flex-wrap gap-2">
                           {tool.vendors.map((vendor, vIndex) => (
-                            <div key={vIndex} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
-                              <div className="flex items-center gap-3 flex-1">
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm">{vendor.name}</span>
-                                  <div className="flex items-center gap-1">
-                                    <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                                    <span className="text-xs text-muted-foreground">{vendor.rating}</span>
-                                  </div>
-                                </div>
+                            <div key={vIndex} className="inline-flex items-center gap-2 px-2 py-1.5 bg-muted/50 rounded hover:bg-muted transition-colors text-sm">
+                              <span className="font-medium">{vendor.name}</span>
+                              <div className="flex items-center gap-1">
+                                <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
+                                <span className="text-xs text-muted-foreground">{vendor.rating}</span>
                               </div>
-                              <div className="flex items-center gap-3">
-                                <span className="font-bold text-lg text-primary">{vendor.price}</span>
-                                <Button 
-                                  size="sm" 
-                                  asChild
-                                  className="bg-primary hover:bg-primary/90"
+                              <span className="font-semibold text-primary">{vendor.price}</span>
+                              <Button 
+                                size="sm" 
+                                asChild
+                                className="h-6 px-2 text-xs"
+                              >
+                                <a 
+                                  href={vendor.link} 
+                                  target="_blank" 
+                                  rel="nofollow noopener noreferrer"
                                 >
-                                  <a 
-                                    href={vendor.link} 
-                                    target="_blank" 
-                                    rel="nofollow noopener noreferrer"
-                                    className="flex items-center gap-1"
-                                  >
-                                    View Deal
-                                    <Navigation className="h-3 w-3" />
-                                  </a>
-                                </Button>
-                              </div>
+                                  Buy
+                                </a>
+                              </Button>
                             </div>
                           ))}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-2 italic">
-                          Prices may vary. Last updated: {new Date().toLocaleDateString()}
-                        </p>
                       </CardContent>
                     </Card>
                   ))}
@@ -877,45 +866,34 @@ export default function LocalGuide() {
                         <CardDescription>{part.description}</CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className="grid gap-3">
+                        <div className="flex flex-wrap gap-2">
                           {part.vendors.map((vendor, vIndex) => (
-                            <div key={vIndex} className="flex items-center justify-between p-3 bg-background rounded-lg hover:bg-muted/50 transition-colors border">
-                              <div className="flex items-center gap-3 flex-1">
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-sm">{vendor.name}</span>
-                                  <div className="flex items-center gap-2">
-                                    <div className="flex items-center gap-1">
-                                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                                      <span className="text-xs text-muted-foreground">{vendor.rating}</span>
-                                    </div>
-                                    <span className="text-xs text-muted-foreground">• {vendor.shipping}</span>
-                                  </div>
+                            <div key={vIndex} className="inline-flex items-center gap-2 px-2 py-1.5 bg-background rounded hover:bg-muted/50 transition-colors border text-sm">
+                              <span className="font-medium">{vendor.name}</span>
+                              <div className="flex items-center gap-1.5">
+                                <div className="flex items-center gap-0.5">
+                                  <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
+                                  <span className="text-xs text-muted-foreground">{vendor.rating}</span>
                                 </div>
+                                <span className="text-xs text-muted-foreground">• {vendor.shipping}</span>
                               </div>
-                              <div className="flex items-center gap-3">
-                                <span className="font-bold text-lg text-primary">{vendor.price}</span>
-                                <Button 
-                                  size="sm" 
-                                  asChild
-                                  className="bg-primary hover:bg-primary/90"
+                              <span className="font-semibold text-primary">{vendor.price}</span>
+                              <Button 
+                                size="sm" 
+                                asChild
+                                className="h-6 px-2 text-xs"
+                              >
+                                <a 
+                                  href={vendor.link} 
+                                  target="_blank" 
+                                  rel="nofollow noopener noreferrer"
                                 >
-                                  <a 
-                                    href={vendor.link} 
-                                    target="_blank" 
-                                    rel="nofollow noopener noreferrer"
-                                    className="flex items-center gap-1"
-                                  >
-                                    Buy Now
-                                    <Navigation className="h-3 w-3" />
-                                  </a>
-                                </Button>
-                              </div>
+                                  Buy
+                                </a>
+                              </Button>
                             </div>
                           ))}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-2 italic">
-                          Prices may vary. We earn commission on qualifying purchases. Last updated: {new Date().toLocaleDateString()}
-                        </p>
                       </CardContent>
                     </Card>
                   ))}
