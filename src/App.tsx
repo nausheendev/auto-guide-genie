@@ -11,6 +11,13 @@ import ProfileDashboard from "./pages/ProfileDashboard";
 import Settings from "./pages/Settings";
 import Subscription from "./pages/Subscription";
 import Admin from "./pages/Admin";
+import Reports from "./pages/admin/Reports";
+import UserManagement from "./pages/admin/UserManagement";
+import EditStaff from "./pages/admin/EditStaff";
+import ManageModel from "./pages/admin/ManageModel";
+import AIConfiguration from "./pages/admin/AIConfiguration";
+import CreditSystem from "./pages/admin/CreditSystem";
+import MaintenanceMode from "./pages/admin/MaintenanceMode";
 import MechanicDashboard from "./pages/MechanicDashboard";
 import MechanicOnboarding from "./pages/MechanicOnboarding";
 import MechanicOffers from "./pages/MechanicOffers";
@@ -41,6 +48,14 @@ const App = () => (
           <Route path="/settings" element={<Settings />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/reports" element={<Reports />} />
+          <Route path="/admin/users" element={<UserManagement />} />
+          <Route path="/admin/staff/:id" element={<EditStaff />} />
+          <Route path="/admin/model/add" element={<ManageModel />} />
+          <Route path="/admin/model/:id" element={<ManageModel />} />
+          <Route path="/admin/ai-config" element={<AIConfiguration />} />
+          <Route path="/admin/credit-system" element={<CreditSystem />} />
+          <Route path="/admin/maintenance" element={<MaintenanceMode />} />
           <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
           <Route path="/mechanic-onboarding" element={<MechanicOnboarding />} />
           <Route path="/mechanic-offers" element={<MechanicOffers />} />
