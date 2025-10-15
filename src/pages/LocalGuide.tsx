@@ -73,7 +73,8 @@ export default function LocalGuide() {
       image: "/placeholder.svg",
       duration: "10 min",
       difficulty: "Easy",
-      vehicleNote: `${vehicleMake} ${vehicleModel} specific: Check owner's manual for jacking points location.`
+      vehicleNote: `${vehicleMake} ${vehicleModel} specific: Check owner's manual for jacking points location.`,
+      caution: "Never work under a vehicle supported only by a jack"
     },
     {
       title: "Remove the Wheel",
@@ -81,7 +82,8 @@ export default function LocalGuide() {
       image: "/placeholder.svg",
       duration: "15 min",
       difficulty: "Medium",
-      vehicleNote: `Torque spec for ${vehicleMake} ${vehicleModel} lug nuts: 80 ft-lbs`
+      vehicleNote: `Torque spec for ${vehicleMake} ${vehicleModel} lug nuts: 80 ft-lbs`,
+      caution: "Ensure jack stands are on solid, level ground"
     },
     {
       title: "Remove Old Brake Pads",
@@ -89,7 +91,8 @@ export default function LocalGuide() {
       image: "/placeholder.svg",
       duration: "20 min",
       difficulty: "Medium",
-      vehicleNote: `${vehicleMake} ${vehicleModel} caliper bolt torque: 26 ft-lbs`
+      vehicleNote: `${vehicleMake} ${vehicleModel} caliper bolt torque: 26 ft-lbs`,
+      caution: "Dispose of old brake pads properly - they may contain hazardous materials."
     },
     {
       title: "Install New Brake Pads",
@@ -97,7 +100,8 @@ export default function LocalGuide() {
       image: "/placeholder.svg",
       duration: "20 min",
       difficulty: "Medium",
-      vehicleNote: `Use ${vehicleMake} OEM or equivalent ceramic pads for best performance`
+      vehicleNote: `Use ${vehicleMake} OEM or equivalent ceramic pads for best performance`,
+      caution: "Brake fluid is corrosive. Avoid skin contact and clean spills immediately."
     },
     {
       title: "Test and Verify",
@@ -105,7 +109,8 @@ export default function LocalGuide() {
       image: "/placeholder.svg",
       duration: "15 min",
       difficulty: "Easy",
-      vehicleNote: `${vehicleMake} ${vehicleModel}: Check brake fluid reservoir level before first drive`
+      vehicleNote: `${vehicleMake} ${vehicleModel}: Check brake fluid reservoir level before first drive`,
+      caution: "Brakes may feel soft at first - pump pedal until firm"
     }
   ] : [
     {
@@ -113,35 +118,40 @@ export default function LocalGuide() {
       description: "Park on level ground and engage parking brake. Gather all necessary tools.",
       image: "/placeholder.svg",
       duration: "10 min",
-      difficulty: "Easy"
+      difficulty: "Easy",
+      caution: "Never work under a vehicle supported only by a jack"
     },
     {
       title: "Remove the Wheel",
       description: "Loosen lug nuts, jack up the vehicle, and remove the wheel to access brake components.",
       image: "/placeholder.svg",
       duration: "15 min",
-      difficulty: "Medium"
+      difficulty: "Medium",
+      caution: "Ensure jack stands are on solid, level ground"
     },
     {
       title: "Remove Old Brake Pads",
       description: "Remove caliper bolts and slide out the old brake pads. Inspect for uneven wear.",
       image: "/placeholder.svg",
       duration: "20 min",
-      difficulty: "Medium"
+      difficulty: "Medium",
+      caution: "Dispose of old brake pads properly - they may contain hazardous materials."
     },
     {
       title: "Install New Brake Pads",
       description: "Compress the caliper piston, insert new pads, and reassemble the caliper.",
       image: "/placeholder.svg",
       duration: "20 min",
-      difficulty: "Medium"
+      difficulty: "Medium",
+      caution: "Brake fluid is corrosive. Avoid skin contact and clean spills immediately."
     },
     {
       title: "Test and Verify",
       description: "Reinstall wheel, lower vehicle, and test brakes in a safe area before normal driving.",
       image: "/placeholder.svg",
       duration: "15 min",
-      difficulty: "Easy"
+      difficulty: "Easy",
+      caution: "Brakes may feel soft at first - pump pedal until firm"
     }
   ];
 
@@ -540,28 +550,6 @@ export default function LocalGuide() {
                         <CheckCircle2 className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                         <span>Never compress brake caliper without opening bleeder valve</span>
                       </li>
-                      <li className="flex items-start gap-2">
-                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                        <span><strong>Caution:</strong> Working on brakes requires mechanical knowledge. If you're unsure, consult a professional mechanic to avoid safety risks.</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                        <span><strong>Caution:</strong> Brake fluid is corrosive. Avoid skin contact and clean spills immediately.</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                        <span><strong>Caution:</strong> Dispose of old brake pads properly - they may contain hazardous materials.</span>
-                      </li>
-                      {isVehicleSpecific && (
-                        <li className="flex items-start gap-2">
-                          <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                          <span><strong>Caution:</strong> Follow {vehicleMake} {vehicleModel} specific torque specifications to prevent brake system damage.</span>
-                        </li>
-                      )}
-                      <li className="flex items-start gap-2">
-                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                        <span><strong>{city} specific:</strong> California law requires STAR certification for shops performing brake work. Ensure compliance with local emissions standards.</span>
-                      </li>
                     </ul>
                   </CardContent>
                 </Card>
@@ -744,13 +732,26 @@ export default function LocalGuide() {
                             <p className="text-muted-foreground leading-relaxed">
                               {step.description}
                             </p>
-                            {isVehicleSpecific && 'vehicleNote' in step && (
+                            {'caution' in step && (
                               <div className="p-3 bg-amber-50 border-l-4 border-amber-500 rounded dark:bg-amber-950">
                                 <div className="flex items-start gap-2">
                                   <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                                   <div>
                                     <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">Caution:</p>
                                     <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                                      {step.caution}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            {isVehicleSpecific && 'vehicleNote' in step && (
+                              <div className="p-3 bg-blue-50 border-l-4 border-blue-500 rounded dark:bg-blue-950">
+                                <div className="flex items-start gap-2">
+                                  <AlertTriangle className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                                  <div>
+                                    <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">Vehicle Note:</p>
+                                    <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
                                       {step.vehicleNote}
                                     </p>
                                   </div>
