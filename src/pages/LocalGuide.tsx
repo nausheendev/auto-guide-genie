@@ -14,7 +14,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { 
   MapPin, Clock, DollarSign, CheckCircle2, AlertTriangle, 
   Wrench, Phone, Star, Navigation, TrendingUp, Calendar,
-  ThermometerSun, CloudRain, Mountain, Users
+  ThermometerSun, CloudRain, Mountain, Users, Printer, Share2
 } from "lucide-react";
 import { Helmet } from "react-helmet";
 
@@ -341,57 +341,60 @@ export default function LocalGuide() {
           </div>
 
           {/* Hero Section - Location-Specific */}
-          <section className="relative bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-16">
-            <div className="container mx-auto px-4">
-              <div className="max-w-4xl">
-                <div className="flex items-center gap-2 mb-4">
-                  <MapPin className="h-5 w-5" />
-                  <span className="text-sm font-medium">{city}, {state}</span>
+          <section className="bg-primary text-primary-foreground py-8">
+            <div className="container">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm opacity-90">
+                    {isVehicleSpecific && (
+                      <>
+                        <span>{vehicleMake}</span>
+                        <span>•</span>
+                        <span>{vehicleModel}</span>
+                        <span>•</span>
+                      </>
+                    )}
+                    <span>{city}, {state}</span>
+                  </div>
+                  <h1 className="text-3xl md:text-4xl font-bold">
+                    {isVehicleSpecific ? `${vehicleMake} ${vehicleModel} ${service}` : service} in {city}
+                  </h1>
+                  <p className="text-base text-primary-foreground/90 max-w-2xl">
+                    {isVehicleSpecific 
+                      ? `Complete ${vehicleMake} ${vehicleModel}-specific ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanics specializing in ${vehicleMake}.`
+                      : `Complete DIY guide and local mechanic directory for ${city} drivers. Save money or find trusted professionals near you.`
+                    }
+                  </p>
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <Badge variant="secondary" className="bg-success/20 text-success-foreground border border-success/30">
+                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                      Verified Local Mechanics
+                    </Badge>
+                    <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
+                      Professional Service
+                    </Badge>
+                    {isVehicleSpecific && (
+                      <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
+                        {vehicleMake} Specialist
+                      </Badge>
+                    )}
+                    <div className="flex items-center gap-1">
+                      <DollarSign className="h-4 w-4" />
+                      <span className="text-sm">${localData.avgCost.min}-${localData.avgCost.max}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      <span className="text-sm">{localData.avgWaitDays} days wait</span>
+                    </div>
+                  </div>
                 </div>
-                
-                <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                  {isVehicleSpecific ? `${vehicleMake} ${vehicleModel} ${service}` : service} in {city}
-                </h1>
-                
-                <p className="text-xl mb-6 text-primary-foreground/90">
-                  {isVehicleSpecific 
-                    ? `Complete ${vehicleMake} ${vehicleModel}-specific ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanics specializing in ${vehicleMake}.`
-                    : `Complete DIY guide and local mechanic directory for ${city} drivers. Save money or find trusted professionals near you.`
-                  }
-                </p>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Card className="bg-background/10 border-primary-foreground/20">
-                    <CardContent className="p-4 text-center">
-                      <DollarSign className="h-6 w-6 mx-auto mb-2" />
-                      <div className="text-2xl font-bold">${localData.avgCost.min}-${localData.avgCost.max}</div>
-                      <div className="text-sm text-primary-foreground/80">Local Avg Cost</div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-background/10 border-primary-foreground/20">
-                    <CardContent className="p-4 text-center">
-                      <Wrench className="h-6 w-6 mx-auto mb-2" />
-                      <div className="text-2xl font-bold">{localData.mechanicCount}</div>
-                      <div className="text-sm text-primary-foreground/80">Local Mechanics</div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-background/10 border-primary-foreground/20">
-                    <CardContent className="p-4 text-center">
-                      <Clock className="h-6 w-6 mx-auto mb-2" />
-                      <div className="text-2xl font-bold">{localData.avgWaitDays} days</div>
-                      <div className="text-sm text-primary-foreground/80">Avg Wait Time</div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-background/10 border-primary-foreground/20">
-                    <CardContent className="p-4 text-center">
-                      <Clock className="h-6 w-6 mx-auto mb-2" />
-                      <div className="text-2xl font-bold">80 min</div>
-                      <div className="text-sm text-primary-foreground/80">DIY Time</div>
-                    </CardContent>
-                  </Card>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+                    <Printer className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="sm" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+                    <Share2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </div>
