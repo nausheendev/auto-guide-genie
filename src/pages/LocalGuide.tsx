@@ -505,8 +505,169 @@ export default function LocalGuide() {
             </div>
           </section>
 
-          {/* Main Guide Steps with Images */}
+          {/* Safety First Section */}
+          <section className="py-12 bg-muted/30">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <Card className="border-warning/50 bg-warning/5">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-warning">
+                      <AlertTriangle className="h-5 w-5" />
+                      Safety First
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <p className="text-muted-foreground">
+                      Brake repairs are safety-critical. If you're unsure about any step or lack proper tools, 
+                      please consult a certified mechanic in {city}.
+                    </p>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+                        <span>Always use jack stands - never rely on the jack alone</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+                        <span>Wear safety glasses and gloves throughout the repair</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+                        <span>Test brakes in a safe area before normal driving</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+                        <span>Dispose of old brake pads and fluid according to {city} regulations</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </section>
+
+          {/* Quick Overview Section */}
           <section className="py-12 bg-background">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-3xl font-bold mb-6">Quick Overview</h2>
+                
+                <div className="grid md:grid-cols-3 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-lg">
+                        <Clock className="h-5 w-5 text-primary" />
+                        Time Required
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold">2 hours</p>
+                      <p className="text-sm text-muted-foreground mt-1">Per axle, typical conditions</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-lg">
+                        <DollarSign className="h-5 w-5 text-primary" />
+                        Estimated Cost
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold">${localData.avgCost.min}-${localData.avgCost.max}</p>
+                      <p className="text-sm text-muted-foreground mt-1">Professional service in {city}</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-lg">
+                        <Wrench className="h-5 w-5 text-primary" />
+                        Difficulty Level
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold">Medium</p>
+                      <p className="text-sm text-muted-foreground mt-1">Intermediate mechanical skills</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Required Tools Section */}
+          <section className="py-12 bg-muted/30">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-3xl font-bold mb-6">Required Tools</h2>
+                
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {(isVehicleSpecific ? [
+                        `Jack and jack stands`,
+                        `Lug wrench (19mm for ${vehicleMake})`,
+                        `C-clamp or brake piston tool`,
+                        `Socket set (12mm hex)`,
+                        `Torque wrench`,
+                        `Brake cleaner spray`
+                      ] : [
+                        "Jack and jack stands",
+                        "Lug wrench",
+                        "C-clamp or brake piston tool",
+                        "Socket set",
+                        "Torque wrench",
+                        "Brake cleaner spray"
+                      ]).map((tool, index) => (
+                        <div key={index} className="flex items-center gap-3 p-3 bg-background rounded-lg">
+                          <Wrench className="h-5 w-5 text-primary shrink-0" />
+                          <span className="text-sm">{tool}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </section>
+
+          {/* Required Parts Section */}
+          <section className="py-12 bg-background">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-3xl font-bold mb-6">Required Parts</h2>
+                
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {(isVehicleSpecific ? [
+                        { name: `${vehicleMake} OEM or equivalent brake pads`, price: "$50-120" },
+                        { name: "Brake cleaner", price: "$8-15" },
+                        { name: "High-temperature grease", price: "$10-20" },
+                        { name: "Anti-squeal shims", price: "$15-25" }
+                      ] : [
+                        { name: "New brake pads", price: "$40-100" },
+                        { name: "Brake cleaner", price: "$8-15" },
+                        { name: "High-temperature grease", price: "$10-20" },
+                        { name: "Anti-squeal shims (optional)", price: "$15-25" }
+                      ]).map((part, index) => (
+                        <div key={index} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
+                            <span className="text-sm font-medium">{part.name}</span>
+                          </div>
+                          <span className="text-sm font-bold text-primary">{part.price}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </section>
+
+          {/* Main Guide Steps with Images */}
+          <section className="py-12 bg-muted/30">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
                 <h2 className="text-3xl font-bold mb-2">Step-by-Step Guide</h2>
@@ -519,7 +680,7 @@ export default function LocalGuide() {
                     <Card 
                       key={index}
                       id={`step-${index + 1}`}
-                      className={completedSteps.includes(index) ? "border-success" : ""}
+                      className={completedSteps.includes(index) ? "border-green-500" : ""}
                     >
                       <CardHeader>
                         <div className="flex items-start justify-between">
@@ -531,17 +692,20 @@ export default function LocalGuide() {
                               <CardTitle>{step.title}</CardTitle>
                             </div>
                             <div className="flex gap-3 ml-11">
-                              <Badge variant="outline" className="gap-1">
+                              <Badge variant="secondary" className="gap-1 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100">
                                 <Clock className="h-3 w-3" />
                                 {step.duration}
                               </Badge>
-                              <Badge variant="outline">{step.difficulty}</Badge>
+                              <Badge variant="secondary" className="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-100">
+                                {step.difficulty}
+                              </Badge>
                             </div>
                           </div>
                           <Button
                             variant={completedSteps.includes(index) ? "default" : "outline"}
                             size="sm"
                             onClick={() => toggleStepComplete(index)}
+                            className={completedSteps.includes(index) ? "bg-green-600 hover:bg-green-700 text-white" : ""}
                           >
                             <CheckCircle2 className="h-4 w-4 mr-1" />
                             {completedSteps.includes(index) ? "Done" : "Mark Complete"}
@@ -563,10 +727,16 @@ export default function LocalGuide() {
                               {step.description}
                             </p>
                             {isVehicleSpecific && 'vehicleNote' in step && (
-                              <div className="p-3 bg-primary/5 border-l-4 border-primary rounded">
-                                <p className="text-sm font-medium text-primary">
-                                  {step.vehicleNote}
-                                </p>
+                              <div className="p-3 bg-amber-50 border-l-4 border-amber-500 rounded dark:bg-amber-950">
+                                <div className="flex items-start gap-2">
+                                  <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                                  <div>
+                                    <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">Caution:</p>
+                                    <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                                      {step.vehicleNote}
+                                    </p>
+                                  </div>
+                                </div>
                               </div>
                             )}
                           </div>
