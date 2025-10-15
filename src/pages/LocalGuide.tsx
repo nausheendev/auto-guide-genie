@@ -467,37 +467,133 @@ export default function LocalGuide() {
             </div>
           </section>
 
-          {/* Neighborhood Coverage Section */}
+          {/* Common Issues Section - Location Specific */}
           <section className="py-12 bg-muted/30">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
-                <h2 className="text-3xl font-bold mb-2">Serving All {city} Neighborhoods</h2>
+                <h2 className="text-3xl font-bold mb-2">Common Brake Issues in {city}</h2>
                 <p className="text-muted-foreground mb-6">
-                  Find {service.toLowerCase()} services in your area
+                  Understanding brake problems specific to {city}'s driving conditions
                 </p>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {localData.neighborhoods.map((neighborhood) => (
-                    <Card key={neighborhood.name} className="hover:shadow-md transition-shadow">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <MapPin className="h-4 w-4 text-primary" />
-                          {neighborhood.name}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Mechanics:</span>
-                          <span className="font-medium">{neighborhood.mechanics} shops</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Avg Cost:</span>
-                          <span className="font-medium">${neighborhood.avgCost}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <AlertTriangle className="h-5 w-5 text-amber-500" />
+                        Accelerated Pad Wear
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        {city}'s heavy traffic on I-405, I-10, and I-5 causes constant stop-and-go driving, leading to 30-40% faster brake pad deterioration than rural areas.
+                      </p>
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold">Warning Signs:</p>
+                        <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+                          <li>Squealing or grinding noises</li>
+                          <li>Reduced braking responsiveness</li>
+                          <li>Brake pedal pulsation</li>
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <ThermometerSun className="h-5 w-5 text-orange-500" />
+                        Heat-Related Brake Fade
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        Summer temperatures reaching 95°F+ in {city} can cause brake fluid to heat up, reducing braking efficiency especially on canyon roads and mountain passes.
+                      </p>
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold">Prevention Tips:</p>
+                        <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+                          <li>Use DOT 4 or higher brake fluid</li>
+                          <li>Check fluid levels monthly in summer</li>
+                          <li>Replace fluid every 2 years in {city} climate</li>
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <CloudRain className="h-5 w-5 text-blue-500" />
+                        Rotor Corrosion & Rust
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        Despite {city}'s dry climate, coastal areas and winter moisture can cause surface rust on brake rotors, especially on vehicles that sit for extended periods.
+                      </p>
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold">What to Do:</p>
+                        <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+                          <li>Drive regularly to keep rotors clean</li>
+                          <li>Light rust burns off with normal braking</li>
+                          <li>Heavy rust requires rotor replacement</li>
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Mountain className="h-5 w-5 text-green-500" />
+                        Canyon & Hill Driving Strain
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        Frequent driving on Mulholland Drive, Angeles Crest Highway, or hilly neighborhoods puts extra stress on brakes through prolonged downhill braking.
+                      </p>
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold">Best Practices:</p>
+                        <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+                          <li>Use engine braking on long descents</li>
+                          <li>Allow brakes to cool after mountain drives</li>
+                          <li>Consider upgraded brake pads for frequent canyon driving</li>
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
+
+                <Card className="mt-6 bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-blue-900 dark:text-blue-100">
+                      <CheckCircle2 className="h-5 w-5" />
+                      {city} Brake Maintenance Schedule
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid sm:grid-cols-2 gap-4 text-sm">
+                      <div className="space-y-2">
+                        <p className="font-semibold text-blue-900 dark:text-blue-100">Inspection Frequency:</p>
+                        <ul className="text-blue-800 dark:text-blue-200 space-y-1">
+                          <li>• Visual check: Every oil change</li>
+                          <li>• Full inspection: Every 12,000 miles</li>
+                          <li>• Brake fluid: Check every 6 months</li>
+                        </ul>
+                      </div>
+                      <div className="space-y-2">
+                        <p className="font-semibold text-blue-900 dark:text-blue-100">Typical Replacement Intervals:</p>
+                        <ul className="text-blue-800 dark:text-blue-200 space-y-1">
+                          <li>• Brake pads: 25,000-40,000 miles</li>
+                          <li>• Rotors: 50,000-70,000 miles</li>
+                          <li>• Brake fluid: Every 24 months</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </section>
