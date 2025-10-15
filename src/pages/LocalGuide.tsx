@@ -748,13 +748,8 @@ export default function LocalGuide() {
                               <div className="p-3 bg-amber-50 border-l-4 border-amber-500 rounded dark:bg-amber-950">
                                 <div className="flex items-start gap-2">
                                   <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                                  <div className="space-y-2">
-                                    <div>
-                                      <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">Caution:</p>
-                                      <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                                        Never work under a vehicle supported only by a jack. Always use jack stands on stable, level ground.
-                                      </p>
-                                    </div>
+                                  <div>
+                                    <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">Caution:</p>
                                     <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
                                       {step.vehicleNote}
                                     </p>
