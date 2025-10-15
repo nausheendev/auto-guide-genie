@@ -43,6 +43,11 @@ export const Footer = () => {
             <h4 className="font-semibold mb-4">Resources</h4>
             <ul className="space-y-2 text-sm">
               <li>
+                <Link to="/repairs/los-angeles/toyota/camry/brake-repair" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Sample Local Guide
+                </Link>
+              </li>
+              <li>
                 <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
                   Popular Repairs
                 </a>
