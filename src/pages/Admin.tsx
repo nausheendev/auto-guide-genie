@@ -309,22 +309,18 @@ export default function Admin() {
 
             {/* Main Content Tabs */}
             <Tabs defaultValue="overview" className="space-y-6">
-              <TabsList>
+              <TabsList className="grid grid-cols-5 lg:grid-cols-10">
                 <TabsTrigger value="overview">
                   <LayoutDashboard className="h-4 w-4 mr-2" />
                   Overview
                 </TabsTrigger>
-                <TabsTrigger value="content">
-                  <FileText className="h-4 w-4 mr-2" />
-                  Content
+                <TabsTrigger value="reports">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Reports
                 </TabsTrigger>
                 <TabsTrigger value="users">
                   <Users className="h-4 w-4 mr-2" />
                   Users
-                </TabsTrigger>
-                <TabsTrigger value="mechanics">
-                  <Wrench className="h-4 w-4 mr-2" />
-                  Mechanics
                 </TabsTrigger>
                 <TabsTrigger value="staff">
                   <UserPlus className="h-4 w-4 mr-2" />
@@ -332,19 +328,23 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="brands">
                   <Car className="h-4 w-4 mr-2" />
-                  Brands & Models
+                  Models
                 </TabsTrigger>
-                <TabsTrigger value="localization">
-                  <Globe className="h-4 w-4 mr-2" />
-                  Localization
+                <TabsTrigger value="ai-config">
+                  <Code className="h-4 w-4 mr-2" />
+                  AI Config
+                </TabsTrigger>
+                <TabsTrigger value="credits">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Credits
+                </TabsTrigger>
+                <TabsTrigger value="maintenance">
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                  Maintenance
                 </TabsTrigger>
                 <TabsTrigger value="email-templates">
                   <Mail className="h-4 w-4 mr-2" />
-                  Email Templates
-                </TabsTrigger>
-                <TabsTrigger value="notifications">
-                  <Bell className="h-4 w-4 mr-2" />
-                  Notifications
+                  Email
                 </TabsTrigger>
                 <TabsTrigger value="settings">
                   <Settings className="h-4 w-4 mr-2" />
@@ -508,12 +508,45 @@ export default function Admin() {
                 )}
               </TabsContent>
 
+              {/* Reports Tab */}
+              <TabsContent value="reports" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Reports & Analytics</CardTitle>
+                        <CardDescription>View detailed analytics and reports</CardDescription>
+                      </div>
+                      <Link to="/admin/reports">
+                        <Button>
+                          <TrendingUp className="h-4 w-4 mr-2" />
+                          View Full Reports
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">Quick overview of reports. Click "View Full Reports" for detailed analytics with filters and time-based views.</p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
               {/* Users Tab */}
               <TabsContent value="users" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>User Management</CardTitle>
-                    <CardDescription>Manage user accounts and permissions</CardDescription>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>User Management</CardTitle>
+                        <CardDescription>Manage user accounts and permissions</CardDescription>
+                      </div>
+                      <Link to="/admin/users">
+                        <Button>
+                          <Users className="h-4 w-4 mr-2" />
+                          Manage Users
+                        </Button>
+                      </Link>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
@@ -531,9 +564,11 @@ export default function Admin() {
                             <Badge variant={user.status === "Active" ? "secondary" : "destructive"}>
                               {user.status}
                             </Badge>
-                            <Button size="sm" variant="outline">
-                              Manage
-                            </Button>
+                            <Link to="/admin/users">
+                              <Button size="sm" variant="outline">
+                                Manage
+                              </Button>
+                            </Link>
                           </div>
                         </div>
                       ))}
@@ -606,9 +641,11 @@ export default function Admin() {
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-2">
-                                <Button size="sm" variant="outline">
-                                  <Edit className="h-3 w-3" />
-                                </Button>
+                                <Link to={`/admin/staff/${staff.id}`}>
+                                  <Button size="sm" variant="outline">
+                                    <Edit className="h-3 w-3" />
+                                  </Button>
+                                </Link>
                                 <Button size="sm" variant="outline">
                                   <Trash2 className="h-3 w-3" />
                                 </Button>
@@ -618,82 +655,6 @@ export default function Admin() {
                         ))}
                       </TableBody>
                     </Table>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Create New Staff Member</CardTitle>
-                    <CardDescription>Add a new staff member with specific role and permissions</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="staff-name">Full Name</Label>
-                        <Input id="staff-name" placeholder="Enter full name" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="staff-email">Email</Label>
-                        <Input id="staff-email" type="email" placeholder="email@example.com" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="staff-role">Role</Label>
-                        <Select>
-                          <SelectTrigger id="staff-role">
-                            <SelectValue placeholder="Select role" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="admin">Admin</SelectItem>
-                            <SelectItem value="manager">Manager</SelectItem>
-                            <SelectItem value="editor">Editor</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="staff-password">Temporary Password</Label>
-                        <Input id="staff-password" type="password" placeholder="Generate password" />
-                      </div>
-                      <div className="space-y-2 md:col-span-2">
-                        <Label>Permissions</Label>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 border rounded-lg">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="perm-users" />
-                            <label htmlFor="perm-users" className="text-sm cursor-pointer">Users</label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="perm-content" />
-                            <label htmlFor="perm-content" className="text-sm cursor-pointer">Content</label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="perm-mechanics" />
-                            <label htmlFor="perm-mechanics" className="text-sm cursor-pointer">Mechanics</label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="perm-settings" />
-                            <label htmlFor="perm-settings" className="text-sm cursor-pointer">Settings</label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="perm-brands" />
-                            <label htmlFor="perm-brands" className="text-sm cursor-pointer">Brands</label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="perm-reports" />
-                            <label htmlFor="perm-reports" className="text-sm cursor-pointer">Reports</label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="perm-analytics" />
-                            <label htmlFor="perm-analytics" className="text-sm cursor-pointer">Analytics</label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Checkbox id="perm-all" />
-                            <label htmlFor="perm-all" className="text-sm cursor-pointer font-medium">All Permissions</label>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="md:col-span-2">
-                        <Button className="w-full">Create Staff Member</Button>
-                      </div>
-                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -708,14 +669,12 @@ export default function Admin() {
                         <CardDescription>Manage vehicle brands and their models</CardDescription>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline">
-                          <Upload className="h-4 w-4 mr-2" />
-                          Bulk Import
-                        </Button>
-                        <Button>
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Brand
-                        </Button>
+                        <Link to="/admin/model/add">
+                          <Button>
+                            <Plus className="h-4 w-4 mr-2" />
+                            Add Model
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </CardHeader>
@@ -730,13 +689,17 @@ export default function Admin() {
                               <Badge variant="outline">{brand.models.length} models</Badge>
                             </div>
                             <div className="flex gap-2">
-                              <Button size="sm" variant="outline">
-                                <Plus className="h-3 w-3 mr-1" />
-                                Add Model
-                              </Button>
-                              <Button size="sm" variant="outline">
-                                <Edit className="h-3 w-3" />
-                              </Button>
+                              <Link to="/admin/model/add">
+                                <Button size="sm" variant="outline">
+                                  <Plus className="h-3 w-3 mr-1" />
+                                  Add Model
+                                </Button>
+                              </Link>
+                              <Link to={`/admin/model/${brand.id}`}>
+                                <Button size="sm" variant="outline">
+                                  <Edit className="h-3 w-3" />
+                                </Button>
+                              </Link>
                               <Button size="sm" variant="outline">
                                 <Trash2 className="h-3 w-3" />
                               </Button>
@@ -757,61 +720,6 @@ export default function Admin() {
                     </div>
                   </CardContent>
                 </Card>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Add New Brand</CardTitle>
-                      <CardDescription>Add a single vehicle brand</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="brand-name">Brand Name</Label>
-                          <Input id="brand-name" placeholder="e.g., Toyota" />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="brand-models">Models (comma-separated)</Label>
-                          <Input id="brand-models" placeholder="e.g., Camry, Corolla, RAV4" />
-                        </div>
-                        <Button className="w-full">Add Brand</Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Bulk Import Brands</CardTitle>
-                      <CardDescription>Upload CSV file with brands and models</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="border-2 border-dashed rounded-lg p-8 text-center">
-                          <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                          <p className="text-sm text-muted-foreground mb-2">
-                            Drag and drop CSV file or click to browse
-                          </p>
-                          <Input type="file" accept=".csv" className="max-w-xs mx-auto" />
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-sm font-medium">CSV Format:</p>
-                          <code className="block text-xs bg-muted p-2 rounded">
-                            Brand,Model1,Model2,Model3<br/>
-                            Toyota,Camry,Corolla,RAV4<br/>
-                            Honda,Civic,Accord,CR-V
-                          </code>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button variant="outline" className="flex-1">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download Template
-                          </Button>
-                          <Button className="flex-1">Import CSV</Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
               </TabsContent>
 
               {/* Localization Tab */}
@@ -1265,33 +1173,88 @@ Example:
                 </Card>
               </TabsContent>
 
+              {/* AI Configuration Tab */}
+              <TabsContent value="ai-config" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>AI Configuration</CardTitle>
+                        <CardDescription>Configure AI service and generation settings</CardDescription>
+                      </div>
+                      <Link to="/admin/ai-config">
+                        <Button>
+                          <Code className="h-4 w-4 mr-2" />
+                          Full Configuration
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">Manage API keys, model selection, and generation limits for AI features.</p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Credits Tab */}
+              <TabsContent value="credits" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Credit System</CardTitle>
+                        <CardDescription>Manage credits, limits, and usage tracking</CardDescription>
+                      </div>
+                      <Link to="/admin/credit-system">
+                        <Button>
+                          <TrendingUp className="h-4 w-4 mr-2" />
+                          Configure Credits
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">Configure daily limits, reset timing, and per-token credit calculations.</p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Maintenance Tab */}
+              <TabsContent value="maintenance" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Maintenance Mode</CardTitle>
+                        <CardDescription>Control site access during maintenance</CardDescription>
+                      </div>
+                      <Link to="/admin/maintenance">
+                        <Button>
+                          <AlertCircle className="h-4 w-4 mr-2" />
+                          Manage Maintenance
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">Enable or disable maintenance mode to restrict site access.</p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
               {/* Settings Tab */}
               <TabsContent value="settings" className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>System Settings</CardTitle>
-                    <CardDescription>Configure AI, credits, and site settings</CardDescription>
+                    <CardTitle>General Settings</CardTitle>
+                    <CardDescription>Configure general system settings</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between p-4 rounded-lg border">
                         <div>
-                          <h4 className="font-medium">AI Configuration</h4>
-                          <p className="text-sm text-muted-foreground">API keys and generation limits</p>
-                        </div>
-                        <Button variant="outline">Configure</Button>
-                      </div>
-                      <div className="flex items-center justify-between p-4 rounded-lg border">
-                        <div>
-                          <h4 className="font-medium">Credit System</h4>
-                          <p className="text-sm text-muted-foreground">Daily limits and reset timing</p>
-                        </div>
-                        <Button variant="outline">Configure</Button>
-                      </div>
-                      <div className="flex items-center justify-between p-4 rounded-lg border">
-                        <div>
-                          <h4 className="font-medium">Maintenance Mode</h4>
-                          <p className="text-sm text-muted-foreground">Enable/disable site access</p>
+                          <h4 className="font-medium">Site Configuration</h4>
+                          <p className="text-sm text-muted-foreground">General site settings and preferences</p>
                         </div>
                         <Button variant="outline">Configure</Button>
                       </div>
