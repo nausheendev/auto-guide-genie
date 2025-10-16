@@ -23,15 +23,18 @@ const PopularSearches = lazy(() => import("@/components/PopularSearches").then(m
 const GuideFeedback = lazy(() => import("@/components/GuideFeedback").then(m => ({ default: m.GuideFeedback })));
 
 export default function LocalGuide() {
-  const { citySlug, serviceSlug, make, model } = useParams<{ 
+  const { categorySlug, citySlug, serviceSlug, make, model, year } = useParams<{ 
+    categorySlug: string;
     citySlug: string; 
     serviceSlug: string;
     make?: string;
     model?: string;
+    year?: string;
   }>();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   
   // In production, fetch this data from database/API
+  const category = categorySlug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Repairs';
   const city = citySlug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Los Angeles';
   const service = serviceSlug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Brake Repair';
   const state = 'California'; // Would come from DB
@@ -39,15 +42,16 @@ export default function LocalGuide() {
   // Vehicle-specific data
   const vehicleMake = make?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   const vehicleModel = model?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-  const isVehicleSpecific = !!vehicleMake && !!vehicleModel;
+  const vehicleYear = year;
+  const isVehicleSpecific = !!vehicleMake && !!vehicleModel && !!vehicleYear;
   
   // Build page title and description
   const pageTitle = isVehicleSpecific 
-    ? `${vehicleMake} ${vehicleModel} ${service} in ${city}`
+    ? `${vehicleYear} ${vehicleMake} ${vehicleModel} ${service} in ${city}`
     : `${service} in ${city}`;
   
   const pageDescription = isVehicleSpecific
-    ? `Complete ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city}. Model-specific instructions, torque specs, common issues. Local cost $${29}0-$${45}0.`
+    ? `Complete ${vehicleYear} ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city}. Year-specific instructions, torque specs, common issues. Local cost $${29}0-$${45}0.`
     : `Complete ${service.toLowerCase()} guide for ${city} drivers. Local cost $${25}0-$${45}0. Find ${47} certified mechanics, step-by-step instructions.`;
   
   // Mock local data - in production, generate with AI
@@ -253,8 +257,8 @@ export default function LocalGuide() {
         <meta property="og:title" content={`${pageTitle} - Local Guide`} />
         <meta property="og:description" content={pageDescription} />
         <link rel="canonical" href={isVehicleSpecific 
-          ? `https://autogos.com/repairs/${citySlug}/${make}/${model}/${serviceSlug}`
-          : `https://autogos.com/repairs/${citySlug}/${serviceSlug}`} />
+          ? `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}/${year}/${serviceSlug}`
+          : `https://autogos.com/${categorySlug}/${citySlug}/${serviceSlug}`} />
       </Helmet>
 
       {/* Schema Markups - Lazy loaded for better initial performance */}
@@ -264,17 +268,18 @@ export default function LocalGuide() {
             type="breadcrumb"
             data={{
               breadcrumbs: isVehicleSpecific ? [
-                { name: "Home", url: "/" },
-                { name: "Repairs", url: "/repairs" },
-                { name: city, url: `/repairs/${citySlug}` },
-                { name: vehicleMake!, url: `/repairs/${citySlug}/${make}` },
-                { name: vehicleModel!, url: `/repairs/${citySlug}/${make}/${model}` },
-                { name: service, url: `/repairs/${citySlug}/${make}/${model}/${serviceSlug}` }
+                { name: "Home", url: "https://autogos.com" },
+                { name: category, url: `https://autogos.com/${categorySlug}` },
+                { name: city, url: `https://autogos.com/${categorySlug}/${citySlug}` },
+                { name: vehicleMake!, url: `https://autogos.com/${categorySlug}/${citySlug}/${make}` },
+                { name: vehicleModel!, url: `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}` },
+                { name: vehicleYear!, url: `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}/${year}` },
+                { name: service, url: `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}/${year}/${serviceSlug}` }
               ] : [
-                { name: "Home", url: "/" },
-                { name: "Repairs", url: "/repairs" },
-                { name: city, url: `/repairs/${citySlug}` },
-                { name: service, url: `/repairs/${citySlug}/${serviceSlug}` }
+                { name: "Home", url: "https://autogos.com" },
+                { name: category, url: `https://autogos.com/${categorySlug}` },
+                { name: city, url: `https://autogos.com/${categorySlug}/${citySlug}` },
+                { name: service, url: `https://autogos.com/${categorySlug}/${citySlug}/${serviceSlug}` }
               ]
             }}
           />
@@ -343,21 +348,25 @@ export default function LocalGuide() {
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="/repairs">Repairs</BreadcrumbLink>
+                    <BreadcrumbLink href={`/${categorySlug}`}>{category}</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbLink href={`/repairs/${citySlug}`}>{city}</BreadcrumbLink>
+                    <BreadcrumbLink href={`/${categorySlug}/${citySlug}`}>{city}</BreadcrumbLink>
                   </BreadcrumbItem>
                   {isVehicleSpecific && (
                     <>
                       <BreadcrumbSeparator />
                       <BreadcrumbItem>
-                        <BreadcrumbLink href={`/repairs/${citySlug}/${make}`}>{vehicleMake}</BreadcrumbLink>
+                        <span className="text-muted-foreground">{vehicleMake}</span>
                       </BreadcrumbItem>
                       <BreadcrumbSeparator />
                       <BreadcrumbItem>
-                        <BreadcrumbLink href={`/repairs/${citySlug}/${make}/${model}`}>{vehicleModel}</BreadcrumbLink>
+                        <span className="text-muted-foreground">{vehicleModel}</span>
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <span className="text-muted-foreground">{vehicleYear}</span>
                       </BreadcrumbItem>
                     </>
                   )}
