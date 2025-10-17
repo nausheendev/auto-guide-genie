@@ -9,330 +9,320 @@ import { Progress } from "@/components/ui/progress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Skeleton } from "@/components/ui/skeleton";
-import { 
-  MapPin, Clock, DollarSign, CheckCircle2, AlertTriangle, 
-  Wrench, Phone, Star, Navigation, TrendingUp, Calendar,
-  ThermometerSun, CloudRain, Mountain, Users, Printer, Share2, Heart
-} from "lucide-react";
+import { MapPin, Clock, DollarSign, CheckCircle2, AlertTriangle, Wrench, Phone, Star, Navigation, TrendingUp, Calendar, ThermometerSun, CloudRain, Mountain, Users, Printer, Share2, Heart } from "lucide-react";
 import { Helmet } from "react-helmet";
 
 // Lazy load heavy components for better initial load performance
-const SchemaMarkup = lazy(() => import("@/components/SchemaMarkup").then(m => ({ default: m.SchemaMarkup })));
-const UsedCarsSection = lazy(() => import("@/components/UsedCarsSection").then(m => ({ default: m.UsedCarsSection })));
-const PopularSearches = lazy(() => import("@/components/PopularSearches").then(m => ({ default: m.PopularSearches })));
-const GuideFeedback = lazy(() => import("@/components/GuideFeedback").then(m => ({ default: m.GuideFeedback })));
-
+const SchemaMarkup = lazy(() => import("@/components/SchemaMarkup").then(m => ({
+  default: m.SchemaMarkup
+})));
+const UsedCarsSection = lazy(() => import("@/components/UsedCarsSection").then(m => ({
+  default: m.UsedCarsSection
+})));
+const PopularSearches = lazy(() => import("@/components/PopularSearches").then(m => ({
+  default: m.PopularSearches
+})));
+const GuideFeedback = lazy(() => import("@/components/GuideFeedback").then(m => ({
+  default: m.GuideFeedback
+})));
 export default function LocalGuide() {
-  const { categorySlug, citySlug, serviceSlug, make, model, year } = useParams<{ 
+  const {
+    categorySlug,
+    citySlug,
+    serviceSlug,
+    make,
+    model,
+    year
+  } = useParams<{
     categorySlug: string;
-    citySlug: string; 
+    citySlug: string;
     serviceSlug: string;
     make?: string;
     model?: string;
     year?: string;
   }>();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  
+
   // In production, fetch this data from database/API
   const category = categorySlug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Repairs';
   const city = citySlug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Los Angeles';
   const service = serviceSlug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Brake Repair';
   const state = 'California'; // Would come from DB
-  
+
   // Vehicle-specific data
   const vehicleMake = make?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   const vehicleModel = model?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   const vehicleYear = year;
   const isVehicleSpecific = !!vehicleMake && !!vehicleModel && !!vehicleYear;
-  
+
   // Build page title and description
-  const pageTitle = isVehicleSpecific 
-    ? `${vehicleYear} ${vehicleMake} ${vehicleModel} ${service} in ${city}`
-    : `${service} in ${city}`;
-  
-  const pageDescription = isVehicleSpecific
-    ? `Complete ${vehicleYear} ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city}. Year-specific instructions, torque specs, common issues. Local cost $${29}0-$${45}0.`
-    : `Complete ${service.toLowerCase()} guide for ${city} drivers. Local cost $${25}0-$${45}0. Find ${47} certified mechanics, step-by-step instructions.`;
-  
+  const pageTitle = isVehicleSpecific ? `${vehicleYear} ${vehicleMake} ${vehicleModel} ${service} in ${city}` : `${service} in ${city}`;
+  const pageDescription = isVehicleSpecific ? `Complete ${vehicleYear} ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city}. Year-specific instructions, torque specs, common issues. Local cost $${29}0-$${45}0.` : `Complete ${service.toLowerCase()} guide for ${city} drivers. Local cost $${25}0-$${45}0. Find ${47} certified mechanics, step-by-step instructions.`;
+
   // Mock local data - in production, generate with AI
   const localData = {
-    avgCost: { min: 250, max: 450 },
+    avgCost: {
+      min: 250,
+      max: 450
+    },
     mechanicCount: 47,
     avgWaitDays: 2,
     climate: "Mediterranean climate with mild, wet winters and hot, dry summers",
     trafficImpact: "Heavy stop-and-go traffic on I-405 and I-10 causes 30% faster brake wear",
-    neighborhoods: [
-      { name: "Santa Monica", mechanics: 8, avgCost: 320 },
-      { name: "Hollywood", mechanics: 12, avgCost: 290 },
-      { name: "Downtown LA", mechanics: 15, avgCost: 310 },
-      { name: "Venice", mechanics: 6, avgCost: 335 },
-      { name: "Pasadena", mechanics: 6, avgCost: 275 }
-    ],
+    neighborhoods: [{
+      name: "Santa Monica",
+      mechanics: 8,
+      avgCost: 320
+    }, {
+      name: "Hollywood",
+      mechanics: 12,
+      avgCost: 290
+    }, {
+      name: "Downtown LA",
+      mechanics: 15,
+      avgCost: 310
+    }, {
+      name: "Venice",
+      mechanics: 6,
+      avgCost: 335
+    }, {
+      name: "Pasadena",
+      mechanics: 6,
+      avgCost: 275
+    }],
     seasonalTip: "Summer heat increases brake fluid evaporation - check levels monthly",
     commonIssue: "Dust and smog accelerate brake pad deterioration in LA County"
   };
 
   // Vehicle-specific instructions (in production, generate with AI based on make/model)
-  const guideSteps = isVehicleSpecific ? [
-    {
-      title: "Prepare Your Vehicle",
-      description: `Park your ${vehicleMake} ${vehicleModel} on level ground and engage parking brake. For this model, ensure transmission is in Park. Gather all necessary tools including ${vehicleMake}-specific socket sizes.`,
-      image: "/placeholder.svg",
-      duration: "10 min",
-      difficulty: "Easy",
-      vehicleNote: `${vehicleMake} ${vehicleModel} specific: Check owner's manual for jacking points location.`,
-      caution: "Never work under a vehicle supported only by a jack"
-    },
-    {
-      title: "Remove the Wheel",
-      description: `Loosen lug nuts (typically 19mm for ${vehicleMake} ${vehicleModel}), jack up the vehicle at designated points, and remove the wheel to access brake components.`,
-      image: "/placeholder.svg",
-      duration: "15 min",
-      difficulty: "Medium",
-      vehicleNote: `Torque spec for ${vehicleMake} ${vehicleModel} lug nuts: 80 ft-lbs`,
-      caution: "Ensure jack stands are on solid, level ground"
-    },
-    {
-      title: "Remove Old Brake Pads",
-      description: `Remove caliper bolts (12mm hex on most ${vehicleMake} models) and slide out the old brake pads. Common on ${vehicleModel}: check for uneven inner pad wear.`,
-      image: "/placeholder.svg",
-      duration: "20 min",
-      difficulty: "Medium",
-      vehicleNote: `${vehicleMake} ${vehicleModel} caliper bolt torque: 26 ft-lbs`,
-      caution: "Dispose of old brake pads properly - they may contain hazardous materials."
-    },
-    {
-      title: "Install New Brake Pads",
-      description: `Compress the caliper piston using a C-clamp. ${vehicleMake} ${vehicleModel} may require opening bleeder valve if piston is stubborn. Insert new pads with anti-squeal shims.`,
-      image: "/placeholder.svg",
-      duration: "20 min",
-      difficulty: "Medium",
-      vehicleNote: `Use ${vehicleMake} OEM or equivalent ceramic pads for best performance`,
-      caution: "Brake fluid is corrosive. Avoid skin contact and clean spills immediately."
-    },
-    {
-      title: "Test and Verify",
-      description: `Reinstall wheel, torque to spec, lower vehicle. Pump brake pedal 3-4 times before starting. Test in safe area - ${vehicleMake} ${vehicleModel} ABS will activate if done correctly.`,
-      image: "/placeholder.svg",
-      duration: "15 min",
-      difficulty: "Easy",
-      vehicleNote: `${vehicleMake} ${vehicleModel}: Check brake fluid reservoir level before first drive`,
-      caution: "Brakes may feel soft at first - pump pedal until firm"
-    }
-  ] : [
-    {
-      title: "Prepare Your Vehicle",
-      description: "Park on level ground and engage parking brake. Gather all necessary tools.",
-      image: "/placeholder.svg",
-      duration: "10 min",
-      difficulty: "Easy",
-      caution: "Never work under a vehicle supported only by a jack"
-    },
-    {
-      title: "Remove the Wheel",
-      description: "Loosen lug nuts, jack up the vehicle, and remove the wheel to access brake components.",
-      image: "/placeholder.svg",
-      duration: "15 min",
-      difficulty: "Medium",
-      caution: "Ensure jack stands are on solid, level ground"
-    },
-    {
-      title: "Remove Old Brake Pads",
-      description: "Remove caliper bolts and slide out the old brake pads. Inspect for uneven wear.",
-      image: "/placeholder.svg",
-      duration: "20 min",
-      difficulty: "Medium",
-      caution: "Dispose of old brake pads properly - they may contain hazardous materials."
-    },
-    {
-      title: "Install New Brake Pads",
-      description: "Compress the caliper piston, insert new pads, and reassemble the caliper.",
-      image: "/placeholder.svg",
-      duration: "20 min",
-      difficulty: "Medium",
-      caution: "Brake fluid is corrosive. Avoid skin contact and clean spills immediately."
-    },
-    {
-      title: "Test and Verify",
-      description: "Reinstall wheel, lower vehicle, and test brakes in a safe area before normal driving.",
-      image: "/placeholder.svg",
-      duration: "15 min",
-      difficulty: "Easy",
-      caution: "Brakes may feel soft at first - pump pedal until firm"
-    }
-  ];
-
-  const localMechanics = [
-    {
-      name: "Precision Auto Repair",
-      address: "1234 Main St",
-      city,
-      state,
-      zip: "90001",
-      phone: "(323) 555-0100",
-      rating: 4.8,
-      reviewCount: 234,
-      distance: "2.3 mi",
-      priceRange: "$$",
-      specialties: ["Brakes", "Suspension"]
-    },
-    {
-      name: `${city} Brake Masters`,
-      address: "5678 Ocean Ave",
-      city,
-      state,
-      zip: "90002",
-      phone: "(323) 555-0200",
-      rating: 4.6,
-      reviewCount: 189,
-      distance: "3.1 mi",
-      priceRange: "$$$",
-      specialties: ["Brakes", "Diagnostics"]
-    },
-    {
-      name: "Quick Fix Auto Service",
-      address: "9101 Sunset Blvd",
-      city,
-      state,
-      zip: "90003",
-      phone: "(323) 555-0300",
-      rating: 4.7,
-      reviewCount: 156,
-      distance: "1.8 mi",
-      priceRange: "$",
-      specialties: ["Brakes", "Oil Change"]
-    }
-  ];
-
-  const localFAQs = [
-    {
-      question: `Do I need an appointment for brake repair in ${city}?`,
-      answer: `Most brake repair shops in ${city} accept walk-ins, but appointments are recommended during peak hours (8-10 AM). Average wait time is ${localData.avgWaitDays} days for scheduled service.`
-    },
-    {
-      question: `What are ${city}'s emissions requirements for brake work?`,
-      answer: `${city} follows California's strict emissions standards. Any brake work must not interfere with the ABS system, which is part of the emissions inspection. All shops must be STAR certified.`
-    },
-    {
-      question: `Are there mobile brake repair services in ${city}?`,
-      answer: `Yes, several mobile mechanics serve ${city} and can perform brake pad replacement at your location. Expect to pay 10-20% more for mobile service convenience.`
-    },
-    {
-      question: `How does ${city}'s weather affect brake maintenance?`,
-      answer: `${localData.climate} means brake components can dry out quickly in summer. The frequent temperature changes between seasons can cause brake fluid to absorb moisture, requiring more frequent flushes.`
-    },
-    {
-      question: `What's the average cost for ${service.toLowerCase()} in ${city}?`,
-      answer: `Based on local shop data, ${service.toLowerCase()} costs between $${localData.avgCost.min}-$${localData.avgCost.max} in ${city}, slightly above the national average due to higher labor costs and stricter regulations.`
-    }
-  ];
+  const guideSteps = isVehicleSpecific ? [{
+    title: "Prepare Your Vehicle",
+    description: `Park your ${vehicleMake} ${vehicleModel} on level ground and engage parking brake. For this model, ensure transmission is in Park. Gather all necessary tools including ${vehicleMake}-specific socket sizes.`,
+    image: "/placeholder.svg",
+    duration: "10 min",
+    difficulty: "Easy",
+    vehicleNote: `${vehicleMake} ${vehicleModel} specific: Check owner's manual for jacking points location.`,
+    caution: "Never work under a vehicle supported only by a jack"
+  }, {
+    title: "Remove the Wheel",
+    description: `Loosen lug nuts (typically 19mm for ${vehicleMake} ${vehicleModel}), jack up the vehicle at designated points, and remove the wheel to access brake components.`,
+    image: "/placeholder.svg",
+    duration: "15 min",
+    difficulty: "Medium",
+    vehicleNote: `Torque spec for ${vehicleMake} ${vehicleModel} lug nuts: 80 ft-lbs`,
+    caution: "Ensure jack stands are on solid, level ground"
+  }, {
+    title: "Remove Old Brake Pads",
+    description: `Remove caliper bolts (12mm hex on most ${vehicleMake} models) and slide out the old brake pads. Common on ${vehicleModel}: check for uneven inner pad wear.`,
+    image: "/placeholder.svg",
+    duration: "20 min",
+    difficulty: "Medium",
+    vehicleNote: `${vehicleMake} ${vehicleModel} caliper bolt torque: 26 ft-lbs`,
+    caution: "Dispose of old brake pads properly - they may contain hazardous materials."
+  }, {
+    title: "Install New Brake Pads",
+    description: `Compress the caliper piston using a C-clamp. ${vehicleMake} ${vehicleModel} may require opening bleeder valve if piston is stubborn. Insert new pads with anti-squeal shims.`,
+    image: "/placeholder.svg",
+    duration: "20 min",
+    difficulty: "Medium",
+    vehicleNote: `Use ${vehicleMake} OEM or equivalent ceramic pads for best performance`,
+    caution: "Brake fluid is corrosive. Avoid skin contact and clean spills immediately."
+  }, {
+    title: "Test and Verify",
+    description: `Reinstall wheel, torque to spec, lower vehicle. Pump brake pedal 3-4 times before starting. Test in safe area - ${vehicleMake} ${vehicleModel} ABS will activate if done correctly.`,
+    image: "/placeholder.svg",
+    duration: "15 min",
+    difficulty: "Easy",
+    vehicleNote: `${vehicleMake} ${vehicleModel}: Check brake fluid reservoir level before first drive`,
+    caution: "Brakes may feel soft at first - pump pedal until firm"
+  }] : [{
+    title: "Prepare Your Vehicle",
+    description: "Park on level ground and engage parking brake. Gather all necessary tools.",
+    image: "/placeholder.svg",
+    duration: "10 min",
+    difficulty: "Easy",
+    caution: "Never work under a vehicle supported only by a jack"
+  }, {
+    title: "Remove the Wheel",
+    description: "Loosen lug nuts, jack up the vehicle, and remove the wheel to access brake components.",
+    image: "/placeholder.svg",
+    duration: "15 min",
+    difficulty: "Medium",
+    caution: "Ensure jack stands are on solid, level ground"
+  }, {
+    title: "Remove Old Brake Pads",
+    description: "Remove caliper bolts and slide out the old brake pads. Inspect for uneven wear.",
+    image: "/placeholder.svg",
+    duration: "20 min",
+    difficulty: "Medium",
+    caution: "Dispose of old brake pads properly - they may contain hazardous materials."
+  }, {
+    title: "Install New Brake Pads",
+    description: "Compress the caliper piston, insert new pads, and reassemble the caliper.",
+    image: "/placeholder.svg",
+    duration: "20 min",
+    difficulty: "Medium",
+    caution: "Brake fluid is corrosive. Avoid skin contact and clean spills immediately."
+  }, {
+    title: "Test and Verify",
+    description: "Reinstall wheel, lower vehicle, and test brakes in a safe area before normal driving.",
+    image: "/placeholder.svg",
+    duration: "15 min",
+    difficulty: "Easy",
+    caution: "Brakes may feel soft at first - pump pedal until firm"
+  }];
+  const localMechanics = [{
+    name: "Precision Auto Repair",
+    address: "1234 Main St",
+    city,
+    state,
+    zip: "90001",
+    phone: "(323) 555-0100",
+    rating: 4.8,
+    reviewCount: 234,
+    distance: "2.3 mi",
+    priceRange: "$$",
+    specialties: ["Brakes", "Suspension"]
+  }, {
+    name: `${city} Brake Masters`,
+    address: "5678 Ocean Ave",
+    city,
+    state,
+    zip: "90002",
+    phone: "(323) 555-0200",
+    rating: 4.6,
+    reviewCount: 189,
+    distance: "3.1 mi",
+    priceRange: "$$$",
+    specialties: ["Brakes", "Diagnostics"]
+  }, {
+    name: "Quick Fix Auto Service",
+    address: "9101 Sunset Blvd",
+    city,
+    state,
+    zip: "90003",
+    phone: "(323) 555-0300",
+    rating: 4.7,
+    reviewCount: 156,
+    distance: "1.8 mi",
+    priceRange: "$",
+    specialties: ["Brakes", "Oil Change"]
+  }];
+  const localFAQs = [{
+    question: `Do I need an appointment for brake repair in ${city}?`,
+    answer: `Most brake repair shops in ${city} accept walk-ins, but appointments are recommended during peak hours (8-10 AM). Average wait time is ${localData.avgWaitDays} days for scheduled service.`
+  }, {
+    question: `What are ${city}'s emissions requirements for brake work?`,
+    answer: `${city} follows California's strict emissions standards. Any brake work must not interfere with the ABS system, which is part of the emissions inspection. All shops must be STAR certified.`
+  }, {
+    question: `Are there mobile brake repair services in ${city}?`,
+    answer: `Yes, several mobile mechanics serve ${city} and can perform brake pad replacement at your location. Expect to pay 10-20% more for mobile service convenience.`
+  }, {
+    question: `How does ${city}'s weather affect brake maintenance?`,
+    answer: `${localData.climate} means brake components can dry out quickly in summer. The frequent temperature changes between seasons can cause brake fluid to absorb moisture, requiring more frequent flushes.`
+  }, {
+    question: `What's the average cost for ${service.toLowerCase()} in ${city}?`,
+    answer: `Based on local shop data, ${service.toLowerCase()} costs between $${localData.avgCost.min}-$${localData.avgCost.max} in ${city}, slightly above the national average due to higher labor costs and stricter regulations.`
+  }];
 
   // Optimize event handlers with useCallback
   const toggleStepComplete = useCallback((index: number) => {
-    setCompletedSteps(prev =>
-      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
-    );
+    setCompletedSteps(prev => prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]);
   }, []);
 
   // Memoize computed values
-  const progress = useMemo(() => (completedSteps.length / guideSteps.length) * 100, [completedSteps.length, guideSteps.length]);
-  
+  const progress = useMemo(() => completedSteps.length / guideSteps.length * 100, [completedSteps.length, guideSteps.length]);
+
   // Track when below-fold content should be loaded
   const [shouldLoadBelowFold, setShouldLoadBelowFold] = useState(false);
-
   useEffect(() => {
     // Defer loading below-fold content for better LCP
     const timer = setTimeout(() => setShouldLoadBelowFold(true), 300);
     return () => clearTimeout(timer);
   }, []);
-
-  return (
-    <>
+  return <>
       <Helmet>
         <title>{pageTitle} - Expert DIY Guide & Local Mechanics | AutoGos</title>
-        <meta 
-          name="description" 
-          content={pageDescription}
-        />
+        <meta name="description" content={pageDescription} />
         <meta property="og:title" content={`${pageTitle} - Local Guide`} />
         <meta property="og:description" content={pageDescription} />
-        <link rel="canonical" href={isVehicleSpecific 
-          ? `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}/${year}/${serviceSlug}`
-          : `https://autogos.com/${categorySlug}/${citySlug}/${serviceSlug}`} />
+        <link rel="canonical" href={isVehicleSpecific ? `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}/${year}/${serviceSlug}` : `https://autogos.com/${categorySlug}/${citySlug}/${serviceSlug}`} />
       </Helmet>
 
       {/* Schema Markups - Lazy loaded for better initial performance */}
-      {shouldLoadBelowFold && (
-        <Suspense fallback={null}>
-          <SchemaMarkup
-            type="breadcrumb"
-            data={{
-              breadcrumbs: isVehicleSpecific ? [
-                { name: "Home", url: "https://autogos.com" },
-                { name: category, url: `https://autogos.com/${categorySlug}` },
-                { name: city, url: `https://autogos.com/${categorySlug}/${citySlug}` },
-                { name: vehicleMake!, url: `https://autogos.com/${categorySlug}/${citySlug}/${make}` },
-                { name: vehicleModel!, url: `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}` },
-                { name: vehicleYear!, url: `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}/${year}` },
-                { name: service, url: `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}/${year}/${serviceSlug}` }
-              ] : [
-                { name: "Home", url: "https://autogos.com" },
-                { name: category, url: `https://autogos.com/${categorySlug}` },
-                { name: city, url: `https://autogos.com/${categorySlug}/${citySlug}` },
-                { name: service, url: `https://autogos.com/${categorySlug}/${citySlug}/${serviceSlug}` }
-              ]
-            }}
-          />
+      {shouldLoadBelowFold && <Suspense fallback={null}>
+          <SchemaMarkup type="breadcrumb" data={{
+        breadcrumbs: isVehicleSpecific ? [{
+          name: "Home",
+          url: "https://autogos.com"
+        }, {
+          name: category,
+          url: `https://autogos.com/${categorySlug}`
+        }, {
+          name: city,
+          url: `https://autogos.com/${categorySlug}/${citySlug}`
+        }, {
+          name: vehicleMake!,
+          url: `https://autogos.com/${categorySlug}/${citySlug}/${make}`
+        }, {
+          name: vehicleModel!,
+          url: `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}`
+        }, {
+          name: vehicleYear!,
+          url: `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}/${year}`
+        }, {
+          name: service,
+          url: `https://autogos.com/${categorySlug}/${citySlug}/${make}/${model}/${year}/${serviceSlug}`
+        }] : [{
+          name: "Home",
+          url: "https://autogos.com"
+        }, {
+          name: category,
+          url: `https://autogos.com/${categorySlug}`
+        }, {
+          name: city,
+          url: `https://autogos.com/${categorySlug}/${citySlug}`
+        }, {
+          name: service,
+          url: `https://autogos.com/${categorySlug}/${citySlug}/${serviceSlug}`
+        }]
+      }} />
           
-          <SchemaMarkup
-            type="howto"
-            data={{
-              name: isVehicleSpecific 
-                ? `How to Perform ${service} on ${vehicleMake} ${vehicleModel} in ${city}`
-                : `How to Perform ${service} in ${city}`,
-              description: isVehicleSpecific
-                ? `Complete step-by-step ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanic recommendations.`
-                : `Complete step-by-step guide for ${service.toLowerCase()} tailored for ${city} drivers, including local considerations and mechanic recommendations.`,
-              estimatedCost: localData.avgCost,
-              totalTime: "PT2H",
-              aggregateRating: { ratingValue: 4.7, reviewCount: 324 },
-              tools: isVehicleSpecific
-                ? [`Jack and jack stands`, `Lug wrench (19mm for ${vehicleMake})`, `C-clamp or brake piston tool`, `Socket set (12mm hex)`]
-                : ["Jack and jack stands", "Lug wrench", "C-clamp or brake piston tool", "Socket set"],
-              supplies: isVehicleSpecific
-                ? [`${vehicleMake} OEM or equivalent brake pads`, "Brake cleaner", "High-temperature grease", "Anti-squeal shims"]
-                : ["New brake pads", "Brake cleaner", "High-temperature grease"],
-              steps: guideSteps.map(step => ({
-                name: step.title,
-                text: step.description,
-                image: step.image,
-                url: `${window.location.href}#step-${guideSteps.indexOf(step) + 1}`
-              }))
-            }}
-          />
+          <SchemaMarkup type="howto" data={{
+        name: isVehicleSpecific ? `How to Perform ${service} on ${vehicleMake} ${vehicleModel} in ${city}` : `How to Perform ${service} in ${city}`,
+        description: isVehicleSpecific ? `Complete step-by-step ${vehicleMake} ${vehicleModel} ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanic recommendations.` : `Complete step-by-step guide for ${service.toLowerCase()} tailored for ${city} drivers, including local considerations and mechanic recommendations.`,
+        estimatedCost: localData.avgCost,
+        totalTime: "PT2H",
+        aggregateRating: {
+          ratingValue: 4.7,
+          reviewCount: 324
+        },
+        tools: isVehicleSpecific ? [`Jack and jack stands`, `Lug wrench (19mm for ${vehicleMake})`, `C-clamp or brake piston tool`, `Socket set (12mm hex)`] : ["Jack and jack stands", "Lug wrench", "C-clamp or brake piston tool", "Socket set"],
+        supplies: isVehicleSpecific ? [`${vehicleMake} OEM or equivalent brake pads`, "Brake cleaner", "High-temperature grease", "Anti-squeal shims"] : ["New brake pads", "Brake cleaner", "High-temperature grease"],
+        steps: guideSteps.map(step => ({
+          name: step.title,
+          text: step.description,
+          image: step.image,
+          url: `${window.location.href}#step-${guideSteps.indexOf(step) + 1}`
+        }))
+      }} />
 
-          <SchemaMarkup
-            type="localbusiness"
-            data={{ businesses: localMechanics }}
-          />
+          <SchemaMarkup type="localbusiness" data={{
+        businesses: localMechanics
+      }} />
 
-          <SchemaMarkup
-            type="faq"
-            data={{ faqs: localFAQs }}
-          />
+          <SchemaMarkup type="faq" data={{
+        faqs: localFAQs
+      }} />
 
-          <SchemaMarkup
-            type="service"
-            data={{
-              name: pageTitle,
-              description: pageDescription,
-              provider: "AutoGos",
-              serviceType: service,
-              areaServed: `${city}, ${state}`
-            }}
-          />
-        </Suspense>
-      )}
+          <SchemaMarkup type="service" data={{
+        name: pageTitle,
+        description: pageDescription,
+        provider: "AutoGos",
+        serviceType: service,
+        areaServed: `${city}, ${state}`
+      }} />
+        </Suspense>}
 
       <div className="min-h-screen bg-background">
         <Header />
@@ -354,8 +344,7 @@ export default function LocalGuide() {
                   <BreadcrumbItem>
                     <BreadcrumbLink href={`/${categorySlug}/${citySlug}`}>{city}</BreadcrumbLink>
                   </BreadcrumbItem>
-                  {isVehicleSpecific && (
-                    <>
+                  {isVehicleSpecific && <>
                       <BreadcrumbSeparator />
                       <BreadcrumbItem>
                         <span className="text-muted-foreground">{vehicleMake}</span>
@@ -368,8 +357,7 @@ export default function LocalGuide() {
                       <BreadcrumbItem>
                         <span className="text-muted-foreground">{vehicleYear}</span>
                       </BreadcrumbItem>
-                    </>
-                  )}
+                    </>}
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbPage>{service}</BreadcrumbPage>
@@ -384,25 +372,12 @@ export default function LocalGuide() {
             <div className="container">
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm opacity-90">
-                    {isVehicleSpecific && (
-                      <>
-                        <span>{vehicleMake}</span>
-                        <span>•</span>
-                        <span>{vehicleModel}</span>
-                        <span>•</span>
-                      </>
-                    )}
-                    <span>{city}, {state}</span>
-                  </div>
+                  
                   <h1 className="text-3xl md:text-4xl font-bold">
                     {isVehicleSpecific ? `${vehicleMake} ${vehicleModel} ${service}` : service} in {city}
                   </h1>
                   <p className="text-base text-primary-foreground/90 max-w-2xl">
-                    {isVehicleSpecific 
-                      ? `Complete ${vehicleMake} ${vehicleModel}-specific ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanics specializing in ${vehicleMake}.`
-                      : `Complete DIY guide and local mechanic directory for ${city} drivers. Save money or find trusted professionals near you.`
-                    }
+                    {isVehicleSpecific ? `Complete ${vehicleMake} ${vehicleModel}-specific ${service.toLowerCase()} guide for ${city} drivers with model-specific torque specs, common issues, and local mechanics specializing in ${vehicleMake}.` : `Complete DIY guide and local mechanic directory for ${city} drivers. Save money or find trusted professionals near you.`}
                   </p>
                   <div className="flex flex-col gap-3 pt-2">
                     <div className="flex flex-wrap items-center gap-3">
@@ -415,11 +390,9 @@ export default function LocalGuide() {
                       <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
                         Brake
                       </Badge>
-                      {isVehicleSpecific && (
-                        <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
+                      {isVehicleSpecific && <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">
                           Medium
-                        </Badge>
-                      )}
+                        </Badge>}
                     </div>
                     <div className="flex flex-wrap items-center gap-3">
                       <div className="flex items-center gap-1">
@@ -731,52 +704,92 @@ export default function LocalGuide() {
                 </h2>
                 
                 <div className="space-y-6">
-                  {[
-                    {
-                      name: "Jack and Jack Stands Set",
-                      description: "3-ton capacity hydraulic jack with safety stands",
-                      vendors: [
-                        { name: "Amazon", price: "$89.99", link: "https://amazon.com/dp/YOURAFFID-jack-stands", rating: 4.6 },
-                        { name: "AutoZone", price: "$94.99", link: "https://autozone.com/YOURAFFID-jack-stands", rating: 4.5 },
-                        { name: "RockAuto", price: "$79.99", link: "https://rockauto.com/YOURAFFID-jack-stands", rating: 4.7 }
-                      ]
-                    },
-                    {
-                      name: isVehicleSpecific ? `Lug Wrench (19mm for ${vehicleMake})` : "Lug Wrench Set",
-                      description: "Cross-pattern lug wrench with multiple sizes",
-                      vendors: [
-                        { name: "Amazon", price: "$24.99", link: "https://amazon.com/dp/YOURAFFID-lug-wrench", rating: 4.7 },
-                        { name: "Advance Auto", price: "$27.99", link: "https://advanceautoparts.com/YOURAFFID-lug-wrench", rating: 4.4 }
-                      ]
-                    },
-                    {
-                      name: "Brake Caliper Piston Tool",
-                      description: "Universal disc brake caliper compression tool",
-                      vendors: [
-                        { name: "Amazon", price: "$32.99", link: "https://amazon.com/dp/YOURAFFID-piston-tool", rating: 4.5 },
-                        { name: "AutoZone", price: "$36.99", link: "https://autozone.com/YOURAFFID-piston-tool", rating: 4.3 },
-                        { name: "Harbor Freight", price: "$29.99", link: "https://harborfreight.com/YOURAFFID-piston-tool", rating: 4.2 }
-                      ]
-                    },
-                    {
-                      name: isVehicleSpecific ? `Socket Set (12mm hex)` : "Metric Socket Set",
-                      description: "Complete metric socket set with ratchet",
-                      vendors: [
-                        { name: "Amazon", price: "$45.99", link: "https://amazon.com/dp/YOURAFFID-socket-set", rating: 4.8 },
-                        { name: "AutoZone", price: "$52.99", link: "https://autozone.com/YOURAFFID-socket-set", rating: 4.6 }
-                      ]
-                    },
-                    {
-                      name: "Torque Wrench",
-                      description: "Click-type torque wrench (20-150 ft-lbs)",
-                      vendors: [
-                        { name: "Amazon", price: "$49.99", link: "https://amazon.com/dp/YOURAFFID-torque-wrench", rating: 4.7 },
-                        { name: "Harbor Freight", price: "$39.99", link: "https://harborfreight.com/YOURAFFID-torque-wrench", rating: 4.4 },
-                        { name: "AutoZone", price: "$54.99", link: "https://autozone.com/YOURAFFID-torque-wrench", rating: 4.5 }
-                      ]
-                    }
-                  ].map((tool, index) => (
-                    <Card key={index}>
+                  {[{
+                  name: "Jack and Jack Stands Set",
+                  description: "3-ton capacity hydraulic jack with safety stands",
+                  vendors: [{
+                    name: "Amazon",
+                    price: "$89.99",
+                    link: "https://amazon.com/dp/YOURAFFID-jack-stands",
+                    rating: 4.6
+                  }, {
+                    name: "AutoZone",
+                    price: "$94.99",
+                    link: "https://autozone.com/YOURAFFID-jack-stands",
+                    rating: 4.5
+                  }, {
+                    name: "RockAuto",
+                    price: "$79.99",
+                    link: "https://rockauto.com/YOURAFFID-jack-stands",
+                    rating: 4.7
+                  }]
+                }, {
+                  name: isVehicleSpecific ? `Lug Wrench (19mm for ${vehicleMake})` : "Lug Wrench Set",
+                  description: "Cross-pattern lug wrench with multiple sizes",
+                  vendors: [{
+                    name: "Amazon",
+                    price: "$24.99",
+                    link: "https://amazon.com/dp/YOURAFFID-lug-wrench",
+                    rating: 4.7
+                  }, {
+                    name: "Advance Auto",
+                    price: "$27.99",
+                    link: "https://advanceautoparts.com/YOURAFFID-lug-wrench",
+                    rating: 4.4
+                  }]
+                }, {
+                  name: "Brake Caliper Piston Tool",
+                  description: "Universal disc brake caliper compression tool",
+                  vendors: [{
+                    name: "Amazon",
+                    price: "$32.99",
+                    link: "https://amazon.com/dp/YOURAFFID-piston-tool",
+                    rating: 4.5
+                  }, {
+                    name: "AutoZone",
+                    price: "$36.99",
+                    link: "https://autozone.com/YOURAFFID-piston-tool",
+                    rating: 4.3
+                  }, {
+                    name: "Harbor Freight",
+                    price: "$29.99",
+                    link: "https://harborfreight.com/YOURAFFID-piston-tool",
+                    rating: 4.2
+                  }]
+                }, {
+                  name: isVehicleSpecific ? `Socket Set (12mm hex)` : "Metric Socket Set",
+                  description: "Complete metric socket set with ratchet",
+                  vendors: [{
+                    name: "Amazon",
+                    price: "$45.99",
+                    link: "https://amazon.com/dp/YOURAFFID-socket-set",
+                    rating: 4.8
+                  }, {
+                    name: "AutoZone",
+                    price: "$52.99",
+                    link: "https://autozone.com/YOURAFFID-socket-set",
+                    rating: 4.6
+                  }]
+                }, {
+                  name: "Torque Wrench",
+                  description: "Click-type torque wrench (20-150 ft-lbs)",
+                  vendors: [{
+                    name: "Amazon",
+                    price: "$49.99",
+                    link: "https://amazon.com/dp/YOURAFFID-torque-wrench",
+                    rating: 4.7
+                  }, {
+                    name: "Harbor Freight",
+                    price: "$39.99",
+                    link: "https://harborfreight.com/YOURAFFID-torque-wrench",
+                    rating: 4.4
+                  }, {
+                    name: "AutoZone",
+                    price: "$54.99",
+                    link: "https://autozone.com/YOURAFFID-torque-wrench",
+                    rating: 4.5
+                  }]
+                }].map((tool, index) => <Card key={index}>
                       <CardHeader className="pb-3">
                         <CardTitle className="text-lg flex items-center gap-2">
                           <Wrench className="h-5 w-5 text-primary" />
@@ -786,33 +799,22 @@ export default function LocalGuide() {
                       </CardHeader>
                       <CardContent>
                         <div className="flex flex-wrap gap-2">
-                          {tool.vendors.map((vendor, vIndex) => (
-                            <div key={vIndex} className="inline-flex items-center gap-2 px-2 py-1.5 bg-muted/50 rounded hover:bg-muted transition-colors text-sm">
+                          {tool.vendors.map((vendor, vIndex) => <div key={vIndex} className="inline-flex items-center gap-2 px-2 py-1.5 bg-muted/50 rounded hover:bg-muted transition-colors text-sm">
                               <span className="font-medium">{vendor.name}</span>
                               <div className="flex items-center gap-1">
                                 <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
                                 <span className="text-xs text-muted-foreground">{vendor.rating}</span>
                               </div>
                               <span className="font-semibold text-primary">{vendor.price}</span>
-                              <Button 
-                                size="sm" 
-                                asChild
-                                className="h-6 px-2 text-xs"
-                              >
-                                <a 
-                                  href={vendor.link} 
-                                  target="_blank" 
-                                  rel="nofollow noopener noreferrer"
-                                >
+                              <Button size="sm" asChild className="h-6 px-2 text-xs">
+                                <a href={vendor.link} target="_blank" rel="nofollow noopener noreferrer">
                                   Buy
                                 </a>
                               </Button>
-                            </div>
-                          ))}
+                            </div>)}
                         </div>
                       </CardContent>
-                    </Card>
-                  ))}
+                    </Card>)}
                 </div>
               </div>
             </div>
@@ -825,48 +827,101 @@ export default function LocalGuide() {
                 <h2 className="text-3xl font-bold mb-6">Required Parts</h2>
                 
                 <div className="space-y-6">
-                  {[
-                    {
-                      name: isVehicleSpecific ? `${vehicleMake} ${vehicleModel} Brake Pads` : "Brake Pads (Front Set)",
-                      description: isVehicleSpecific 
-                        ? `OEM-quality ceramic brake pads for ${vehicleMake} ${vehicleModel}`
-                        : "Premium ceramic brake pads for most vehicles",
-                      vendors: [
-                        { name: "Amazon", price: "$67.99", link: "https://amazon.com/dp/YOURAFFID-brake-pads", rating: 4.6, shipping: "Free 2-day" },
-                        { name: "RockAuto", price: "$52.99", link: "https://rockauto.com/YOURAFFID-brake-pads", rating: 4.7, shipping: "$5.99" },
-                        { name: "AutoZone", price: "$74.99", link: "https://autozone.com/YOURAFFID-brake-pads", rating: 4.5, shipping: "Free pickup" },
-                        { name: "Advance Auto", price: "$69.99", link: "https://advanceautoparts.com/YOURAFFID-brake-pads", rating: 4.4, shipping: "Free pickup" }
-                      ]
-                    },
-                    {
-                      name: "Brake Cleaner Spray",
-                      description: "Non-chlorinated brake parts cleaner (14 oz)",
-                      vendors: [
-                        { name: "Amazon", price: "$8.99", link: "https://amazon.com/dp/YOURAFFID-brake-cleaner", rating: 4.8, shipping: "Add-on item" },
-                        { name: "AutoZone", price: "$7.49", link: "https://autozone.com/YOURAFFID-brake-cleaner", rating: 4.6, shipping: "In-store" },
-                        { name: "Walmart", price: "$6.99", link: "https://walmart.com/YOURAFFID-brake-cleaner", rating: 4.5, shipping: "Free pickup" }
-                      ]
-                    },
-                    {
-                      name: "High-Temperature Brake Grease",
-                      description: "Synthetic brake lubricant for caliper pins and slides",
-                      vendors: [
-                        { name: "Amazon", price: "$12.99", link: "https://amazon.com/dp/YOURAFFID-brake-grease", rating: 4.7, shipping: "Prime" },
-                        { name: "AutoZone", price: "$14.99", link: "https://autozone.com/YOURAFFID-brake-grease", rating: 4.5, shipping: "In-store" },
-                        { name: "RockAuto", price: "$10.99", link: "https://rockauto.com/YOURAFFID-brake-grease", rating: 4.6, shipping: "$5.99" }
-                      ]
-                    },
-                    {
-                      name: "Anti-Squeal Brake Shims",
-                      description: "Noise-dampening shims for quiet braking",
-                      vendors: [
-                        { name: "Amazon", price: "$18.99", link: "https://amazon.com/dp/YOURAFFID-brake-shims", rating: 4.5, shipping: "Prime" },
-                        { name: "RockAuto", price: "$15.99", link: "https://rockauto.com/YOURAFFID-brake-shims", rating: 4.6, shipping: "$5.99" },
-                        { name: "AutoZone", price: "$21.99", link: "https://autozone.com/YOURAFFID-brake-shims", rating: 4.4, shipping: "In-store" }
-                      ]
-                    }
-                  ].map((part, index) => (
-                    <Card key={index}>
+                  {[{
+                  name: isVehicleSpecific ? `${vehicleMake} ${vehicleModel} Brake Pads` : "Brake Pads (Front Set)",
+                  description: isVehicleSpecific ? `OEM-quality ceramic brake pads for ${vehicleMake} ${vehicleModel}` : "Premium ceramic brake pads for most vehicles",
+                  vendors: [{
+                    name: "Amazon",
+                    price: "$67.99",
+                    link: "https://amazon.com/dp/YOURAFFID-brake-pads",
+                    rating: 4.6,
+                    shipping: "Free 2-day"
+                  }, {
+                    name: "RockAuto",
+                    price: "$52.99",
+                    link: "https://rockauto.com/YOURAFFID-brake-pads",
+                    rating: 4.7,
+                    shipping: "$5.99"
+                  }, {
+                    name: "AutoZone",
+                    price: "$74.99",
+                    link: "https://autozone.com/YOURAFFID-brake-pads",
+                    rating: 4.5,
+                    shipping: "Free pickup"
+                  }, {
+                    name: "Advance Auto",
+                    price: "$69.99",
+                    link: "https://advanceautoparts.com/YOURAFFID-brake-pads",
+                    rating: 4.4,
+                    shipping: "Free pickup"
+                  }]
+                }, {
+                  name: "Brake Cleaner Spray",
+                  description: "Non-chlorinated brake parts cleaner (14 oz)",
+                  vendors: [{
+                    name: "Amazon",
+                    price: "$8.99",
+                    link: "https://amazon.com/dp/YOURAFFID-brake-cleaner",
+                    rating: 4.8,
+                    shipping: "Add-on item"
+                  }, {
+                    name: "AutoZone",
+                    price: "$7.49",
+                    link: "https://autozone.com/YOURAFFID-brake-cleaner",
+                    rating: 4.6,
+                    shipping: "In-store"
+                  }, {
+                    name: "Walmart",
+                    price: "$6.99",
+                    link: "https://walmart.com/YOURAFFID-brake-cleaner",
+                    rating: 4.5,
+                    shipping: "Free pickup"
+                  }]
+                }, {
+                  name: "High-Temperature Brake Grease",
+                  description: "Synthetic brake lubricant for caliper pins and slides",
+                  vendors: [{
+                    name: "Amazon",
+                    price: "$12.99",
+                    link: "https://amazon.com/dp/YOURAFFID-brake-grease",
+                    rating: 4.7,
+                    shipping: "Prime"
+                  }, {
+                    name: "AutoZone",
+                    price: "$14.99",
+                    link: "https://autozone.com/YOURAFFID-brake-grease",
+                    rating: 4.5,
+                    shipping: "In-store"
+                  }, {
+                    name: "RockAuto",
+                    price: "$10.99",
+                    link: "https://rockauto.com/YOURAFFID-brake-grease",
+                    rating: 4.6,
+                    shipping: "$5.99"
+                  }]
+                }, {
+                  name: "Anti-Squeal Brake Shims",
+                  description: "Noise-dampening shims for quiet braking",
+                  vendors: [{
+                    name: "Amazon",
+                    price: "$18.99",
+                    link: "https://amazon.com/dp/YOURAFFID-brake-shims",
+                    rating: 4.5,
+                    shipping: "Prime"
+                  }, {
+                    name: "RockAuto",
+                    price: "$15.99",
+                    link: "https://rockauto.com/YOURAFFID-brake-shims",
+                    rating: 4.6,
+                    shipping: "$5.99"
+                  }, {
+                    name: "AutoZone",
+                    price: "$21.99",
+                    link: "https://autozone.com/YOURAFFID-brake-shims",
+                    rating: 4.4,
+                    shipping: "In-store"
+                  }]
+                }].map((part, index) => <Card key={index}>
                       <CardHeader className="pb-3">
                         <CardTitle className="text-lg flex items-center gap-2">
                           <CheckCircle2 className="h-5 w-5 text-primary" />
@@ -876,8 +931,7 @@ export default function LocalGuide() {
                       </CardHeader>
                       <CardContent>
                         <div className="flex flex-wrap gap-2">
-                          {part.vendors.map((vendor, vIndex) => (
-                            <div key={vIndex} className="inline-flex items-center gap-2 px-2 py-1.5 bg-background rounded hover:bg-muted/50 transition-colors border text-sm">
+                          {part.vendors.map((vendor, vIndex) => <div key={vIndex} className="inline-flex items-center gap-2 px-2 py-1.5 bg-background rounded hover:bg-muted/50 transition-colors border text-sm">
                               <span className="font-medium">{vendor.name}</span>
                               <div className="flex items-center gap-1.5">
                                 <div className="flex items-center gap-0.5">
@@ -887,25 +941,15 @@ export default function LocalGuide() {
                                 <span className="text-xs text-muted-foreground">• {vendor.shipping}</span>
                               </div>
                               <span className="font-semibold text-primary">{vendor.price}</span>
-                              <Button 
-                                size="sm" 
-                                asChild
-                                className="h-6 px-2 text-xs"
-                              >
-                                <a 
-                                  href={vendor.link} 
-                                  target="_blank" 
-                                  rel="nofollow noopener noreferrer"
-                                >
+                              <Button size="sm" asChild className="h-6 px-2 text-xs">
+                                <a href={vendor.link} target="_blank" rel="nofollow noopener noreferrer">
                                   Buy
                                 </a>
                               </Button>
-                            </div>
-                          ))}
+                            </div>)}
                         </div>
                       </CardContent>
-                    </Card>
-                  ))}
+                    </Card>)}
                 </div>
 
                 <Card className="mt-6 bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800">
@@ -940,12 +984,7 @@ export default function LocalGuide() {
                 </p>
 
                 <div className="space-y-6">
-                  {guideSteps.map((step, index) => (
-                    <Card 
-                      key={index}
-                      id={`step-${index + 1}`}
-                      className={completedSteps.includes(index) ? "border-green-500" : ""}
-                    >
+                  {guideSteps.map((step, index) => <Card key={index} id={`step-${index + 1}`} className={completedSteps.includes(index) ? "border-green-500" : ""}>
                       <CardHeader>
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                           <div className="flex-1">
@@ -965,12 +1004,7 @@ export default function LocalGuide() {
                               </Badge>
                             </div>
                           </div>
-                          <Button
-                            variant={completedSteps.includes(index) ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => toggleStepComplete(index)}
-                            className={`${completedSteps.includes(index) ? "bg-emerald-600 hover:bg-emerald-700 text-emerald-50 border-emerald-600" : "hover:bg-accent"} w-full sm:w-auto shrink-0`}
-                          >
+                          <Button variant={completedSteps.includes(index) ? "default" : "outline"} size="sm" onClick={() => toggleStepComplete(index)} className={`${completedSteps.includes(index) ? "bg-emerald-600 hover:bg-emerald-700 text-emerald-50 border-emerald-600" : "hover:bg-accent"} w-full sm:w-auto shrink-0`}>
                             <CheckCircle2 className="h-4 w-4 mr-1" />
                             Mark Complete
                           </Button>
@@ -979,22 +1013,13 @@ export default function LocalGuide() {
                       <CardContent>
                         <div className="grid md:grid-cols-2 gap-6">
                          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-                            <img
-                              src={step.image}
-                              alt={step.title}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                              width="800"
-                              height="450"
-                              decoding="async"
-                            />
+                            <img src={step.image} alt={step.title} className="w-full h-full object-cover" loading="lazy" width="800" height="450" decoding="async" />
                           </div>
                           <div className="space-y-3">
                             <p className="text-muted-foreground leading-relaxed">
                               {step.description}
                             </p>
-                            {'caution' in step && (
-                              <div className="p-3 bg-amber-50 border-l-4 border-amber-500 rounded dark:bg-amber-950">
+                            {'caution' in step && <div className="p-3 bg-amber-50 border-l-4 border-amber-500 rounded dark:bg-amber-950">
                                 <div className="flex items-start gap-2">
                                   <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                                   <div>
@@ -1004,10 +1029,8 @@ export default function LocalGuide() {
                                     </p>
                                   </div>
                                 </div>
-                              </div>
-                            )}
-                            {isVehicleSpecific && 'vehicleNote' in step && (
-                              <div className="p-3 bg-blue-50 border-l-4 border-blue-500 rounded dark:bg-blue-950">
+                              </div>}
+                            {isVehicleSpecific && 'vehicleNote' in step && <div className="p-3 bg-blue-50 border-l-4 border-blue-500 rounded dark:bg-blue-950">
                                 <div className="flex items-start gap-2">
                                   <AlertTriangle className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
                                   <div>
@@ -1017,13 +1040,11 @@ export default function LocalGuide() {
                                     </p>
                                   </div>
                                 </div>
-                              </div>
-                            )}
+                              </div>}
                           </div>
                         </div>
                       </CardContent>
-                    </Card>
-                  ))}
+                    </Card>)}
                 </div>
               </div>
             </div>
@@ -1039,8 +1060,7 @@ export default function LocalGuide() {
                 </p>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {localMechanics.map((mechanic, index) => (
-                    <Card key={index} className="hover:shadow-lg transition-shadow">
+                  {localMechanics.map((mechanic, index) => <Card key={index} className="hover:shadow-lg transition-shadow">
                       <CardHeader>
                         <CardTitle className="text-lg">{mechanic.name}</CardTitle>
                         <CardDescription>
@@ -1075,11 +1095,9 @@ export default function LocalGuide() {
                         </div>
 
                         <div className="flex flex-wrap gap-1">
-                          {mechanic.specialties.map((specialty) => (
-                            <Badge key={specialty} variant="secondary" className="text-xs">
+                          {mechanic.specialties.map(specialty => <Badge key={specialty} variant="secondary" className="text-xs">
                               {specialty}
-                            </Badge>
-                          ))}
+                            </Badge>)}
                         </div>
 
                         <div className="grid grid-cols-2 gap-2 pt-2">
@@ -1093,8 +1111,7 @@ export default function LocalGuide() {
                           </Button>
                         </div>
                       </CardContent>
-                    </Card>
-                  ))}
+                    </Card>)}
                 </div>
 
                 <div className="text-center mt-8">
@@ -1107,8 +1124,7 @@ export default function LocalGuide() {
           </section>
 
           {/* Feedback Section - Lazy loaded */}
-          {shouldLoadBelowFold && (
-            <Suspense fallback={<div className="py-12"><Skeleton className="h-40 max-w-4xl mx-auto" /></div>}>
+          {shouldLoadBelowFold && <Suspense fallback={<div className="py-12"><Skeleton className="h-40 max-w-4xl mx-auto" /></div>}>
               <section className="py-12 bg-background">
                 <div className="container mx-auto px-4">
                   <div className="max-w-4xl mx-auto">
@@ -1116,8 +1132,7 @@ export default function LocalGuide() {
                   </div>
                 </div>
               </section>
-            </Suspense>
-          )}
+            </Suspense>}
 
           {/* Related Guides Section */}
           <section className="py-12 bg-muted/30">
@@ -1170,32 +1185,10 @@ export default function LocalGuide() {
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                  {[
-                    "San Diego",
-                    "San Francisco",
-                    "San Jose",
-                    "Sacramento",
-                    "Fresno",
-                    "Long Beach",
-                    "Oakland",
-                    "Bakersfield",
-                    "Anaheim",
-                    "Santa Ana",
-                    "Riverside",
-                    "Stockton",
-                    "Irvine",
-                    "Chula Vista",
-                    "Fremont"
-                  ].map((relatedCity) => (
-                    <a
-                      key={relatedCity}
-                      href={`/repairs/${relatedCity.toLowerCase().replace(' ', '-')}/${serviceSlug}`}
-                      className="p-4 border rounded-lg hover:shadow-md hover:border-primary transition-all text-center"
-                    >
+                  {["San Diego", "San Francisco", "San Jose", "Sacramento", "Fresno", "Long Beach", "Oakland", "Bakersfield", "Anaheim", "Santa Ana", "Riverside", "Stockton", "Irvine", "Chula Vista", "Fremont"].map(relatedCity => <a key={relatedCity} href={`/repairs/${relatedCity.toLowerCase().replace(' ', '-')}/${serviceSlug}`} className="p-4 border rounded-lg hover:shadow-md hover:border-primary transition-all text-center">
                       <MapPin className="h-5 w-5 text-primary mx-auto mb-2" />
                       <p className="font-medium text-sm">{relatedCity}</p>
-                    </a>
-                  ))}
+                    </a>)}
                 </div>
               </div>
             </div>
@@ -1211,20 +1204,14 @@ export default function LocalGuide() {
                 </p>
 
                 <Accordion type="single" collapsible className="space-y-4">
-                  {localFAQs.map((faq, index) => (
-                    <AccordionItem 
-                      key={index} 
-                      value={`faq-${index}`}
-                      className="border rounded-lg px-6 bg-card"
-                    >
+                  {localFAQs.map((faq, index) => <AccordionItem key={index} value={`faq-${index}`} className="border rounded-lg px-6 bg-card">
                       <AccordionTrigger className="hover:no-underline">
                         <span className="text-left font-medium">{faq.question}</span>
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground">
                         {faq.answer}
                       </AccordionContent>
-                    </AccordionItem>
-                  ))}
+                    </AccordionItem>)}
                 </Accordion>
               </div>
             </div>
@@ -1255,18 +1242,14 @@ export default function LocalGuide() {
           </section>
 
           {/* Popular Searches Section - Lazy loaded */}
-          {shouldLoadBelowFold && (
-            <Suspense fallback={<div className="py-12 bg-muted/30"><Skeleton className="h-60 max-w-6xl mx-auto" /></div>}>
+          {shouldLoadBelowFold && <Suspense fallback={<div className="py-12 bg-muted/30"><Skeleton className="h-60 max-w-6xl mx-auto" /></div>}>
               <PopularSearches city={city} citySlug={citySlug!} />
-            </Suspense>
-          )}
+            </Suspense>}
 
           {/* Used Cars Section - Lazy loaded */}
-          {shouldLoadBelowFold && (
-            <Suspense fallback={<div className="py-12"><Skeleton className="h-80 max-w-7xl mx-auto" /></div>}>
+          {shouldLoadBelowFold && <Suspense fallback={<div className="py-12"><Skeleton className="h-80 max-w-7xl mx-auto" /></div>}>
               <UsedCarsSection city={city} />
-            </Suspense>
-          )}
+            </Suspense>}
 
           {/* Related Guides Section */}
           <section className="py-12 bg-background">
@@ -1274,25 +1257,28 @@ export default function LocalGuide() {
               <div className="max-w-4xl mx-auto">
                 <h2 className="text-3xl font-bold mb-6">Related Guides</h2>
                 <div className="grid md:grid-cols-2 gap-4">
-                  {[
-                    { title: "How to Replace Brake Rotors", slug: "brake-rotor-replacement" },
-                    { title: "Brake Fluid Flush Guide", slug: "brake-fluid-flush" },
-                    { title: "Brake Caliper Replacement", slug: "brake-caliper-replacement" },
-                    { title: "ABS System Diagnosis", slug: "abs-system-diagnosis" },
-                    { title: "Parking Brake Adjustment", slug: "parking-brake-adjustment" },
-                    { title: "Brake Line Replacement", slug: "brake-line-replacement" }
-                  ].map((guide) => (
-                    <a
-                      key={guide.slug}
-                      href={isVehicleSpecific 
-                        ? `/repairs/${citySlug}/${make}/${model}/${guide.slug}`
-                        : `/repairs/${citySlug}/${guide.slug}`}
-                      className="flex items-center gap-3 p-4 border rounded-lg hover:border-primary hover:bg-muted/50 transition-all"
-                    >
+                  {[{
+                  title: "How to Replace Brake Rotors",
+                  slug: "brake-rotor-replacement"
+                }, {
+                  title: "Brake Fluid Flush Guide",
+                  slug: "brake-fluid-flush"
+                }, {
+                  title: "Brake Caliper Replacement",
+                  slug: "brake-caliper-replacement"
+                }, {
+                  title: "ABS System Diagnosis",
+                  slug: "abs-system-diagnosis"
+                }, {
+                  title: "Parking Brake Adjustment",
+                  slug: "parking-brake-adjustment"
+                }, {
+                  title: "Brake Line Replacement",
+                  slug: "brake-line-replacement"
+                }].map(guide => <a key={guide.slug} href={isVehicleSpecific ? `/repairs/${citySlug}/${make}/${model}/${guide.slug}` : `/repairs/${citySlug}/${guide.slug}`} className="flex items-center gap-3 p-4 border rounded-lg hover:border-primary hover:bg-muted/50 transition-all">
                       <Wrench className="h-5 w-5 text-primary shrink-0" />
                       <span className="font-medium">{guide.title}</span>
-                    </a>
-                  ))}
+                    </a>)}
                 </div>
               </div>
             </div>
@@ -1307,34 +1293,55 @@ export default function LocalGuide() {
                   Find {service.toLowerCase()} guides in nearby cities
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                  {[
-                    { name: "San Francisco", slug: "san-francisco" },
-                    { name: "San Diego", slug: "san-diego" },
-                    { name: "San Jose", slug: "san-jose" },
-                    { name: "Sacramento", slug: "sacramento" },
-                    { name: "Long Beach", slug: "long-beach" },
-                    { name: "Oakland", slug: "oakland" },
-                    { name: "Fresno", slug: "fresno" },
-                    { name: "Bakersfield", slug: "bakersfield" },
-                    { name: "Anaheim", slug: "anaheim" },
-                    { name: "Santa Ana", slug: "santa-ana" },
-                    { name: "Riverside", slug: "riverside" },
-                    { name: "Stockton", slug: "stockton" },
-                    { name: "Irvine", slug: "irvine" },
-                    { name: "Fremont", slug: "fremont" },
-                    { name: "Santa Clarita", slug: "santa-clarita" }
-                  ].map((cityItem) => (
-                    <a
-                      key={cityItem.slug}
-                      href={isVehicleSpecific 
-                        ? `/repairs/${cityItem.slug}/${make}/${model}/${serviceSlug}`
-                        : `/repairs/${cityItem.slug}/${serviceSlug}`}
-                      className="flex items-center gap-2 p-3 border rounded-lg hover:border-primary hover:bg-background transition-all text-sm"
-                    >
+                  {[{
+                  name: "San Francisco",
+                  slug: "san-francisco"
+                }, {
+                  name: "San Diego",
+                  slug: "san-diego"
+                }, {
+                  name: "San Jose",
+                  slug: "san-jose"
+                }, {
+                  name: "Sacramento",
+                  slug: "sacramento"
+                }, {
+                  name: "Long Beach",
+                  slug: "long-beach"
+                }, {
+                  name: "Oakland",
+                  slug: "oakland"
+                }, {
+                  name: "Fresno",
+                  slug: "fresno"
+                }, {
+                  name: "Bakersfield",
+                  slug: "bakersfield"
+                }, {
+                  name: "Anaheim",
+                  slug: "anaheim"
+                }, {
+                  name: "Santa Ana",
+                  slug: "santa-ana"
+                }, {
+                  name: "Riverside",
+                  slug: "riverside"
+                }, {
+                  name: "Stockton",
+                  slug: "stockton"
+                }, {
+                  name: "Irvine",
+                  slug: "irvine"
+                }, {
+                  name: "Fremont",
+                  slug: "fremont"
+                }, {
+                  name: "Santa Clarita",
+                  slug: "santa-clarita"
+                }].map(cityItem => <a key={cityItem.slug} href={isVehicleSpecific ? `/repairs/${cityItem.slug}/${make}/${model}/${serviceSlug}` : `/repairs/${cityItem.slug}/${serviceSlug}`} className="flex items-center gap-2 p-3 border rounded-lg hover:border-primary hover:bg-background transition-all text-sm">
                       <MapPin className="h-4 w-4 text-primary shrink-0" />
                       <span className="font-medium">{cityItem.name}</span>
-                    </a>
-                  ))}
+                    </a>)}
                 </div>
               </div>
             </div>
@@ -1343,6 +1350,5 @@ export default function LocalGuide() {
 
         <Footer />
       </div>
-    </>
-  );
+    </>;
 }
