@@ -97,7 +97,7 @@ export default function Notifications() {
                                 </div>
                               </div>
                               {!notification.read && (
-                                <Button variant="ghost" size="sm" className="w-full sm:w-auto sm:self-start">
+                                <Button variant="default" size="sm" className="w-full sm:w-auto sm:self-start">
                                   Mark as read
                                 </Button>
                               )}
@@ -134,7 +134,7 @@ export default function Notifications() {
                                     <Badge variant="secondary" className="text-xs">{notification.type}</Badge>
                                   </div>
                                 </div>
-                                <Button variant="ghost" size="sm" className="w-full sm:w-auto sm:self-start">
+                                <Button variant="default" size="sm" className="w-full sm:w-auto sm:self-start">
                                   Mark as read
                                 </Button>
                               </div>
