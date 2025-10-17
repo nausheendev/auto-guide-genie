@@ -45,14 +45,14 @@ export default function Notifications() {
 
             <Separator />
 
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold">Notifications</h1>
-                <p className="text-muted-foreground mt-1">
+                <h1 className="text-2xl sm:text-3xl font-bold">Notifications</h1>
+                <p className="text-muted-foreground mt-1 text-sm">
                   Stay updated with your latest activity
                 </p>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
                 <CheckCircle className="h-4 w-4 mr-2" />
                 Mark all as read
               </Button>
@@ -76,28 +76,28 @@ export default function Notifications() {
                   {allNotifications.map((notification) => (
                     <Card key={notification.id} className={notification.read ? 'opacity-75' : ''}>
                       <CardContent className="p-4">
-                        <div className="flex gap-4">
+                        <div className="flex gap-3 sm:gap-4">
                           {getIconComponent(notification)}
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-2">
+                            <div className="flex flex-col gap-3">
                               <div className="flex-1">
-                                <h3 className="font-semibold flex items-center gap-2">
+                                <h3 className="font-semibold flex items-center gap-2 flex-wrap">
                                   {notification.title}
                                   {!notification.read && (
                                     <Badge variant="destructive" className="h-2 w-2 p-0 rounded-full" />
                                   )}
                                 </h3>
-                                <p className="text-sm text-muted-foreground mt-1">
+                                <p className="text-sm text-muted-foreground mt-1 break-words">
                                   {notification.message}
                                 </p>
-                                <div className="flex items-center gap-2 mt-2">
+                                <div className="flex items-center gap-2 mt-2 flex-wrap">
                                   <Clock className="h-3 w-3 text-muted-foreground" />
                                   <span className="text-xs text-muted-foreground">{notification.time}</span>
                                   <Badge variant="secondary" className="text-xs">{notification.type}</Badge>
                                 </div>
                               </div>
                               {!notification.read && (
-                                <Button variant="ghost" size="sm">
+                                <Button variant="ghost" size="sm" className="w-full sm:w-auto sm:self-start">
                                   Mark as read
                                 </Button>
                               )}
@@ -116,25 +116,25 @@ export default function Notifications() {
                     unreadNotifications.map((notification) => (
                       <Card key={notification.id}>
                         <CardContent className="p-4">
-                          <div className="flex gap-4">
+                          <div className="flex gap-3 sm:gap-4">
                             {getIconComponent(notification)}
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-start justify-between gap-2">
+                              <div className="flex flex-col gap-3">
                                 <div className="flex-1">
-                                  <h3 className="font-semibold flex items-center gap-2">
+                                  <h3 className="font-semibold flex items-center gap-2 flex-wrap">
                                     {notification.title}
                                     <Badge variant="destructive" className="h-2 w-2 p-0 rounded-full" />
                                   </h3>
-                                  <p className="text-sm text-muted-foreground mt-1">
+                                  <p className="text-sm text-muted-foreground mt-1 break-words">
                                     {notification.message}
                                   </p>
-                                  <div className="flex items-center gap-2 mt-2">
+                                  <div className="flex items-center gap-2 mt-2 flex-wrap">
                                     <Clock className="h-3 w-3 text-muted-foreground" />
                                     <span className="text-xs text-muted-foreground">{notification.time}</span>
                                     <Badge variant="secondary" className="text-xs">{notification.type}</Badge>
                                   </div>
                                 </div>
-                                <Button variant="ghost" size="sm">
+                                <Button variant="ghost" size="sm" className="w-full sm:w-auto sm:self-start">
                                   Mark as read
                                 </Button>
                               </div>
