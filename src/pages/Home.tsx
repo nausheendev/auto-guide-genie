@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { VehicleSelector } from "@/components/VehicleSelector";
 import { VoiceInput } from "@/components/VoiceInput";
 import { AuthModal } from "@/components/AuthModal";
+import { SchemaMarkup } from "@/components/SchemaMarkup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, Wrench, Clock, DollarSign, TrendingUp, Calendar } from "lucide-react";
+import { Search, Wrench, Clock, DollarSign, TrendingUp, Calendar, Car, Battery, Gauge, Droplets, Settings, Zap } from "lucide-react";
 import heroBanner from "@/assets/hero-banner.jpg";
 import toolsImage from "@/assets/tools-image.jpg";
 import engineImage from "@/assets/engine-image.jpg";
@@ -96,22 +98,118 @@ const LATEST_GUIDES = [
   }
 ];
 
+const MAIN_CATEGORIES = [
+  {
+    slug: "repairs",
+    name: "Auto Repairs",
+    description: "Complete repair guides for all vehicle systems",
+    icon: Wrench,
+    count: "500+ Guides",
+    color: "primary"
+  },
+  {
+    slug: "maintenance",
+    name: "Maintenance",
+    description: "Regular maintenance schedules and how-to guides",
+    icon: Settings,
+    count: "350+ Guides",
+    color: "accent"
+  },
+  {
+    slug: "diagnostics",
+    name: "Diagnostics",
+    description: "Troubleshoot and diagnose vehicle issues",
+    icon: Gauge,
+    count: "250+ Guides",
+    color: "secondary"
+  },
+  {
+    slug: "electrical",
+    name: "Electrical Systems",
+    description: "Battery, alternator, and electrical component repairs",
+    icon: Zap,
+    count: "200+ Guides",
+    color: "warning"
+  },
+  {
+    slug: "fluids",
+    name: "Fluids & Filters",
+    description: "Oil changes, coolant flushes, and filter replacements",
+    icon: Droplets,
+    count: "180+ Guides",
+    color: "success"
+  },
+  {
+    slug: "customization",
+    name: "Customization",
+    description: "Upgrades, modifications, and performance tuning",
+    icon: Car,
+    count: "150+ Guides",
+    color: "destructive"
+  }
+];
+
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Helmet>
+        <title>AutoGos - Professional Auto Repair Guides & Local Mechanic Finder | DIY Car Maintenance</title>
+        <meta name="description" content="Get step-by-step auto repair guides powered by AI. Find trusted local mechanics, learn DIY car maintenance, and save money on repairs. 500+ professional guides for all vehicle makes and models." />
+        <meta name="keywords" content="auto repair guides, car maintenance, DIY repairs, local mechanics, vehicle maintenance, brake repair, oil change, engine repair, auto diagnostics" />
+        <link rel="canonical" href="https://autogos.com/" />
+        <meta property="og:title" content="AutoGos - Professional Auto Repair Guides & Local Mechanic Finder" />
+        <meta property="og:description" content="Get step-by-step auto repair guides powered by AI. Find trusted local mechanics and save money on repairs." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://autogos.com/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AutoGos - Professional Auto Repair Guides" />
+        <meta name="twitter:description" content="Step-by-step auto repair guides powered by AI. Find local mechanics and save money." />
+        <link rel="preload" as="image" href={heroBanner} />
+      </Helmet>
+
+      <SchemaMarkup
+        type="organization"
+        data={{
+          name: "AutoGos",
+          url: "https://autogos.com",
+          logo: "https://autogos.com/logo.png",
+          description: "Professional auto repair guides and local mechanic finder powered by AI technology"
+        }}
+      />
+
+      <SchemaMarkup
+        type="website"
+        data={{
+          name: "AutoGos",
+          url: "https://autogos.com",
+          description: "Professional auto repair guides and local mechanic finder"
+        }}
+      />
+
+      <SchemaMarkup
+        type="breadcrumb"
+        data={{
+          items: [
+            { name: "Home", url: "https://autogos.com" }
+          ]
+        }}
+      />
+
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
+      <section className="relative py-20 overflow-hidden" aria-label="Hero section">
         <div className="absolute inset-0 z-0">
           <img 
             src={heroBanner} 
-            alt="Auto repair hero" 
+            alt="Professional auto mechanic working on vehicle repair"
             className="w-full h-full object-cover opacity-20"
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/80" />
         </div>
@@ -124,7 +222,7 @@ export default function Home() {
                 <span className="block text-primary mt-2">At Your Fingertips</span>
               </h1>
               <p className="text-xl text-muted-foreground">
-                Step-by-step instructions, AI-powered assistance, and local mechanic recommendations
+                Access over 1,500 step-by-step auto repair guides powered by advanced AI technology. Get instant help with repairs, maintenance, and diagnostics for any vehicle make or model. Connect with certified local mechanics when you need professional assistance.
               </p>
             </div>
 
@@ -178,13 +276,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-muted/30">
+      {/* Main Categories Section */}
+      <section className="py-16" aria-labelledby="main-categories">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why Choose AutoGos?</h2>
+            <h2 id="main-categories" className="text-3xl font-bold mb-4">Explore Auto Repair Categories</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Professional-grade repair guides powered by AI, designed for both DIY enthusiasts and professionals
+              Browse our comprehensive collection of repair guides organized by category. From routine maintenance to complex repairs, find expert guidance for every automotive need.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {MAIN_CATEGORIES.map((category) => {
+              const IconComponent = category.icon;
+              return (
+                <Link key={category.slug} to={`/${category.slug}`}>
+                  <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer h-full border-2 hover:border-primary/50">
+                    <CardHeader>
+                      <div className={`h-14 w-14 rounded-xl bg-${category.color}/10 flex items-center justify-center mb-4`}>
+                        <IconComponent className={`h-7 w-7 text-${category.color}`} />
+                      </div>
+                      <CardTitle className="text-xl mb-2">{category.name}</CardTitle>
+                      <CardDescription className="mb-3">
+                        {category.description}
+                      </CardDescription>
+                      <Badge variant="secondary" className="w-fit">
+                        {category.count}
+                      </Badge>
+                    </CardHeader>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16 bg-muted/30" aria-labelledby="features-heading">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 id="features-heading" className="text-3xl font-bold mb-4">Why Choose AutoGos?</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Professional-grade repair guides powered by AI, designed for both DIY enthusiasts and professional mechanics. Get accurate diagnostics, detailed repair procedures, and access to a network of certified technicians.
             </p>
           </div>
 
@@ -196,7 +330,7 @@ export default function Home() {
                 </div>
                 <CardTitle>AI-Powered Guides</CardTitle>
                 <CardDescription>
-                  Advanced AI generates detailed, step-by-step instructions tailored to your specific vehicle
+                  Advanced AI technology generates detailed, step-by-step repair instructions tailored to your specific vehicle's make, model, and year. Get precise torque specifications, part numbers, and safety warnings for every repair.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -208,7 +342,7 @@ export default function Home() {
                 </div>
                 <CardTitle>Save Time & Money</CardTitle>
                 <CardDescription>
-                  Clear instructions with time and cost estimates help you make informed decisions
+                  Clear instructions with accurate time and cost estimates help you make informed decisions. Compare DIY costs versus professional shop rates. Access real-time pricing on parts and labor from local mechanics in your area.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -218,9 +352,9 @@ export default function Home() {
                 <div className="h-12 w-12 rounded-lg bg-success/10 flex items-center justify-center mb-4">
                   <DollarSign className="h-6 w-6 text-success" />
                 </div>
-                <CardTitle>Local Mechanics</CardTitle>
+                <CardTitle>Local Mechanics Network</CardTitle>
                 <CardDescription>
-                  Find trusted mechanics nearby if you prefer professional help with your repairs
+                  Find and connect with certified, trusted mechanics in your area. Read verified reviews, compare quotes, and book appointments directly. Our network includes thousands of ASE-certified professionals across the United States.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -229,15 +363,15 @@ export default function Home() {
       </section>
 
       {/* Latest Guides Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16 bg-muted/30" aria-labelledby="latest-guides">
         <div className="container">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Latest Repair Guides</h2>
-              <p className="text-muted-foreground">Recently published guides for your vehicle</p>
+              <h2 id="latest-guides" className="text-3xl font-bold mb-2">Latest Repair Guides</h2>
+              <p className="text-muted-foreground">Recently published professional repair guides with detailed instructions, diagrams, and video tutorials for popular vehicle models</p>
             </div>
             <Button variant="outline" asChild>
-              <Link to="/search">View All</Link>
+              <Link to="/search">View All Guides</Link>
             </Button>
           </div>
 
@@ -282,15 +416,15 @@ export default function Home() {
       </section>
 
       {/* Popular Repairs Section */}
-      <section className="py-16">
+      <section className="py-16" aria-labelledby="popular-repairs">
         <div className="container">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Popular Repair Guides</h2>
-              <p className="text-muted-foreground">Most searched repairs this month</p>
+              <h2 id="popular-repairs" className="text-3xl font-bold mb-2">Popular Repair Guides</h2>
+              <p className="text-muted-foreground">Most searched and viewed automotive repairs this month. These common maintenance and repair procedures can help you save hundreds of dollars in shop fees.</p>
             </div>
             <Button variant="outline" asChild>
-              <Link to="/search">View All</Link>
+              <Link to="/search">View All Repairs</Link>
             </Button>
           </div>
 
@@ -331,22 +465,63 @@ export default function Home() {
         </div>
       </section>
 
+      {/* How It Works Section */}
+      <section className="py-16 bg-muted/30" aria-labelledby="how-it-works">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 id="how-it-works" className="text-3xl font-bold mb-4">How AutoGos Works</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Get professional auto repair guidance in three simple steps
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
+                1
+              </div>
+              <h3 className="text-xl font-semibold">Select Your Vehicle</h3>
+              <p className="text-muted-foreground">
+                Enter your vehicle's make, model, and year to get repair guides specifically tailored to your car's specifications and common issues.
+              </p>
+            </div>
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
+                2
+              </div>
+              <h3 className="text-xl font-semibold">Search for Repair</h3>
+              <p className="text-muted-foreground">
+                Describe the issue or repair needed. Our AI analyzes thousands of repair procedures to provide you with the most relevant guide.
+              </p>
+            </div>
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto">
+                3
+              </div>
+              <h3 className="text-xl font-semibold">Get Expert Guidance</h3>
+              <p className="text-muted-foreground">
+                Follow step-by-step instructions with photos, videos, and diagrams. Connect with local mechanics if you need professional help.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
+      <section className="py-20 bg-primary text-primary-foreground" aria-labelledby="cta-heading">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold">
+            <h2 id="cta-heading" className="text-3xl md:text-4xl font-bold">
               Ready to Start Your Repair?
             </h2>
             <p className="text-xl opacity-90">
-              Join thousands of car owners who trust AutoGos for their repair needs
+              Join over 50,000 car owners who trust AutoGos for their automotive repair and maintenance needs. Access professional guides, connect with certified mechanics, and save money on every repair.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button size="lg" variant="accent" asChild>
                 <Link to="/search">Browse Repair Guides</Link>
               </Button>
               <Button size="lg" variant="outline" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90" onClick={() => setShowAuthModal(true)}>
-                Create Account
+                Create Free Account
               </Button>
             </div>
           </div>

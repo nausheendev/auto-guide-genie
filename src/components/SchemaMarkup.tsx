@@ -24,7 +24,7 @@ interface FAQItem {
 }
 
 interface SchemaMarkupProps {
-  type: 'howto' | 'localbusiness' | 'breadcrumb' | 'faq' | 'service';
+  type: 'howto' | 'localbusiness' | 'breadcrumb' | 'faq' | 'service' | 'organization' | 'website';
   data: {
     // HowTo Schema
     name?: string;
@@ -41,6 +41,7 @@ interface SchemaMarkupProps {
     
     // Breadcrumb Schema
     breadcrumbs?: Array<{ name: string; url: string }>;
+    items?: Array<{ name: string; url: string }>;
     
     // FAQ Schema
     faqs?: FAQItem[];
@@ -51,6 +52,10 @@ interface SchemaMarkupProps {
     state?: string;
     areaServed?: string;
     provider?: string;
+    
+    // Organization & Website Schema
+    url?: string;
+    logo?: string;
   };
 }
 
@@ -115,14 +120,15 @@ export const SchemaMarkup = ({ type, data }: SchemaMarkupProps) => {
           }));
 
         case 'breadcrumb':
+          const breadcrumbItems = data.breadcrumbs || data.items || [];
           return {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
-            "itemListElement": data.breadcrumbs?.map((crumb, index) => ({
+            "itemListElement": breadcrumbItems.map((crumb, index) => ({
               "@type": "ListItem",
               "position": index + 1,
               "name": crumb.name,
-              "item": `${window.location.origin}${crumb.url}`
+              "item": crumb.url
             }))
           };
 
@@ -157,6 +163,38 @@ export const SchemaMarkup = ({ type, data }: SchemaMarkupProps) => {
                 "@type": "State",
                 "name": data.state
               }
+            }
+          };
+
+        case 'organization':
+          return {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": data.name,
+            "url": data.url,
+            "logo": data.logo,
+            "description": data.description,
+            "sameAs": [
+              "https://www.facebook.com/autogos",
+              "https://twitter.com/autogos",
+              "https://www.instagram.com/autogos"
+            ]
+          };
+
+        case 'website':
+          return {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": data.name,
+            "url": data.url,
+            "description": data.description,
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": `${data.url}/search?q={search_term_string}`
+              },
+              "query-input": "required name=search_term_string"
             }
           };
 
