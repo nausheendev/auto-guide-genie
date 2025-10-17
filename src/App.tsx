@@ -30,6 +30,9 @@ import Notifications from "./pages/Notifications";
 import LeadDetails from "./pages/LeadDetails";
 import LocalGuide from "./pages/LocalGuide";
 import NotFound from "./pages/NotFound";
+import CategoryHub from "./pages/CategoryHub";
+import CityHub from "./pages/CityHub";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
@@ -66,10 +69,16 @@ const App = () => (
           <Route path="/workshop/:id/leads" element={<WorkshopLeads />} />
           <Route path="/leads/:id" element={<LeadDetails />} />
           <Route path="/notifications" element={<Notifications />} />
+          {/* Blog Pages */}
+          <Route path="/blog/:slug" element={<BlogPost />} />
           {/* Vehicle-specific local guide routes with year */}
           <Route path="/:categorySlug/:citySlug/:make/:model/:year/:serviceSlug" element={<LocalGuide />} />
           {/* General local guide routes (no vehicle) */}
           <Route path="/:categorySlug/:citySlug/:serviceSlug" element={<LocalGuide />} />
+          {/* City Hub Page */}
+          <Route path="/:categorySlug/:citySlug" element={<CityHub />} />
+          {/* Category Hub Page */}
+          <Route path="/:categorySlug" element={<CategoryHub />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
