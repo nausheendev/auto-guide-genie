@@ -148,18 +148,18 @@ export const SchemaMarkup = ({ type, data }: SchemaMarkupProps) => {
             "@type": "Service",
             "serviceType": data.serviceType,
             "provider": {
-              "@type": "AutoRepair",
+              "@type": "Organization",
               "name": data.provider || "AutoGos",
-              "areaServed": {
-                "@type": "City",
-                "name": data.city,
-                "containedInPlace": {
-                  "@type": "State",
-                  "name": data.state
-                }
-              }
+              "url": "https://autogos.com"
             },
-            "areaServed": data.areaServed
+            "areaServed": {
+              "@type": "City",
+              "name": data.city,
+              "containedInPlace": {
+                "@type": "State",
+                "name": data.state
+              }
+            }
           };
 
         default:
