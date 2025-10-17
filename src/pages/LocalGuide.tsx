@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Clock, DollarSign, CheckCircle2, AlertTriangle, Wrench, Phone, Star, Navigation, TrendingUp, Calendar, ThermometerSun, CloudRain, Mountain, Users, Printer, Share2, Heart } from "lucide-react";
+import { MapPin, Clock, DollarSign, CheckCircle2, AlertTriangle, Wrench, Star, Navigation, TrendingUp, Calendar, ThermometerSun, CloudRain, Mountain, Users, Printer, Share2, Heart } from "lucide-react";
 import { Helmet } from "react-helmet";
 
 // Lazy load heavy components for better initial load performance
@@ -177,7 +177,6 @@ export default function LocalGuide() {
     city,
     state,
     zip: "90001",
-    phone: "(323) 555-0100",
     rating: 4.8,
     reviewCount: 234,
     distance: "2.3 mi",
@@ -189,7 +188,6 @@ export default function LocalGuide() {
     city,
     state,
     zip: "90002",
-    phone: "(323) 555-0200",
     rating: 4.6,
     reviewCount: 189,
     distance: "3.1 mi",
@@ -201,7 +199,6 @@ export default function LocalGuide() {
     city,
     state,
     zip: "90003",
-    phone: "(323) 555-0300",
     rating: 4.7,
     reviewCount: 156,
     distance: "1.8 mi",
@@ -1082,13 +1079,6 @@ export default function LocalGuide() {
                           </div>
                           
                           <div className="flex items-center gap-2">
-                            <Phone className="h-4 w-4 text-muted-foreground" />
-                            <a href={`tel:${mechanic.phone}`} className="text-primary hover:underline">
-                              {mechanic.phone}
-                            </a>
-                          </div>
-
-                          <div className="flex items-center gap-2">
                             <DollarSign className="h-4 w-4 text-muted-foreground" />
                             <span>{mechanic.priceRange}</span>
                           </div>
@@ -1100,11 +1090,7 @@ export default function LocalGuide() {
                             </Badge>)}
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2 pt-2">
-                          <Button variant="outline" size="sm" className="w-full">
-                            <Phone className="h-3 w-3 mr-1" />
-                            Call
-                          </Button>
+                        <div className="grid grid-cols-1 gap-2 pt-2">
                           <Button variant="default" size="sm" className="w-full">
                             <Navigation className="h-3 w-3 mr-1" />
                             Directions

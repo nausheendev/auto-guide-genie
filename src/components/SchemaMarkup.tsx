@@ -13,7 +13,6 @@ interface LocalBusiness {
   city: string;
   state: string;
   zip: string;
-  phone: string;
   rating?: number;
   reviewCount?: number;
   priceRange?: string;
@@ -107,7 +106,6 @@ export const SchemaMarkup = ({ type, data }: SchemaMarkupProps) => {
               "addressRegion": business.state,
               "postalCode": business.zip
             },
-            "telephone": business.phone,
             "priceRange": business.priceRange || "$$",
             "aggregateRating": business.rating ? {
               "@type": "AggregateRating",
