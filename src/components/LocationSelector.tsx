@@ -78,7 +78,7 @@ export const LocationSelector = ({ currentLocation, onLocationChange }: Location
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2">
           <MapPin className="h-4 w-4" />
-          <span className="hidden sm:inline">{currentLocation}</span>
+          <span className="text-sm">{currentLocation}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="end">
