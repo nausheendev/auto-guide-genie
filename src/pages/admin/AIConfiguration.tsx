@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { AdminTabs } from "@/components/admin/AdminTabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,15 +37,20 @@ export default function AIConfiguration() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">AI Configuration</h1>
-            <p className="text-muted-foreground">Configure AI model settings and behavior</p>
-          </div>
-          <Button variant="outline" onClick={() => navigate("/admin")}>Back to Admin</Button>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+          <p className="text-muted-foreground">Manage system settings</p>
+        </div>
+
+        <div className="mb-6">
+          <AdminTabs />
         </div>
 
         <div className="max-w-3xl space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold mb-2">AI Configuration</h2>
+            <p className="text-muted-foreground">Configure AI model settings and behavior</p>
+          </div>
           <Card>
             <CardHeader>
               <CardTitle>AI Provider Settings</CardTitle>

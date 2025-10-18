@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { AdminTabs } from "@/components/admin/AdminTabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, Edit, Trash2, MoreHorizontal } from "lucide-react";
+import { Search, Edit, Trash2, MoreHorizontal, UserPlus } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 
@@ -29,26 +30,33 @@ export default function UserManagement() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">User Management</h1>
-            <p className="text-muted-foreground">Manage user accounts and permissions</p>
-          </div>
-          <Button onClick={() => navigate("/admin")}>Back to Admin</Button>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+          <p className="text-muted-foreground">Manage users and system settings</p>
+        </div>
+
+        <div className="mb-6">
+          <AdminTabs />
         </div>
 
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <CardTitle>All Users</CardTitle>
-              <div className="relative w-64">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search users..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search users..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Button onClick={() => navigate("/admin/users/add")} className="w-full sm:w-auto">
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Add User
+                </Button>
               </div>
             </div>
           </CardHeader>
@@ -86,7 +94,7 @@ export default function UserManagement() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => navigate(`/admin/users/edit/${user.id}`)}>
                             <Edit className="h-4 w-4 mr-2" />
                             Edit User
                           </DropdownMenuItem>
